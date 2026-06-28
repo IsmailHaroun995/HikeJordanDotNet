@@ -1,0 +1,83 @@
+@page
+@model OrganizerSignupModel
+@{
+    ViewData["Title"] = "Organizer sign up";
+}
+
+<section class="auth-page">
+    <div class="container-fluid page-shell auth-grid">
+        <div class="auth-copy">
+            <span class="eyebrow">Organizer onboarding</span>
+            <h1>Apply to list hikes.</h1>
+            <p>Organizers cannot publish hikes immediately. The admin reviews the profile, verifies trust signals, then approves the account.</p>
+            <div class="submission-steps">
+                <span>1. Create organizer profile</span>
+                <span>2. Wait for admin approval</span>
+                <span>3. Add hikes after approval</span>
+            </div>
+        </div>
+
+        <div class="auth-card">
+            @if (Model.Submitted)
+            {
+                <div class="success-panel" role="status">
+                    <strong>@(Model.AlreadyApproved ? "Password updated. You can now sign in." : "Organizer profile submitted.")</strong>
+                    <p>@(Model.AlreadyApproved ? "Your account was already approved. Sign in now to add hikes." : "Your account is pending admin approval. After approval you can sign in and add hikes.")</p>
+                    <a class="btn primary-action" asp-page="/Login">Go to sign in</a>
+                </div>
+            }
+            else
+            {
+                <form method="post" class="organizer-form">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div>
+                        <label asp-for="Input.OrganizerName"></label>
+                        <input asp-for="Input.OrganizerName" class="form-control" placeholder="Desert Paths" autocomplete="organization" />
+                        <span asp-validation-for="Input.OrganizerName" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="Input.Email"></label>
+                        <input asp-for="Input.Email" class="form-control" placeholder="owner@example.com" autocomplete="email" />
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="Input.WhatsAppNumber"></label>
+                        <input asp-for="Input.WhatsAppNumber" class="form-control" placeholder="+962 7X XXX XXXX" autocomplete="tel" />
+                        <span asp-validation-for="Input.WhatsAppNumber" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="Input.Regions"></label>
+                        <input asp-for="Input.Regions" class="form-control" placeholder="Wadi Rum, Dana, Ajloun" />
+                        <span asp-validation-for="Input.Regions" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="Input.Experience"></label>
+                        <textarea asp-for="Input.Experience" class="form-control" rows="4" placeholder="Years operating, licenses, safety process, guide experience"></textarea>
+                        <span asp-validation-for="Input.Experience" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="Input.Password"></label>
+                        <div class="password-wrap">
+                            <input asp-for="Input.Password" class="form-control" placeholder="Minimum 8 characters" autocomplete="new-password" />
+                            <button type="button" class="password-toggle" aria-label="Show password">Show</button>
+                        </div>
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="Input.ConfirmPassword"></label>
+                        <div class="password-wrap">
+                            <input asp-for="Input.ConfirmPassword" class="form-control" placeholder="Repeat password" autocomplete="new-password" />
+                            <button type="button" class="password-toggle" aria-label="Show password">Show</button>
+                        </div>
+                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                    </div>
+                    <button class="btn primary-action" type="submit">Submit for approval</button>
+                </form>
+            }
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

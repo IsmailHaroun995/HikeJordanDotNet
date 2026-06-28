@@ -1,0 +1,44 @@
+@page
+@model LoginModel
+@{
+    ViewData["Title"] = "Sign in";
+}
+
+<section class="auth-page">
+    <div class="container-fluid page-shell auth-grid">
+        <div class="auth-copy">
+            <span class="eyebrow">Secure access</span>
+            <h1>Sign in to manage Hike Jordan.</h1>
+            <p>Admins review supply and trust signals. Approved organizers can add hikes after their profile is verified.</p>
+            <div class="demo-credentials">
+                <strong>Demo accounts</strong>
+                <span>Admin: admin@hikejordan.test / admin123</span>
+                <span>Approved organizer: organizer@hikejordan.test / organizer123</span>
+                <span>Pending organizer: pending@hikejordan.test / pending123</span>
+            </div>
+        </div>
+
+        <form method="post" class="auth-card">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div>
+                <label asp-for="Input.Email"></label>
+                <input asp-for="Input.Email" class="form-control" placeholder="admin@hikejordan.test" />
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="Input.Password"></label>
+                <div class="password-wrap">
+                    <input asp-for="Input.Password" class="form-control" placeholder="admin123" autocomplete="current-password" />
+                    <button type="button" class="password-toggle" aria-label="Show password">Show</button>
+                </div>
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+            <button class="btn primary-action" type="submit">Sign in</button>
+            <a asp-page="/OrganizerSignup">Organizer sign up</a>
+        </form>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

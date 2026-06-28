@@ -1,0 +1,162 @@
+2026-06-25 22:44:31.282 +04:00 [INF] User profile is available. Using 'C:\Users\C-ROAD\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-06-25 22:44:35.920 +04:00 [INF] HikeJordan started on Development
+2026-06-25 22:44:36.053 +04:00 [INF] Now listening on: http://localhost:5288
+2026-06-25 22:44:36.055 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-25 22:44:36.057 +04:00 [INF] Hosting environment: Development
+2026-06-25 22:44:36.058 +04:00 [INF] Content root path: C:\Users\C-ROAD\Documents\Codex\2026-06-15\files-mentioned-by-the-user-new\outputs\HikeJordanDotNet
+2026-06-25 22:44:47.266 +04:00 [INF] Request starting HTTP/1.1 GET http://localhost:5288/ - null null
+2026-06-25 22:44:47.275 +04:00 [WRN] Failed to determine the https port for redirect.
+2026-06-25 22:44:47.293 +04:00 [INF] Executing endpoint '/Index'
+2026-06-25 22:44:47.303 +04:00 [INF] Route matched with {page = "/Index"}. Executing page /Index
+2026-06-25 22:44:47.310 +04:00 [INF] Executing handler method HikeJordanDotNet.Pages.IndexModel.OnGetAsync - ModelState is "Valid"
+2026-06-25 22:44:48.304 +04:00 [INF] Executed handler method OnGetAsync, returned result .
+2026-06-25 22:44:48.308 +04:00 [INF] Executing an implicit handler method - ModelState is "Valid"
+2026-06-25 22:44:48.309 +04:00 [INF] Executed an implicit handler method, returned result Microsoft.AspNetCore.Mvc.RazorPages.PageResult.
+2026-06-25 22:44:48.413 +04:00 [INF] Executed page /Index in 1107.0449ms
+2026-06-25 22:44:48.417 +04:00 [INF] Executed endpoint '/Index'
+2026-06-25 22:44:48.421 +04:00 [INF] HTTP GET / responded 200 in 1141.9624 ms
+2026-06-25 22:44:48.428 +04:00 [INF] Request finished HTTP/1.1 GET http://localhost:5288/ - 200 null text/html; charset=utf-8 1162.1219ms
+2026-06-25 22:48:15.813 +04:00 [INF] Request starting HTTP/1.1 GET http://localhost:5288/ - null null
+2026-06-25 22:48:15.823 +04:00 [INF] Executing endpoint '/Index'
+2026-06-25 22:48:15.825 +04:00 [INF] Route matched with {page = "/Index"}. Executing page /Index
+2026-06-25 22:48:15.831 +04:00 [INF] Executing handler method HikeJordanDotNet.Pages.IndexModel.OnGetAsync - ModelState is "Valid"
+2026-06-25 22:48:16.659 +04:00 [INF] Executed handler method OnGetAsync, returned result .
+2026-06-25 22:48:16.660 +04:00 [INF] Executing an implicit handler method - ModelState is "Valid"
+2026-06-25 22:48:16.661 +04:00 [INF] Executed an implicit handler method, returned result Microsoft.AspNetCore.Mvc.RazorPages.PageResult.
+2026-06-25 22:48:16.666 +04:00 [INF] Executed page /Index in 839.4051ms
+2026-06-25 22:48:16.668 +04:00 [INF] Executed endpoint '/Index'
+2026-06-25 22:48:16.670 +04:00 [INF] HTTP GET / responded 200 in 852.7862 ms
+2026-06-25 22:48:16.673 +04:00 [INF] Request finished HTTP/1.1 GET http://localhost:5288/ - 200 null text/html; charset=utf-8 860.4722ms
+2026-06-25 22:48:16.706 +04:00 [INF] Request starting HTTP/1.1 GET http://localhost:5288/css/site.css?v=126jYyJDJmwRYgVqAXu1Nkb4wI2WuHyF_NHClVyX048 - null null
+2026-06-25 22:48:16.706 +04:00 [INF] Request starting HTTP/1.1 GET http://localhost:5288/HikeJordanDotNet.styles.css?v=4J61R-2qxBDln4_gP8eFyAkDd6HIhbKd8azcT8Nn0V4 - null null
+2026-06-25 22:48:16.712 +04:00 [INF] Request starting HTTP/1.1 GET http://localhost:5288/js/site.js?v=0Vh4BxrB9IYlD4DlVkWCFzWi0U_y3mcuoywstPuNZT8 - null null
+2026-06-25 22:48:16.720 +04:00 [INF] The file /HikeJordanDotNet.styles.css was not modified
+2026-06-25 22:48:16.721 +04:00 [INF] The file /js/site.js was not modified
+2026-06-25 22:48:16.722 +04:00 [INF] HTTP GET /HikeJordanDotNet.styles.css responded 304 in 6.6584 ms
+2026-06-25 22:48:16.724 +04:00 [INF] HTTP GET /js/site.js responded 304 in 3.3369 ms
+2026-06-25 22:48:16.727 +04:00 [INF] Request finished HTTP/1.1 GET http://localhost:5288/HikeJordanDotNet.styles.css?v=4J61R-2qxBDln4_gP8eFyAkDd6HIhbKd8azcT8Nn0V4 - 304 null text/css 20.2745ms
+2026-06-25 22:48:16.728 +04:00 [INF] Sending file. Request path: '/css/site.css'. Physical path: 'C:\Users\C-ROAD\Documents\Codex\2026-06-15\files-mentioned-by-the-user-new\outputs\HikeJordanDotNet\wwwroot\css\site.css'
+2026-06-25 22:48:16.730 +04:00 [INF] Request finished HTTP/1.1 GET http://localhost:5288/js/site.js?v=0Vh4BxrB9IYlD4DlVkWCFzWi0U_y3mcuoywstPuNZT8 - 304 null text/javascript 17.4744ms
+2026-06-25 22:48:16.735 +04:00 [INF] HTTP GET /css/site.css responded 200 in 25.0810 ms
+2026-06-25 22:48:16.741 +04:00 [INF] Request finished HTTP/1.1 GET http://localhost:5288/css/site.css?v=126jYyJDJmwRYgVqAXu1Nkb4wI2WuHyF_NHClVyX048 - 200 45585 text/css 34.6334ms
+2026-06-25 22:48:17.074 +04:00 [INF] Request starting HTTP/1.1 GET http://localhost:5288/ - null null
+2026-06-25 22:48:17.079 +04:00 [INF] Executing endpoint '/Index'
+2026-06-25 22:48:17.080 +04:00 [INF] Route matched with {page = "/Index"}. Executing page /Index
+2026-06-25 22:48:17.082 +04:00 [INF] Executing handler method HikeJordanDotNet.Pages.IndexModel.OnGetAsync - ModelState is "Valid"
+2026-06-25 22:48:17.860 +04:00 [INF] Executed handler method OnGetAsync, returned result .
+2026-06-25 22:48:17.862 +04:00 [INF] Executing an implicit handler method - ModelState is "Valid"
+2026-06-25 22:48:17.864 +04:00 [INF] Executed an implicit handler method, returned result Microsoft.AspNetCore.Mvc.RazorPages.PageResult.
+2026-06-25 22:48:17.867 +04:00 [INF] Executed page /Index in 785.1617ms
+2026-06-25 22:48:17.868 +04:00 [INF] Executed endpoint '/Index'
+2026-06-25 22:48:17.869 +04:00 [INF] HTTP GET / responded 200 in 792.2241 ms
+2026-06-25 22:48:17.871 +04:00 [INF] Request finished HTTP/1.1 GET http://localhost:5288/ - 200 null text/html; charset=utf-8 797.1526ms
+2026-06-25 22:48:56.943 +04:00 [INF] Request starting HTTP/1.1 GET http://localhost:5288/Login - null null
+2026-06-25 22:48:56.949 +04:00 [INF] Executing endpoint '/Login'
+2026-06-25 22:48:56.967 +04:00 [INF] Route matched with {page = "/Login"}. Executing page /Login
+2026-06-25 22:48:56.975 +04:00 [INF] Executing handler method HikeJordanDotNet.Pages.LoginModel.OnGet - ModelState is "Valid"
+2026-06-25 22:48:56.977 +04:00 [INF] Executed handler method OnGet, returned result .
+2026-06-25 22:48:56.978 +04:00 [INF] Executing an implicit handler method - ModelState is "Valid"
+2026-06-25 22:48:56.979 +04:00 [INF] Executed an implicit handler method, returned result Microsoft.AspNetCore.Mvc.RazorPages.PageResult.
+2026-06-25 22:48:57.011 +04:00 [INF] Executed page /Login in 42.6965ms
+2026-06-25 22:48:57.013 +04:00 [INF] Executed endpoint '/Login'
+2026-06-25 22:48:57.015 +04:00 [INF] HTTP GET /Login responded 200 in 67.6443 ms
+2026-06-25 22:48:57.017 +04:00 [INF] Request finished HTTP/1.1 GET http://localhost:5288/Login - 200 null text/html; charset=utf-8 74.2591ms
+2026-06-25 22:48:57.091 +04:00 [INF] Request starting HTTP/1.1 GET http://localhost:5288/lib/jquery-validation/dist/jquery.validate.min.js - null null
+2026-06-25 22:48:57.091 +04:00 [INF] Request starting HTTP/1.1 GET http://localhost:5288/css/site.css?v=126jYyJDJmwRYgVqAXu1Nkb4wI2WuHyF_NHClVyX048 - null null
+2026-06-25 22:48:57.097 +04:00 [INF] Request starting HTTP/1.1 GET http://localhost:5288/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js - null null
+2026-06-25 22:48:57.101 +04:00 [INF] The file /css/site.css was not modified
+2026-06-25 22:48:57.105 +04:00 [INF] HTTP GET /css/site.css responded 304 in 4.8358 ms
+2026-06-25 22:48:57.108 +04:00 [INF] Request finished HTTP/1.1 GET http://localhost:5288/css/site.css?v=126jYyJDJmwRYgVqAXu1Nkb4wI2WuHyF_NHClVyX048 - 304 null text/css 17.4619ms
+2026-06-25 22:48:57.170 +04:00 [INF] Sending file. Request path: '/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js'. Physical path: 'C:\Users\C-ROAD\Documents\Codex\2026-06-15\files-mentioned-by-the-user-new\outputs\HikeJordanDotNet\wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.min.js'
+2026-06-25 22:48:57.173 +04:00 [INF] HTTP GET /lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js responded 200 in 69.2435 ms
+2026-06-25 22:48:57.176 +04:00 [INF] Request finished HTTP/1.1 GET http://localhost:5288/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js - 200 5824 text/javascript 78.6604ms
+2026-06-25 22:48:57.223 +04:00 [INF] Sending file. Request path: '/lib/jquery-validation/dist/jquery.validate.min.js'. Physical path: 'C:\Users\C-ROAD\Documents\Codex\2026-06-15\files-mentioned-by-the-user-new\outputs\HikeJordanDotNet\wwwroot\lib\jquery-validation\dist\jquery.validate.min.js'
+2026-06-25 22:48:57.225 +04:00 [INF] HTTP GET /lib/jquery-validation/dist/jquery.validate.min.js responded 200 in 130.5767 ms
+2026-06-25 22:48:57.228 +04:00 [INF] Request finished HTTP/1.1 GET http://localhost:5288/lib/jquery-validation/dist/jquery.validate.min.js - 200 24601 text/javascript 137.1219ms
+2026-06-25 22:48:57.326 +04:00 [INF] Request starting HTTP/1.1 GET http://localhost:5288/Login - null null
+2026-06-25 22:48:57.335 +04:00 [INF] Executing endpoint '/Login'
+2026-06-25 22:48:57.337 +04:00 [INF] Route matched with {page = "/Login"}. Executing page /Login
+2026-06-25 22:48:57.339 +04:00 [INF] Executing handler method HikeJordanDotNet.Pages.LoginModel.OnGet - ModelState is "Valid"
+2026-06-25 22:48:57.341 +04:00 [INF] Executed handler method OnGet, returned result .
+2026-06-25 22:48:57.343 +04:00 [INF] Executing an implicit handler method - ModelState is "Valid"
+2026-06-25 22:48:57.345 +04:00 [INF] Executed an implicit handler method, returned result Microsoft.AspNetCore.Mvc.RazorPages.PageResult.
+2026-06-25 22:48:57.354 +04:00 [INF] Executed page /Login in 15.528ms
+2026-06-25 22:48:57.355 +04:00 [INF] Executed endpoint '/Login'
+2026-06-25 22:48:57.357 +04:00 [INF] HTTP GET /Login responded 200 in 26.5402 ms
+2026-06-25 22:48:57.359 +04:00 [INF] Request finished HTTP/1.1 GET http://localhost:5288/Login - 200 null text/html; charset=utf-8 32.2181ms
+2026-06-25 22:49:07.420 +04:00 [INF] Request starting HTTP/1.1 POST http://localhost:5288/Login - application/x-www-form-urlencoded 242
+2026-06-25 22:49:07.425 +04:00 [INF] Executing endpoint '/Login'
+2026-06-25 22:49:07.426 +04:00 [INF] Route matched with {page = "/Login"}. Executing page /Login
+2026-06-25 22:49:07.443 +04:00 [INF] Executing handler method HikeJordanDotNet.Pages.LoginModel.OnPostAsync - ModelState is "Valid"
+2026-06-25 22:49:08.185 +04:00 [INF] User admin@hikejordan.test (Admin) signed in
+2026-06-25 22:49:08.191 +04:00 [INF] AuthenticationScheme: Cookies signed in.
+2026-06-25 22:49:08.194 +04:00 [INF] Executed handler method OnPostAsync, returned result Microsoft.AspNetCore.Mvc.RedirectToPageResult.
+2026-06-25 22:49:08.196 +04:00 [INF] Executing RedirectToPageResult, redirecting to /Admin.
+2026-06-25 22:49:08.197 +04:00 [INF] Executed page /Login in 769.7326ms
+2026-06-25 22:49:08.198 +04:00 [INF] Executed endpoint '/Login'
+2026-06-25 22:49:08.199 +04:00 [INF] HTTP POST /Login responded 302 in 774.9107 ms
+2026-06-25 22:49:08.201 +04:00 [INF] Request finished HTTP/1.1 POST http://localhost:5288/Login - 302 0 null 780.867ms
+2026-06-25 22:49:08.206 +04:00 [INF] Request starting HTTP/1.1 GET http://localhost:5288/Admin - null null
+2026-06-25 22:49:08.214 +04:00 [INF] Executing endpoint '/Admin'
+2026-06-25 22:49:08.219 +04:00 [INF] Route matched with {page = "/Admin"}. Executing page /Admin
+2026-06-25 22:49:08.220 +04:00 [INF] Executing handler method HikeJordanDotNet.Pages.AdminModel.OnGetAsync - ModelState is "Valid"
+2026-06-25 22:49:09.456 +04:00 [INF] Executed handler method OnGetAsync, returned result .
+2026-06-25 22:49:09.458 +04:00 [INF] Executing an implicit handler method - ModelState is "Valid"
+2026-06-25 22:49:09.459 +04:00 [INF] Executed an implicit handler method, returned result Microsoft.AspNetCore.Mvc.RazorPages.PageResult.
+2026-06-25 22:49:09.481 +04:00 [INF] Executed page /Admin in 1261.2595ms
+2026-06-25 22:49:09.484 +04:00 [INF] Executed endpoint '/Admin'
+2026-06-25 22:49:09.486 +04:00 [INF] HTTP GET /Admin responded 200 in 1277.5335 ms
+2026-06-25 22:49:09.489 +04:00 [INF] Request finished HTTP/1.1 GET http://localhost:5288/Admin - 200 null text/html; charset=utf-8 1283.1537ms
+2026-06-25 22:49:09.999 +04:00 [INF] Request starting HTTP/1.1 GET http://localhost:5288/Admin - null null
+2026-06-25 22:49:10.006 +04:00 [INF] Executing endpoint '/Admin'
+2026-06-25 22:49:10.008 +04:00 [INF] Route matched with {page = "/Admin"}. Executing page /Admin
+2026-06-25 22:49:10.009 +04:00 [INF] Executing handler method HikeJordanDotNet.Pages.AdminModel.OnGetAsync - ModelState is "Valid"
+2026-06-25 22:49:11.201 +04:00 [INF] Executed handler method OnGetAsync, returned result .
+2026-06-25 22:49:11.206 +04:00 [INF] Executing an implicit handler method - ModelState is "Valid"
+2026-06-25 22:49:11.207 +04:00 [INF] Executed an implicit handler method, returned result Microsoft.AspNetCore.Mvc.RazorPages.PageResult.
+2026-06-25 22:49:11.211 +04:00 [INF] Executed page /Admin in 1202.2535ms
+2026-06-25 22:49:11.213 +04:00 [INF] Executed endpoint '/Admin'
+2026-06-25 22:49:11.214 +04:00 [INF] HTTP GET /Admin responded 200 in 1211.4406 ms
+2026-06-25 22:49:11.216 +04:00 [INF] Request finished HTTP/1.1 GET http://localhost:5288/Admin - 200 null text/html; charset=utf-8 1216.9938ms
+2026-06-25 22:49:50.345 +04:00 [INF] Request starting HTTP/1.1 GET http://localhost:5288/css/site.css?v=126jYyJDJmwRYgVqAXu1Nkb4wI2WuHyF_NHClVyX048 - null null
+2026-06-25 22:49:50.350 +04:00 [INF] The file /css/site.css was not modified
+2026-06-25 22:49:50.351 +04:00 [INF] HTTP GET /css/site.css responded 304 in 1.7662 ms
+2026-06-25 22:49:50.354 +04:00 [INF] Request finished HTTP/1.1 GET http://localhost:5288/css/site.css?v=126jYyJDJmwRYgVqAXu1Nkb4wI2WuHyF_NHClVyX048 - 304 null text/css 8.5291ms
+2026-06-25 22:49:50.374 +04:00 [INF] Request starting HTTP/1.1 GET http://localhost:5288/.well-known/appspecific/com.chrome.devtools.json - null null
+2026-06-25 22:49:50.378 +04:00 [INF] HTTP GET /.well-known/appspecific/com.chrome.devtools.json responded 404 in 1.0754 ms
+2026-06-25 22:49:50.381 +04:00 [INF] Request finished HTTP/1.1 GET http://localhost:5288/.well-known/appspecific/com.chrome.devtools.json - 404 0 null 6.9048ms
+2026-06-25 22:49:50.385 +04:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5288/.well-known/appspecific/com.chrome.devtools.json, Response status code: 404
+2026-06-25 22:50:10.234 +04:00 [INF] Request starting HTTP/1.1 GET http://localhost:5288/ - null null
+2026-06-25 22:50:10.239 +04:00 [INF] Executing endpoint '/Index'
+2026-06-25 22:50:10.241 +04:00 [INF] Route matched with {page = "/Index"}. Executing page /Index
+2026-06-25 22:50:10.243 +04:00 [INF] Executing handler method HikeJordanDotNet.Pages.IndexModel.OnGetAsync - ModelState is "Valid"
+2026-06-25 22:50:11.034 +04:00 [INF] Executed handler method OnGetAsync, returned result .
+2026-06-25 22:50:11.036 +04:00 [INF] Executing an implicit handler method - ModelState is "Valid"
+2026-06-25 22:50:11.037 +04:00 [INF] Executed an implicit handler method, returned result Microsoft.AspNetCore.Mvc.RazorPages.PageResult.
+2026-06-25 22:50:11.040 +04:00 [INF] Executed page /Index in 797.1029ms
+2026-06-25 22:50:11.042 +04:00 [INF] Executed endpoint '/Index'
+2026-06-25 22:50:11.044 +04:00 [INF] HTTP GET / responded 200 in 806.9021 ms
+2026-06-25 22:50:11.047 +04:00 [INF] Request finished HTTP/1.1 GET http://localhost:5288/ - 200 null text/html; charset=utf-8 813.02ms
+2026-06-25 22:50:11.118 +04:00 [INF] Request starting HTTP/1.1 GET http://localhost:5288/.well-known/appspecific/com.chrome.devtools.json - null null
+2026-06-25 22:50:11.125 +04:00 [INF] HTTP GET /.well-known/appspecific/com.chrome.devtools.json responded 404 in 1.2062 ms
+2026-06-25 22:50:11.129 +04:00 [INF] Request finished HTTP/1.1 GET http://localhost:5288/.well-known/appspecific/com.chrome.devtools.json - 404 0 null 11.168ms
+2026-06-25 22:50:11.135 +04:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5288/.well-known/appspecific/com.chrome.devtools.json, Response status code: 404
+2026-06-25 22:50:11.714 +04:00 [INF] Request starting HTTP/1.1 GET http://localhost:5288/ - null null
+2026-06-25 22:50:11.720 +04:00 [INF] Executing endpoint '/Index'
+2026-06-25 22:50:11.723 +04:00 [INF] Route matched with {page = "/Index"}. Executing page /Index
+2026-06-25 22:50:11.726 +04:00 [INF] Executing handler method HikeJordanDotNet.Pages.IndexModel.OnGetAsync - ModelState is "Valid"
+2026-06-25 22:50:12.506 +04:00 [INF] Executed handler method OnGetAsync, returned result .
+2026-06-25 22:50:12.507 +04:00 [INF] Executing an implicit handler method - ModelState is "Valid"
+2026-06-25 22:50:12.508 +04:00 [INF] Executed an implicit handler method, returned result Microsoft.AspNetCore.Mvc.RazorPages.PageResult.
+2026-06-25 22:50:12.512 +04:00 [INF] Executed page /Index in 786.8829ms
+2026-06-25 22:50:12.513 +04:00 [INF] Executed endpoint '/Index'
+2026-06-25 22:50:12.515 +04:00 [INF] HTTP GET / responded 200 in 795.5572 ms
+2026-06-25 22:50:12.516 +04:00 [INF] Request finished HTTP/1.1 GET http://localhost:5288/ - 200 null text/html; charset=utf-8 802.4058ms
+2026-06-25 22:50:14.234 +04:00 [INF] Request starting HTTP/1.1 GET http://localhost:5288/.well-known/appspecific/com.chrome.devtools.json - null null
+2026-06-25 22:50:14.240 +04:00 [INF] HTTP GET /.well-known/appspecific/com.chrome.devtools.json responded 404 in 1.0755 ms
+2026-06-25 22:50:14.245 +04:00 [INF] Request finished HTTP/1.1 GET http://localhost:5288/.well-known/appspecific/com.chrome.devtools.json - 404 0 null 11.5588ms
+2026-06-25 22:50:14.253 +04:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5288/.well-known/appspecific/com.chrome.devtools.json, Response status code: 404
+2026-06-25 22:50:14.325 +04:00 [INF] Request starting HTTP/1.1 GET http://localhost:5288/.well-known/appspecific/com.chrome.devtools.json - null null
+2026-06-25 22:50:14.332 +04:00 [INF] HTTP GET /.well-known/appspecific/com.chrome.devtools.json responded 404 in 0.7705 ms
+2026-06-25 22:50:14.337 +04:00 [INF] Request finished HTTP/1.1 GET http://localhost:5288/.well-known/appspecific/com.chrome.devtools.json - 404 0 null 11.5192ms
+2026-06-25 22:50:14.342 +04:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5288/.well-known/appspecific/com.chrome.devtools.json, Response status code: 404

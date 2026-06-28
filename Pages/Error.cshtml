@@ -1,0 +1,27 @@
+@page
+@model ErrorModel
+@{
+    ViewData["Title"] = "Something went wrong";
+}
+
+<section class="hero-section error-hero">
+    <div class="hero-media error-hero-media" role="img" aria-label="Jordan landscape"></div>
+    <div class="container-fluid page-shell hero-content">
+        <div class="hero-copy">
+            <span class="eyebrow">Unexpected error</span>
+            <h1>Something went wrong.</h1>
+            <p>
+                We hit an unexpected error. Our team has been notified. Try going back to the homepage
+                or refreshing the page. If the issue persists, contact us on WhatsApp.
+            </p>
+            @if (Model.ShowRequestId)
+            {
+                <p class="error-request-id">Request ID: <code>@Model.RequestId</code></p>
+            }
+            <div class="hero-actions">
+                <a class="btn primary-action" asp-page="/Index">Back to homepage</a>
+                <a class="btn secondary-action" href="/#organizer-cta">Contact us</a>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,83 @@
+@page "{id:int}"
+@model ReviewModel
+@{
+    ViewData["Title"] = Model.Hike is not null ? $"Review: {Model.Hike.Title}" : "Write a review";
+}
+
+<section class="auth-page">
+    <div class="container-fluid page-shell auth-grid">
+        <div class="auth-copy">
+            <span class="eyebrow">Trip review</span>
+            <h1>Share your experience.</h1>
+            <p>Your honest review helps other travelers choose the right hike and gives organizers valuable feedback. Reviews are moderated before appearing on the site.</p>
+            @if (Model.Hike is not null)
+            {
+                <div class="demo-credentials">
+                    <strong>@Model.Hike.Title</strong>
+                    <span>@Model.Hike.Region · @Model.Hike.Difficulty · @Model.Hike.DateLabel</span>
+                    <span>Organized by @Model.Hike.Organizer</span>
+                </div>
+            }
+        </div>
+
+        <div class="auth-card">
+            @if (Model.ReviewsClosed)
+            {
+                <div class="success-panel blocked-panel" role="alert">
+                    <strong>Reviews are closed for this trip.</strong>
+                    <p>The organizer has closed this trip. No new reviews can be submitted.</p>
+                    <a class="btn primary-action" asp-page="/Index">Back to hikes</a>
+                </div>
+            }
+            else if (Model.Submitted)
+            {
+                <div class="success-panel" role="status">
+                    <strong>Review submitted — thank you!</strong>
+                    <p>Your review is pending admin approval and will appear on the trip once approved.</p>
+                    <a class="btn primary-action" asp-page="/Index">Back to hikes</a>
+                </div>
+            }
+            else
+            {
+                <form method="post" class="organizer-form">
+                    <input type="hidden" asp-for="Input.HikeId" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div>
+                        <label asp-for="Input.ReviewerName"></label>
+                        <input asp-for="Input.ReviewerName" class="form-control" placeholder="Your name or nickname" autocomplete="name" />
+                        <span asp-validation-for="Input.ReviewerName" class="text-danger"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="Input.Rating"></label>
+                        <div class="star-picker" role="group" aria-label="Rating">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <label class="star-label">
+                                    <input type="radio" asp-for="Input.Rating" value="@i" class="star-radio" />
+                                    <span class="star-icon">★</span>
+                                    <span class="sr-only">@i star@(i > 1 ? "s" : "")</span>
+                                </label>
+                            }
+                        </div>
+                        <span asp-validation-for="Input.Rating" class="text-danger"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="Input.ReviewText"></label>
+                        <textarea asp-for="Input.ReviewText" class="form-control" rows="5"
+                            placeholder="How was the route, the organizer, the experience? What would you tell a friend?"></textarea>
+                        <span asp-validation-for="Input.ReviewText" class="text-danger"></span>
+                    </div>
+
+                    <button class="btn primary-action submit-action" type="submit">Submit review</button>
+                </form>
+            }
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

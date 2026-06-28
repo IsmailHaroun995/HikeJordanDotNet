@@ -1,0 +1,223 @@
+@page
+@model AddHikeModel
+@{
+    ViewData["Title"] = "Add a hike";
+}
+
+<section class="form-hero">
+    <div class="container-fluid page-shell form-hero-grid">
+        <div>
+            <span class="eyebrow">Organizer submission</span>
+            <h1>Add a hike for review.</h1>
+            <p>
+                Approved organizers submit trip details here. In the MVP, the administrator reviews the listing,
+                approves it, then publishes it with a WhatsApp booking button.
+            </p>
+        </div>
+        <div class="submission-steps" aria-label="Submission workflow">
+            <span>Signed in as @Model.OrganizerDisplayName</span>
+            <span>Account status: @(Model.IsApprovedOrganizer ? "Approved" : "Pending approval")</span>
+            <span>Hike status after submit: Submitted</span>
+        </div>
+    </div>
+</section>
+
+<section class="section-block">
+    <div class="container-fluid page-shell add-hike-layout">
+        <aside class="form-aside">
+            <h2>What organizers need</h2>
+            <ul>
+                <li>A clear title and honest route description.</li>
+                <li>Date, time, price, capacity, and difficulty.</li>
+                <li>Meeting point, required gear, inclusions, and exclusions.</li>
+                <li>A WhatsApp number where visitors can book directly.</li>
+            </ul>
+            <div class="moderation-note">
+                <strong>Admin status after submit</strong>
+                <span>Draft -> Submitted -> Approved -> Published</span>
+            </div>
+        </aside>
+
+        <div class="form-card">
+            @if (!Model.IsApprovedOrganizer)
+            {
+                <div class="success-panel blocked-panel" role="status">
+                    <strong>Your organizer account is still pending approval.</strong>
+                    <p>An admin must verify the organizer profile before this account can add hikes. This protects the marketplace from unverified trip supply.</p>
+                    <a class="btn primary-action" asp-page="/OrganizerSignup">Review signup flow</a>
+                </div>
+            }
+            else if (Model.Submitted)
+            {
+                <div class="success-panel" role="status">
+                    <strong>Hike submitted for review.</strong>
+                    <p>The listing is now in the Submitted state. An admin would review the details, verify the organizer, and publish it when approved.</p>
+                    <a class="btn primary-action" asp-page="/Index">Back to homepage</a>
+                </div>
+            }
+            else
+            {
+                <form method="post" enctype="multipart/form-data" class="organizer-form">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <fieldset>
+                        <legend>Organizer</legend>
+                        <div class="form-grid two-columns">
+                            <div>
+                                <label asp-for="Input.OrganizerName"></label>
+                                <input asp-for="Input.OrganizerName" class="form-control" placeholder="Jordan Trail Co." />
+                                <span asp-validation-for="Input.OrganizerName" class="text-danger"></span>
+                            </div>
+                            <div>
+                                <label asp-for="Input.WhatsAppNumber"></label>
+                                <input asp-for="Input.WhatsAppNumber" class="form-control" placeholder="+962 7X XXX XXXX" />
+                                <span asp-validation-for="Input.WhatsAppNumber" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Trip basics</legend>
+                        <div class="form-grid">
+                            <div>
+                                <label asp-for="Input.Title"></label>
+                                <input asp-for="Input.Title" class="form-control" placeholder="Wadi Rum Sunset Ridge" />
+                                <span asp-validation-for="Input.Title" class="text-danger"></span>
+                            </div>
+                            <div>
+                                <label asp-for="Input.Description"></label>
+                                <textarea asp-for="Input.Description" class="form-control" rows="4" placeholder="Describe the route, pace, scenery, and who it is best for."></textarea>
+                                <span asp-validation-for="Input.Description" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Schedule and discovery</legend>
+                        <div class="form-grid three-columns">
+                            <div>
+                                <label asp-for="Input.Region"></label>
+                                <select asp-for="Input.Region" class="form-select">
+                                    <option value="">Choose region</option>
+                                    @foreach (var dest in Model.Destinations)
+                                    {
+                                        <option value="@dest.Name">@dest.Name</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="Input.Region" class="text-danger"></span>
+                            </div>
+                            <div>
+                                <label asp-for="Input.Difficulty"></label>
+                                <select asp-for="Input.Difficulty" class="form-select">
+                                    <option value="">Choose difficulty</option>
+                                    <option>Easy</option>
+                                    <option>Moderate</option>
+                                    <option>Hard</option>
+                                </select>
+                                <span asp-validation-for="Input.Difficulty" class="text-danger"></span>
+                            </div>
+                            <div>
+                                <label asp-for="Input.Price"></label>
+                                <input asp-for="Input.Price" class="form-control" placeholder="32" />
+                                <span asp-validation-for="Input.Price" class="text-danger"></span>
+                            </div>
+                            <div>
+                                <label asp-for="Input.Date"></label>
+                                <input asp-for="Input.Date" class="form-control" />
+                                <span asp-validation-for="Input.Date" class="text-danger"></span>
+                            </div>
+                            <div>
+                                <label asp-for="Input.Time"></label>
+                                <input asp-for="Input.Time" class="form-control" />
+                                <span asp-validation-for="Input.Time" class="text-danger"></span>
+                            </div>
+                            <div>
+                                <label asp-for="Input.Capacity"></label>
+                                <input asp-for="Input.Capacity" class="form-control" placeholder="18" />
+                                <span asp-validation-for="Input.Capacity" class="text-danger"></span>
+                            </div>
+                            <div>
+                                <label asp-for="Input.DurationHours">Duration (hours)</label>
+                                <input asp-for="Input.DurationHours" class="form-control" placeholder="6" />
+                                <span asp-validation-for="Input.DurationHours" class="text-danger"></span>
+                            </div>
+                            <div>
+                                <label asp-for="Input.DistanceKm">Distance (km)</label>
+                                <input asp-for="Input.DistanceKm" class="form-control" placeholder="8" />
+                                <span asp-validation-for="Input.DistanceKm" class="text-danger"></span>
+                            </div>
+                            <div>
+                                <label asp-for="Input.MeetingPoint"></label>
+                                <input asp-for="Input.MeetingPoint" class="form-control" placeholder="7th Circle, Amman" />
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Preparation details</legend>
+                        <div class="form-grid three-columns">
+                            <div>
+                                <label asp-for="Input.RequiredGear"></label>
+                                <textarea asp-for="Input.RequiredGear" class="form-control" rows="3" placeholder="Hiking shoes, 2L water, hat"></textarea>
+                            </div>
+                            <div>
+                                <label asp-for="Input.IncludedItems"></label>
+                                <textarea asp-for="Input.IncludedItems" class="form-control" rows="3" placeholder="Guide, transport, snacks"></textarea>
+                            </div>
+                            <div>
+                                <label asp-for="Input.ExcludedItems"></label>
+                                <textarea asp-for="Input.ExcludedItems" class="form-control" rows="3" placeholder="Meals, personal insurance"></textarea>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Booking &amp; contact</legend>
+                        <div class="form-grid three-columns">
+                            <div>
+                                <label asp-for="Input.PaymentType"></label>
+                                <select asp-for="Input.PaymentType" class="form-select">
+                                    <option value="">Choose payment type</option>
+                                    <option>CliQ</option>
+                                    <option>Cash on Arrival</option>
+                                    <option>CliQ or Cash</option>
+                                    <option>Bank Transfer</option>
+                                    <option>Free</option>
+                                </select>
+                                <span asp-validation-for="Input.PaymentType" class="text-danger"></span>
+                            </div>
+                            <div>
+                                <label asp-for="Input.GroupName"></label>
+                                <input asp-for="Input.GroupName" class="form-control" placeholder="Jordan Hikers Club" />
+                                <span asp-validation-for="Input.GroupName" class="text-danger"></span>
+                            </div>
+                            <div>
+                                <label asp-for="Input.InstagramPage"></label>
+                                <input asp-for="Input.InstagramPage" class="form-control" placeholder="@@hikejordan" />
+                                <span asp-validation-for="Input.InstagramPage" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Trip photo</legend>
+                        <div class="image-upload-wrap">
+                            <label asp-for="Input.Image" class="image-upload-label">
+                                <span class="upload-icon">📷</span>
+                                <span class="upload-text">Click to upload a photo, or leave blank for a default regional image</span>
+                                <input asp-for="Input.Image" type="file" accept="image/jpeg,image/png,image/webp" class="image-upload-input" />
+                            </label>
+                            <p class="upload-hint">JPG, PNG or WebP · max 5 MB · recommended 1200×675 px</p>
+                        </div>
+                    </fieldset>
+
+                    <button class="btn primary-action submit-action" type="submit">Submit hike for review</button>
+                </form>
+            }
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

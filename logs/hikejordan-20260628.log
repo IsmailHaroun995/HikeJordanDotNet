@@ -1,0 +1,4 @@
+2026-06-28 10:32:26.803 +04:00 [INF] Request starting HTTP/1.1 GET http://localhost:5288/ - null null
+2026-06-28 10:32:26.815 +04:00 [INF] Executing endpoint '/Index'
+2026-06-28 10:32:26.817 +04:00 [INF] Route matched with {page = "/Index"}. Executing page /Index
+2026-06-28 10:32:26.820 +04:00 [INF] Executing handler method HikeJordanDotNet.Pages.IndexModel.OnGetAsync - ModelState is "Valid"

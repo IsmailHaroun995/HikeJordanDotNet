@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    @{
+        var _pageTitle = ViewData["Title"]?.ToString() ?? "Hike Jordan";
+        var _pageDesc  = ViewData["Description"]?.ToString()
+            ?? "Hike Jordan — discover, compare and book trusted organized hiking trips across Jordan. Compare routes, organizers, dates, prices and reviews.";
+        var _canonical = $"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}";
+        var _ogImage   = "https://images.unsplash.com/photo-1548786811-dd6e453ccca7?auto=format&fit=crop&w=1200&q=80";
+    }
+    <title>@_pageTitle - Hike Jordan</title>
+    <meta name="description"  content="@_pageDesc" />
+    <meta name="robots"       content="index, follow" />
+    <link rel="canonical"     href="@_canonical" />
+    <!-- Open Graph -->
+    <meta property="og:type"        content="website" />
+    <meta property="og:site_name"   content="Hike Jordan" />
+    <meta property="og:title"       content="@_pageTitle - Hike Jordan" />
+    <meta property="og:description" content="@_pageDesc" />
+    <meta property="og:url"         content="@_canonical" />
+    <meta property="og:image"       content="@_ogImage" />
+    <meta property="og:locale"      content="en_US" />
+    <!-- Twitter -->
+    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:title"       content="@_pageTitle - Hike Jordan" />
+    <meta name="twitter:description" content="@_pageDesc" />
+    <meta name="twitter:image"       content="@_ogImage" />
+    <!-- Structured data -->
+    <script type="application/ld+json">{"@@context":"https://schema.org","@@type":"WebSite","name":"Hike Jordan","description":"Jordan’s organized hiking marketplace.","url":"@($"{Context.Request.Scheme}://{Context.Request.Host}")"}</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="icon" type="image/svg+xml" href="~/favicon.svg" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/HikeJordanDotNet.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg site-nav">
+            <div class="container-fluid page-shell">
+                <a class="navbar-brand brand-mark" asp-area="" asp-page="/Index" aria-label="Hike Jordan home">
+                    <span class="brand-symbol" aria-hidden="true">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 20 L9 9 L13 14 L17 6 L21 20 H3Z" fill="white" fill-opacity="0.22"/>
+                            <path d="M3 20 L9 9 L13 14 L17 6 L21 20" stroke="white" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+                            <line x1="17" y1="6" x2="17" y2="3.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                            <path d="M17 3.5 L20 5 L17 6.5" fill="white"/>
+                        </svg>
+                    </span>
+                    <span>Hike Jordan</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse justify-content-end">
+                    <ul class="navbar-nav align-items-lg-center gap-lg-3">
+                        <li class="nav-item"><a class="nav-link" href="/#hikes">Trips</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/#destinations">Destinations</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/#organizers">Organizers</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/#trust">Trust</a></li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-page="/Admin">Admin</a></li>
+                        }
+                        @if (User.IsInRole("Organizer"))
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-page="/OrganizerDashboard">My trips</a></li>
+                            <li class="nav-item"><a class="nav-link nav-pill" asp-page="/AddHike">Add hike</a></li>
+                        }
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item">
+                                <form method="post" asp-page="/Login" asp-page-handler="Logout" style="display:inline">
+                                    <button type="submit" class="nav-link btn-link-nav">Sign out</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-page="/Login">Sign in</a></li>
+                            <li class="nav-item"><a class="nav-link nav-pill" asp-page="/OrganizerSignup">Add hike</a></li>
+                        }
+                        <li class="nav-item"><button class="language-toggle" type="button" id="languageToggle" aria-label="Switch language">العربية</button></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <footer class="site-footer">
+        <div class="container-fluid page-shell footer-grid">
+            <div>
+                <strong>Hike Jordan</strong>
+                <span>Discover trusted organized hikes in under 60 seconds.</span>
+            </div>
+            <div class="footer-links">
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-page="/Admin">Admin</a>
+                }
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <form method="post" asp-page="/Login" asp-page-handler="Logout" style="display:inline">
+                        <button type="submit" class="footer-link-btn">Sign out</button>
+                    </form>
+                }
+                else
+                {
+                    <a asp-page="/Login">Sign in</a>
+                }
+                <a asp-area="" asp-page="/Privacy">Privacy</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

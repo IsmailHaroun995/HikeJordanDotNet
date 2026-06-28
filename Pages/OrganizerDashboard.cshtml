@@ -1,0 +1,176 @@
+@page
+@model OrganizerDashboardModel
+@{
+    ViewData["Title"] = "My trips";
+}
+
+<section class="admin-hero">
+    <div class="container-fluid page-shell admin-hero-grid">
+        <div>
+            <span class="eyebrow">Organizer dashboard</span>
+            <h1>@Model.OrganizerName</h1>
+            <p>
+                Track your submitted trips, check approval status, and monitor reviews from joiners.
+            </p>
+        </div>
+        <div class="admin-actions">
+            <a class="btn primary-action" asp-page="/AddHike">Add new trip</a>
+        </div>
+    </div>
+</section>
+
+<section class="admin-shell">
+    <div class="container-fluid page-shell">
+
+        @if (Model.ApprovalStatus != "Approved")
+        {
+            <div class="pending-banner">
+                <strong>Account pending approval</strong>
+                <span>An admin must verify your profile before you can submit trips.</span>
+            </div>
+        }
+
+        <div class="admin-kpis" aria-label="Trip stats">
+            <article>
+                <span>Total trips</span>
+                <strong>@Model.MyTrips.Count</strong>
+                <small>Submitted since joining</small>
+            </article>
+            <article>
+                <span>Published</span>
+                <strong>@Model.PublishedCount</strong>
+                <small>Visible to hikers</small>
+            </article>
+            <article>
+                <span>Pending review</span>
+                <strong>@Model.PendingCount</strong>
+                <small>Awaiting admin approval</small>
+            </article>
+            <article>
+                <span>Reviews received</span>
+                <strong>@Model.TotalReviews</strong>
+                <small>Approved joiner reviews</small>
+            </article>
+        </div>
+
+        <div class="dash-section">
+            <div class="panel-heading">
+                <div>
+                    <span class="eyebrow">Trip history</span>
+                    <h2>All your submitted trips</h2>
+                </div>
+            </div>
+
+            @if (Model.MyTrips.Count == 0)
+            {
+                <div class="empty-state">
+                    <strong>No trips yet</strong>
+                    <p>Submit your first trip and it will appear here once reviewed by our team.</p>
+                    <a class="btn primary-action" asp-page="/AddHike">Add your first trip</a>
+                </div>
+            }
+            else
+            {
+                <div class="my-trips-list">
+                    @foreach (var hike in Model.MyTrips)
+                    {
+                        var lifecycle = OrganizerDashboardModel.TripLifecycle(hike);
+                        var lcSlug = OrganizerDashboardModel.LifecycleSlug(lifecycle);
+                        var reviews = Model.ApprovedReviews.GetValueOrDefault(hike.Id) ?? [];
+                        var isCompleted = hike.Status == AppConstants.HikeStatus.Completed;
+                        var canClose = hike.Status == AppConstants.HikeStatus.Approved
+                                   || hike.Status == AppConstants.HikeStatus.Published;
+                        var statusClass = hike.Status switch
+                        {
+                            "Published"  => "status-published",
+                            "Approved"   => "status-approved",
+                            "Rejected"   => "status-rejected",
+                            "Hidden"     => "status-hidden",
+                            "Completed"  => "status-completed",
+                            _            => "status-submitted"
+                        };
+
+                        <article class="my-trip-card">
+                            <div class="my-trip-header">
+                                <div class="my-trip-info">
+                                    <strong class="my-trip-title">@hike.Title</strong>
+                                    <div class="my-trip-meta">
+                                        <span>@hike.Region</span>
+                                        <span>@(string.IsNullOrEmpty(hike.DateLabel) ? "TBD" : hike.DateLabel)@(string.IsNullOrEmpty(hike.TimeLabel) ? "" : $" · {hike.TimeLabel}")</span>
+                                        <span>@(hike.Price == 0 ? "Free" : $"JD {hike.Price:0}")</span>
+                                        @if (!string.IsNullOrEmpty(hike.Difficulty))
+                                        {
+                                            <span>@hike.Difficulty</span>
+                                        }
+                                    </div>
+                                    @if (lifecycle == "Upcoming")
+                                    {
+                                        <form method="post" asp-page-handler="UpdateSpots"
+                                              asp-route-id="@hike.Id" class="spots-update-form">
+                                            <span class="spots-label">Spots left</span>
+                                            <input type="number" name="spots" value="@hike.SpotsLeft"
+                                                   min="0" max="500" required class="spots-input"
+                                                   aria-label="Spots left" />
+                                            <button type="submit" class="spots-save">Update</button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <span class="spots-readonly">@hike.SpotsLeft spots left</span>
+                                    }
+                                </div>
+                                <div class="my-trip-badges">
+                                    <span class="status-badge @statusClass">@hike.Status</span>
+                                    <span class="lifecycle-badge lifecycle-@lcSlug">@lifecycle</span>
+                                </div>
+                                <div class="my-trip-action">
+                                    @if (canClose)
+                                    {
+                                        <form method="post" asp-page-handler="CloseTrip" asp-route-id="@hike.Id"
+                                              onsubmit="return confirm('Close this trip? It will be hidden from the homepage and reviews will be disabled.');">
+                                            <button type="submit" class="btn-close-trip">Close trip</button>
+                                        </form>
+                                    }
+                                    else if (isCompleted)
+                                    {
+                                        <span class="trip-closed-label">Closed</span>
+                                    }
+                                </div>
+                            </div>
+
+                            @if (reviews.Count > 0)
+                            {
+                                <details class="trip-reviews-section" @(reviews.Count > 0 ? "open" : "")>
+                                    <summary class="trip-reviews-summary">
+                                        <span>@reviews.Count approved review@(reviews.Count != 1 ? "s" : "")</span>
+                                        <span class="avg-rating">
+                                            @{var avg = reviews.Average(r => r.Rating);}
+                                            ★ @avg.ToString("0.0")
+                                        </span>
+                                    </summary>
+                                    <div class="trip-reviews-list">
+                                        @foreach (var review in reviews)
+                                        {
+                                            <div class="trip-review-item">
+                                                <div class="review-header-row">
+                                                    <span class="review-stars-text">@string.Concat(Enumerable.Repeat("★", review.Rating))@string.Concat(Enumerable.Repeat("☆", 5 - review.Rating))</span>
+                                                    <span class="review-meta">@review.ReviewerName · @review.CreatedAtUtc.ToString("MMM d, yyyy")</span>
+                                                </div>
+                                                <p class="review-body">@review.ReviewText</p>
+                                            </div>
+                                        }
+                                    </div>
+                                </details>
+                            }
+                            else if (hike.Status == AppConstants.HikeStatus.Approved || hike.Status == AppConstants.HikeStatus.Published)
+                            {
+                                <div class="no-reviews-note">No approved reviews yet. <a asp-page="/Review" asp-route-id="@hike.Id">Share the review link</a> with joiners.</div>
+                            }
+                        </article>
+                    }
+                </div>
+            }
+        </div>
+
+    </div>
+</section>
