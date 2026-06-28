@@ -74,9 +74,15 @@
                         {
                             <article class="request-card" data-admin-item="organizer">
                                 <div class="request-card-header">
-                                    <div>
-                                        <strong>@request.Name</strong>
-                                        <span>@request.Email · @request.WhatsApp</span>
+                                    <div class="request-card-identity">
+                                        <div class="request-avatar" aria-hidden="true">@(request.Name.Length > 0 ? request.Name[0].ToString().ToUpper() : "?")</div>
+                                        <div>
+                                            <strong>@request.Name</strong>
+                                            <div class="request-contact">
+                                                <span class="contact-chip">✉ @request.Email</span>
+                                                <span class="contact-chip">📱 @request.WhatsApp</span>
+                                            </div>
+                                        </div>
                                     </div>
                                     <span class="status-badge status-submitted" data-status>@request.Status</span>
                                 </div>
@@ -180,8 +186,9 @@
                         <table class="admin-table">
                             <thead>
                                 <tr>
-                                    <th>Name</th>
+                                    <th>Organizer</th>
                                     <th>Email</th>
+                                    <th>Role</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -190,8 +197,14 @@
                                 @foreach (var organizer in Model.ActiveOrganizers)
                                 {
                                     <tr>
-                                        <td><strong>@organizer.Name</strong></td>
-                                        <td>@organizer.Email</td>
+                                        <td>
+                                            <div class="table-identity">
+                                                <div class="table-avatar" aria-hidden="true">@(organizer.Name.Length > 0 ? organizer.Name[0].ToString().ToUpper() : "?")</div>
+                                                <strong>@organizer.Name</strong>
+                                            </div>
+                                        </td>
+                                        <td><span class="table-email">@organizer.Email</span></td>
+                                        <td><span class="role-chip">@organizer.Role</span></td>
                                         <td>
                                             <span class="status-badge @(organizer.ApprovalStatus == "Disabled" ? "status-rejected" : "status-approved")" data-status>
                                                 @organizer.ApprovalStatus
@@ -382,13 +395,147 @@
                         <div>
                             <span class="eyebrow">Configuration</span>
                             <h2>Marketplace settings</h2>
+                            <p>These controls govern how the platform behaves for organizers and visitors.</p>
                         </div>
                     </div>
-                    <div class="settings-grid">
-                        <label><input type="checkbox" checked /> Require admin approval before publishing</label>
-                        <label><input type="checkbox" checked /> Require WhatsApp number on every hike</label>
-                        <label><input type="checkbox" checked /> Allow verified reviews only after attendance proof</label>
-                        <label><input type="checkbox" /> Enable paid featured placements</label>
+
+                    <div class="settings-sections">
+
+                        <div class="settings-group">
+                            <h3 class="settings-group-title">Marketplace operations</h3>
+                            <div class="settings-toggle-list">
+                                <label class="settings-toggle-row">
+                                    <div class="toggle-info">
+                                        <strong>Site is live</strong>
+                                        <span>Uncheck to put the site into maintenance mode — visitors see a holding page.</span>
+                                    </div>
+                                    <input type="checkbox" class="settings-toggle" checked />
+                                </label>
+                                <label class="settings-toggle-row">
+                                    <div class="toggle-info">
+                                        <strong>Accept new organizer signups</strong>
+                                        <span>Disable to stop new organizers from submitting the signup form.</span>
+                                    </div>
+                                    <input type="checkbox" class="settings-toggle" checked />
+                                </label>
+                                <label class="settings-toggle-row">
+                                    <div class="toggle-info">
+                                        <strong>Allow trip submissions</strong>
+                                        <span>Disable to freeze all new hike submissions from approved organizers.</span>
+                                    </div>
+                                    <input type="checkbox" class="settings-toggle" checked />
+                                </label>
+                                <label class="settings-toggle-row">
+                                    <div class="toggle-info">
+                                        <strong>Trip reviews enabled</strong>
+                                        <span>Disable to hide the review form and all joiner reviews site-wide.</span>
+                                    </div>
+                                    <input type="checkbox" class="settings-toggle" checked />
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="settings-group">
+                            <h3 class="settings-group-title">Trip requirements</h3>
+                            <div class="settings-toggle-list">
+                                <label class="settings-toggle-row">
+                                    <div class="toggle-info">
+                                        <strong>Require admin approval before publishing</strong>
+                                        <span>Submitted hikes must be approved here before they go live.</span>
+                                    </div>
+                                    <input type="checkbox" class="settings-toggle" checked />
+                                </label>
+                                <label class="settings-toggle-row">
+                                    <div class="toggle-info">
+                                        <strong>WhatsApp number required on every hike</strong>
+                                        <span>Organizers cannot submit a trip without a valid WhatsApp contact.</span>
+                                    </div>
+                                    <input type="checkbox" class="settings-toggle" checked />
+                                </label>
+                                <label class="settings-toggle-row">
+                                    <div class="toggle-info">
+                                        <strong>Verified reviews only</strong>
+                                        <span>Only reviews from verified joiners count toward the public rating.</span>
+                                    </div>
+                                    <input type="checkbox" class="settings-toggle" checked />
+                                </label>
+                                <label class="settings-toggle-row">
+                                    <div class="toggle-info">
+                                        <strong>Enable paid featured placements</strong>
+                                        <span>Allow organizers to pay for highlighted placement on the homepage.</span>
+                                    </div>
+                                    <input type="checkbox" class="settings-toggle" />
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="settings-group">
+                            <h3 class="settings-group-title">Limits</h3>
+                            <div class="settings-field-list">
+                                <div class="settings-field-row">
+                                    <label for="settingMaxSpots">
+                                        <strong>Default max spots per trip</strong>
+                                        <span>Organizers can override this per trip, but this is the starting value.</span>
+                                    </label>
+                                    <input id="settingMaxSpots" type="number" class="settings-input" value="20" min="1" max="500" />
+                                </div>
+                                <div class="settings-field-row">
+                                    <label for="settingMaxTrips">
+                                        <strong>Max active trips per organizer</strong>
+                                        <span>Prevents one organizer from flooding the marketplace.</span>
+                                    </label>
+                                    <input id="settingMaxTrips" type="number" class="settings-input" value="10" min="1" max="100" />
+                                </div>
+                                <div class="settings-field-row">
+                                    <label for="settingMinRating">
+                                        <strong>Minimum stars to display review</strong>
+                                        <span>Reviews below this rating are held for admin review before publishing.</span>
+                                    </label>
+                                    <input id="settingMinRating" type="number" class="settings-input" value="1" min="1" max="5" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-group">
+                            <h3 class="settings-group-title">Communication</h3>
+                            <div class="settings-field-list">
+                                <div class="settings-field-row">
+                                    <label for="settingAdminEmail">
+                                        <strong>Admin notification email</strong>
+                                        <span>Where organizer signups, new hikes, and flag alerts are sent.</span>
+                                    </label>
+                                    <input id="settingAdminEmail" type="email" class="settings-input" placeholder="admin@hikejordan.com" />
+                                </div>
+                                <div class="settings-field-row">
+                                    <label for="settingSupportWa">
+                                        <strong>Support WhatsApp number</strong>
+                                        <span>Shown to visitors who need help. Include country code, e.g. +962791234567.</span>
+                                    </label>
+                                    <input id="settingSupportWa" type="tel" class="settings-input" placeholder="+962791234567" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-group">
+                            <h3 class="settings-group-title">Announcement banner</h3>
+                            <div class="settings-field-list">
+                                <div class="settings-field-row settings-field-row--wide">
+                                    <label for="settingBanner">
+                                        <strong>Banner message</strong>
+                                        <span>Displayed at the top of every page when the banner is enabled.</span>
+                                    </label>
+                                    <input id="settingBanner" type="text" class="settings-input" placeholder="e.g. New hike season starts July 1 — check out the latest trips!" maxlength="200" />
+                                </div>
+                                <label class="settings-toggle-row">
+                                    <div class="toggle-info">
+                                        <strong>Show announcement banner</strong>
+                                        <span>Enable to display the message above on all pages.</span>
+                                    </div>
+                                    <input type="checkbox" class="settings-toggle" />
+                                </label>
+                            </div>
+                        </div>
+
                     </div>
                 </section>
             </div>
