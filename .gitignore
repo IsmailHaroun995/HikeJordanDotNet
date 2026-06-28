@@ -1,0 +1,57 @@
+## .NET / ASP.NET Core
+bin/
+obj/
+*.user
+*.suo
+*.dbmdl
+*.jfm
+*.pfx
+*.publishsettings
+
+## Visual Studio
+.vs/
+*.vspscc
+*.vssscc
+
+## Rider
+.idea/
+
+## Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+
+## NuGet
+*.nupkg
+*.snupkg
+.nuget/packages/
+packages/
+!packages/repositories.config
+
+## Rider
+.idea/
+
+## Local DB / secrets
+App_Data/*.db
+App_Data/*.db-shm
+App_Data/*.db-wal
+*.db
+
+## Logs
+logs/
+*.log
+
+## User secrets
+**/secrets.json
+appsettings.Development.json
+
+## Uploaded files (keep folder, ignore contents)
+wwwroot/uploads/**
+!wwwroot/uploads/.gitkeep
+
+## OS
+.DS_Store
+Thumbs.db
+desktop.ini
