@@ -139,13 +139,26 @@
                                     <th>Level</th>
                                     <th>Date</th>
                                     <th>Status</th>
+                                    <th>Lifecycle</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var hike in Model.SubmittedHikes)
                                 {
-                                    <tr data-admin-item="hike">
+                                    var lifecycle = IndexModel.TripLifecycle(hike);
+                                    var isCompleted = lifecycle == "Completed";
+                                    var lifecycleClass = lifecycle == "Completed" ? "lifecycle-completed"
+                                                       : lifecycle == "In Progress" ? "lifecycle-in-progress"
+                                                       : "lifecycle-upcoming";
+                                    var statusClass = hike.Status switch {
+                                        "Approved"  => "status-approved",
+                                        "Published" => "status-published",
+                                        "Rejected"  => "status-rejected",
+                                        "Hidden"    => "status-hidden",
+                                        _           => "status-submitted"
+                                    };
+                                    <tr data-admin-item="hike" class="@(isCompleted ? "row-completed" : "")">
                                         <td>
                                             <strong>@hike.Title</strong>
                                             <span>@hike.Note</span>
@@ -154,18 +167,26 @@
                                         <td>@hike.Region</td>
                                         <td>@hike.Difficulty</td>
                                         <td>@hike.DateLabel</td>
-                                        <td><span class="status-badge status-submitted" data-status>@hike.Status</span></td>
+                                        <td><span class="status-badge @statusClass" data-status>@hike.Status</span></td>
+                                        <td><span class="lifecycle-badge @lifecycleClass">@lifecycle</span></td>
                                         <td>
                                             <div class="table-actions">
-                                                <form method="post" asp-page-handler="UpdateHike" asp-route-id="@hike.Id" asp-route-status="Approved">
-                                                    <button type="submit" data-action="approve-hike">Approve</button>
-                                                </form>
-                                                <form method="post" asp-page-handler="UpdateHike" asp-route-id="@hike.Id" asp-route-status="Hidden">
-                                                    <button type="submit" data-action="hide-hike">Hide</button>
-                                                </form>
-                                                <form method="post" asp-page-handler="UpdateHike" asp-route-id="@hike.Id" asp-route-status="Rejected">
-                                                    <button type="submit" data-action="reject-hike">Reject</button>
-                                                </form>
+                                                @if (isCompleted)
+                                                {
+                                                    <span class="completed-note">Trip ended</span>
+                                                }
+                                                else
+                                                {
+                                                    <form method="post" asp-page-handler="UpdateHike" asp-route-id="@hike.Id" asp-route-status="Approved">
+                                                        <button type="submit" data-action="approve-hike">Approve</button>
+                                                    </form>
+                                                    <form method="post" asp-page-handler="UpdateHike" asp-route-id="@hike.Id" asp-route-status="Hidden">
+                                                        <button type="submit" data-action="hide-hike">Hide</button>
+                                                    </form>
+                                                    <form method="post" asp-page-handler="UpdateHike" asp-route-id="@hike.Id" asp-route-status="Rejected">
+                                                        <button type="submit" data-action="reject-hike">Reject</button>
+                                                    </form>
+                                                }
                                             </div>
                                         </td>
                                     </tr>

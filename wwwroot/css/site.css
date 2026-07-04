@@ -2310,6 +2310,24 @@ button:disabled {
   box-shadow: 0 22px 48px rgba(21, 33, 28, 0.13);
 }
 
+/* ─── Completed trip row in admin table ─────────────────────────── */
+
+.row-completed td {
+  opacity: 0.55;
+}
+
+.row-completed td:last-child {
+  opacity: 1;
+}
+
+.completed-note {
+  font-size: 0.78rem;
+  color: var(--muted);
+  font-style: italic;
+  padding: 4px 0;
+  white-space: nowrap;
+}
+
 /* ─── Admin table row hover ──────────────────────────────────────── */
 
 .admin-table tbody tr {
