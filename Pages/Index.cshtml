@@ -257,6 +257,12 @@
                             </div>
                         }
                         <p class="partner-label">@partner.Name</p>
+                        @if (!string.IsNullOrEmpty(partner.InstagramPage))
+                        {
+                            <a class="partner-insta-link" href="@partnerHref" target="_blank" rel="noopener noreferrer">
+                                @("@" + partner.InstagramPage)
+                            </a>
+                        }
                     </article>
                 }
             </div>
