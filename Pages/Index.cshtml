@@ -215,6 +215,55 @@
 </section>
 
 
+@if (Model.Partners.Count > 0)
+{
+    <section id="partners" class="section-block partners-band">
+        <div class="container-fluid page-shell">
+            <div class="section-heading">
+                <span class="eyebrow">Our partners</span>
+                <h2>Trusted by the hiking community.</h2>
+            </div>
+            <div class="partners-grid">
+                @foreach (var partner in Model.Partners)
+                {
+                    var partnerHref = string.IsNullOrEmpty(partner.InstagramPage)
+                        ? null
+                        : $"https://instagram.com/{partner.InstagramPage}";
+                    <article class="partner-card">
+                        @if (partnerHref is not null)
+                        {
+                            <a href="@partnerHref" target="_blank" rel="noopener noreferrer" class="partner-card-inner" title="@partner.Name on Instagram">
+                                @if (!string.IsNullOrEmpty(partner.ImageUrl))
+                                {
+                                    <img src="@partner.ImageUrl" alt="@partner.Name logo" loading="lazy" />
+                                }
+                                else
+                                {
+                                    <span class="partner-name-fallback">@partner.Name</span>
+                                }
+                            </a>
+                        }
+                        else
+                        {
+                            <div class="partner-card-inner">
+                                @if (!string.IsNullOrEmpty(partner.ImageUrl))
+                                {
+                                    <img src="@partner.ImageUrl" alt="@partner.Name logo" loading="lazy" />
+                                }
+                                else
+                                {
+                                    <span class="partner-name-fallback">@partner.Name</span>
+                                }
+                            </div>
+                        }
+                        <p class="partner-label">@partner.Name</p>
+                    </article>
+                }
+            </div>
+        </div>
+    </section>
+}
+
 <section id="trust" class="section-block dark-band">
     <div class="container-fluid page-shell trust-grid">
         <div>

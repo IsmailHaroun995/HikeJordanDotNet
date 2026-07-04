@@ -11,6 +11,7 @@ public class HikeJordanDbContext(DbContextOptions<HikeJordanDbContext> options) 
     public DbSet<ReviewFlag> ReviewFlags => Set<ReviewFlag>();
     public DbSet<TripReview> TripReviews => Set<TripReview>();
     public DbSet<Destination> Destinations => Set<Destination>();
+    public DbSet<Partner> Partners => Set<Partner>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

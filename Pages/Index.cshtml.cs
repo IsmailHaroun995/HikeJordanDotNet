@@ -12,6 +12,7 @@ public class IndexModel(HikeJordanDbContext db, IWhatsAppService whatsApp) : Pag
         = new Dictionary<int, IReadOnlyList<TripReview>>();
     public int VerifiedOrganizersCount { get; private set; }
     public IReadOnlyList<Destination> Destinations { get; private set; } = [];
+    public IReadOnlyList<Partner> Partners { get; private set; } = [];
 
     public async Task OnGetAsync()
     {
@@ -45,6 +46,11 @@ public class IndexModel(HikeJordanDbContext db, IWhatsAppService whatsApp) : Pag
         Destinations = await db.Destinations
             .Where(d => d.IsActive)
             .OrderBy(d => d.Name)
+            .ToListAsync();
+
+        Partners = await db.Partners
+            .Where(p => p.IsActive)
+            .OrderBy(p => p.Name)
             .ToListAsync();
     }
 

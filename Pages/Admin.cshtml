@@ -55,6 +55,7 @@
                 <a href="#trip-reviews">Trip reviews</a>
                 <a href="#review-flags">Review flags</a>
                 <a href="#destinations">Destinations</a>
+                <a href="#partners">Partners</a>
                 <a href="#analytics">Analytics</a>
                 <a href="#settings">Marketplace settings</a>
             </aside>
@@ -367,6 +368,71 @@
                                     </form>
                                     <form method="post" asp-page-handler="DeleteDestination" asp-route-id="@dest.Id"
                                           onsubmit="return confirm('Delete @dest.Name? This cannot be undone.')">
+                                        <button type="submit" data-action="reject-hike">Delete</button>
+                                    </form>
+                                </div>
+                            </article>
+                        }
+                    </div>
+                </section>
+
+                <section id="partners" class="admin-panel">
+                    <div class="panel-heading">
+                        <div>
+                            <span class="eyebrow">Marketplace configuration</span>
+                            <h2>Partners</h2>
+                            <p>Partners appear in the homepage partners section. Add a logo/image URL and an Instagram account to link to.</p>
+                        </div>
+                    </div>
+
+                    <form method="post" asp-page-handler="AddPartner" class="destination-add-form">
+                        <div class="partner-add-fields">
+                            <div>
+                                <label for="partnerName">Partner name</label>
+                                <input id="partnerName" name="name" class="form-control" placeholder="e.g. Wadi Rum Stars Camp" required maxlength="140" />
+                            </div>
+                            <div>
+                                <label for="partnerImage">Logo / image URL <small>(optional)</small></label>
+                                <input id="partnerImage" name="imageUrl" class="form-control" placeholder="https://..." maxlength="400" />
+                            </div>
+                            <div>
+                                <label for="partnerInsta">Instagram account <small>(optional, without @)</small></label>
+                                <input id="partnerInsta" name="instagramPage" class="form-control" placeholder="wadirumstars" maxlength="120" />
+                            </div>
+                        </div>
+                        <button type="submit" class="btn primary-action">Add partner</button>
+                    </form>
+
+                    <div class="destination-manage-grid">
+                        @if (!Model.Partners.Any())
+                        {
+                            <p class="muted-note">No partners yet. Add the first one above.</p>
+                        }
+                        @foreach (var partner in Model.Partners)
+                        {
+                            <article class="destination-manage-card">
+                                @if (!string.IsNullOrEmpty(partner.ImageUrl))
+                                {
+                                    <div class="dest-thumb" style="background-image:url('@partner.ImageUrl'); background-size:contain; background-color:#f8f8f6;"></div>
+                                }
+                                <div class="dest-info">
+                                    <div>
+                                        <strong>@partner.Name</strong>
+                                        @if (!string.IsNullOrEmpty(partner.InstagramPage))
+                                        {
+                                            <small style="display:block; color:var(--muted);">@("@" + partner.InstagramPage)</small>
+                                        }
+                                    </div>
+                                    <span class="status-badge @(partner.IsActive ? "status-approved" : "status-rejected")">
+                                        @(partner.IsActive ? "Active" : "Hidden")
+                                    </span>
+                                </div>
+                                <div class="table-actions">
+                                    <form method="post" asp-page-handler="TogglePartner" asp-route-id="@partner.Id">
+                                        <button type="submit">@(partner.IsActive ? "Hide" : "Show")</button>
+                                    </form>
+                                    <form method="post" asp-page-handler="DeletePartner" asp-route-id="@partner.Id"
+                                          onsubmit="return confirm('Delete @partner.Name? This cannot be undone.')">
                                         <button type="submit" data-action="reject-hike">Delete</button>
                                     </form>
                                 </div>
