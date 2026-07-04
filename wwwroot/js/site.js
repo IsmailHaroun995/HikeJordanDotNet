@@ -330,11 +330,27 @@ function normalized(text) {
   return text.replace(/\s+/g, " ").trim();
 }
 
+const arabicDigits = ["٠","١","٢","٣","٤","٥","٦","٧","٨","٩"];
+function toArabicNumerals(str) {
+  return str.replace(/\d/g, (d) => arabicDigits[parseInt(d, 10)]);
+}
+
+function translateDynamic(source, language) {
+  if (language !== "ar") return source;
+  const priceMatch = source.match(/^JD (\d+)$/);
+  if (priceMatch) return `${toArabicNumerals(priceMatch[1])} د.أ`;
+  const spotsMatch = source.match(/^(\d+) left$/);
+  if (spotsMatch) return `${toArabicNumerals(spotsMatch[1])} متبقية`;
+  return null;
+}
+
 function translateTextNode(node, language) {
   if (!node.nodeValue || !normalized(node.nodeValue)) return;
   if (!node.__sourceText) node.__sourceText = normalized(node.nodeValue);
   const source = node.__sourceText;
-  const translated = language === "ar" ? translations[source] : source;
+  const translated = language === "ar"
+    ? (translations[source] ?? translateDynamic(source, language))
+    : source;
   if (!translated) return;
   const leading = node.nodeValue.match(/^\s*/)?.[0] || "";
   const trailing = node.nodeValue.match(/\s*$/)?.[0] || "";

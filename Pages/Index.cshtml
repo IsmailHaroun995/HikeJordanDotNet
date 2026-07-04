@@ -62,7 +62,7 @@
     <div class="container-fluid page-shell value-grid">
         <div><strong>@Model.PublicHikes.Count</strong><span>Upcoming hikes</span></div>
         <div><strong>@Model.VerifiedOrganizersCount</strong><span>Verified organizers</span></div>
-        <div><strong>0</strong><span>Direct WhatsApp booking</span></div>
+        <div><strong>Direct</strong><span>WhatsApp booking — no sign-up needed</span></div>
     </div>
 </section>
 
@@ -91,7 +91,7 @@
                     </div>
                     <div class="card-body">
                         <div class="card-kicker">@hike.Region</div>
-                        <h3>@hike.Title</h3>
+                        <h3><a href="/hike/@hike.Id">@hike.Title</a></h3>
                         @if (!string.IsNullOrWhiteSpace(hike.Description))
                         {
                             <p>@hike.Description</p>
@@ -166,8 +166,7 @@
                 var coverUrl = !string.IsNullOrEmpty(dest.CoverImageUrl)
                     ? dest.CoverImageUrl
                     : IndexModel.ImageForRegion(dest.Name);
-                <a class="destination-card" href="#hikes" style="--image:url('@coverUrl')"
-                   data-dest-slug="@dest.Slug">
+                <a class="destination-card" href="/hikes/@dest.Slug" style="--image:url('@coverUrl')">
                     <span>@dest.Name</span>
                 </a>
             }

@@ -2350,6 +2350,210 @@ button:disabled {
   border-right: none;
 }
 
+/* ─── Hike card title link ───────────────────────────────────────── */
+
+.hike-card h3 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.hike-card h3 a:hover {
+  color: var(--cedar);
+}
+
+/* ─── Hike detail page ───────────────────────────────────────────── */
+
+.hike-detail-hero {
+  position: relative;
+  background-image: var(--image);
+  background-size: cover;
+  background-position: center;
+  padding: 80px 0 48px;
+  color: white;
+}
+
+.hike-detail-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(15,25,20,.55) 0%, rgba(15,25,20,.78) 100%);
+}
+
+.hike-detail-hero .container-fluid {
+  position: relative;
+}
+
+.breadcrumb-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  margin-bottom: 24px;
+  opacity: .88;
+}
+
+.breadcrumb-nav a {
+  color: rgba(255,255,255,.8);
+  text-decoration: none;
+}
+
+.breadcrumb-nav a:hover { color: white; }
+.breadcrumb-nav span { color: rgba(255,255,255,.5); }
+
+.hike-detail-header h1 {
+  font-size: clamp(1.9rem, 4vw, 2.8rem);
+  margin: 12px 0 8px;
+  color: white;
+}
+
+.hike-detail-organizer {
+  opacity: .78;
+  margin: 0;
+}
+
+.hike-detail-body {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 40px;
+  padding-top: 40px;
+  padding-bottom: 60px;
+  align-items: start;
+}
+
+.hike-detail-section {
+  margin-bottom: 36px;
+}
+
+.hike-detail-section h2 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin-bottom: 14px;
+  color: var(--cedar);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.what-to-know-block {
+  margin-bottom: 16px;
+}
+
+.what-to-know-block strong {
+  display: block;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin-bottom: 4px;
+}
+
+.reviews-list {
+  display: grid;
+  gap: 16px;
+}
+
+.quick-facts--lg dt {
+  font-weight: 700;
+  color: var(--muted);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.quick-facts--lg dd {
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* ─── Booking sidebar card ───────────────────────────────────────── */
+
+.booking-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 24px;
+  display: grid;
+  gap: 14px;
+  position: sticky;
+  top: 80px;
+  box-shadow: var(--shadow);
+}
+
+.booking-card strong {
+  font-size: 1.1rem;
+}
+
+.booking-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.booking-note {
+  font-size: 0.78rem !important;
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+}
+
+.organizer-instagram {
+  margin-top: 16px;
+  padding: 14px;
+  background: var(--paper);
+  border-radius: 10px;
+  display: grid;
+  gap: 6px;
+  font-size: 0.88rem;
+}
+
+.card-img-link {
+  display: block;
+  text-decoration: none;
+}
+
+/* ─── Destination hero (Hikes page) ─────────────────────────────── */
+
+.destination-hero {
+  position: relative;
+  background-image: var(--image);
+  background-size: cover;
+  background-position: center;
+  padding: 72px 0 40px;
+  color: white;
+}
+
+.destination-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(15,25,20,.5) 0%, rgba(15,25,20,.72) 100%);
+}
+
+.destination-hero .container-fluid {
+  position: relative;
+}
+
+.destination-hero-copy h1 {
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  margin: 8px 0;
+  color: white;
+}
+
+.destination-hero-copy p {
+  max-width: 540px;
+  opacity: .85;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .hike-detail-body {
+    grid-template-columns: 1fr;
+  }
+
+  .booking-card {
+    position: static;
+  }
+}
+
 /* ─── Hero entrance animations ───────────────────────────────────── */
 
 @keyframes fadeUp {

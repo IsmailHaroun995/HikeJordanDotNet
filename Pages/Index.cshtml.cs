@@ -32,8 +32,10 @@ public class IndexModel(HikeJordanDbContext db, IWhatsAppService whatsApp) : Pag
             .ToDictionary(g => g.Key, g => (IReadOnlyList<TripReview>)g.ToList());
 
         TopOrganizers = await db.OrganizerProfiles
-            .Where(org => org.Status == AppConstants.AccountStatus.Verified)
-            .OrderBy(org => org.Name)
+            .Where(org => org.Status == AppConstants.AccountStatus.Verified
+                       && org.PastTrips != ""
+                       && !org.PastTrips.StartsWith("0"))
+            .OrderByDescending(org => org.Rating)
             .Take(3)
             .ToListAsync();
 
@@ -70,9 +72,12 @@ public class IndexModel(HikeJordanDbContext db, IWhatsAppService whatsApp) : Pag
 
     public static string ImageForRegion(string region) => region switch
     {
-        "Ajloun" => "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80",
-        "Dana" => "https://images.unsplash.com/photo-1522163182402-834f871fd851?auto=format&fit=crop&w=900&q=80",
-        "Dead Sea" => "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80",
-        _ => "https://images.unsplash.com/photo-1548786811-dd6e453ccca7?auto=format&fit=crop&w=900&q=80"
+        "Wadi Rum"   => "https://images.unsplash.com/photo-1548786811-dd6e453ccca7?auto=format&fit=crop&w=900&q=80",
+        "Ajloun"     => "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80",
+        "Dana"       => "https://images.unsplash.com/photo-1522163182402-834f871fd851?auto=format&fit=crop&w=900&q=80",
+        "Dead Sea"   => "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80",
+        "Wadi Mujib" => "https://images.unsplash.com/photo-1504151932400-72d4384f04b3?auto=format&fit=crop&w=900&q=80",
+        "Salt"       => "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=900&q=80",
+        _            => "https://images.unsplash.com/photo-1548786811-dd6e453ccca7?auto=format&fit=crop&w=900&q=80"
     };
 }

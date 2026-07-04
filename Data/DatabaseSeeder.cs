@@ -31,9 +31,9 @@ public static class DatabaseSeeder
         if (!await db.HikeListings.AnyAsync())
         {
             db.HikeListings.AddRange(
-                new HikeListing { Title = "Wadi Rum Sunset Ridge", Organizer = "Desert Paths", WhatsApp = "+962791000001", Region = "Wadi Rum", Difficulty = "Moderate", Status = AppConstants.HikeStatus.Submitted, DateLabel = "Jul 3", SpotsLeft = 7, Price = 35, DurationHours = 4, DistanceKm = 8, Description = "Hike to the famous Sunset Ridge overlooking Wadi Rum. Guides provided.", Note = "Needs image quality check" },
-                new HikeListing { Title = "Ajloun Forest Morning Loop", Organizer = "Green North", WhatsApp = "+962791000002", Region = "Ajloun", Difficulty = "Easy", Status = AppConstants.HikeStatus.Submitted, DateLabel = "Jul 4", SpotsLeft = 14, Price = 20, DurationHours = 3, DistanceKm = 5, Description = "A gentle morning loop through Ajloun's oak forests. Perfect for families.", Note = "Ready to publish" },
-                new HikeListing { Title = "Dana Canyon Descent", Organizer = "Jordan Trail Co.", WhatsApp = "+962791000003", Region = "Dana", Difficulty = "Hard", Status = AppConstants.HikeStatus.Submitted, DateLabel = "Jul 10", SpotsLeft = 5, Price = 60, DurationHours = 8, DistanceKm = 14, Description = "Full-day descent through Dana's dramatic canyon system. Advanced hikers only.", Note = "Verify safety notes" });
+                new HikeListing { Title = "Wadi Rum Sunset Ridge", Organizer = "Desert Paths", WhatsApp = "+962791000001", Region = "Wadi Rum", Difficulty = "Moderate", Status = AppConstants.HikeStatus.Published, DateLabel = "Jul 19", TimeLabel = "2:30 PM", SpotsLeft = 7, Price = 35, DurationHours = 4, DistanceKm = 8, Description = "Hike to the famous Sunset Ridge overlooking Wadi Rum. Bedouin tea and golden-hour views included. Jeep transfer from camp.", MeetingPoint = "Wadi Rum Village Gate", RequiredGear = "Sun hat, 2L water, closed shoes", IncludedItems = "Guide, Bedouin tea", GroupName = "Desert Paths Hikes", PaymentType = "Cash on day" },
+                new HikeListing { Title = "Ajloun Forest Morning Loop", Organizer = "Green North", WhatsApp = "+962791000002", Region = "Ajloun", Difficulty = "Easy", Status = AppConstants.HikeStatus.Published, DateLabel = "Jul 26", TimeLabel = "7:00 AM", SpotsLeft = 14, Price = 20, DurationHours = 3, DistanceKm = 5, Description = "A gentle morning loop through Ajloun's oak and pine forests. Perfect for families and beginners. Finishes at the castle viewpoint.", MeetingPoint = "Ajloun Castle parking", RequiredGear = "Comfortable shoes, water", IncludedItems = "Guide, nature booklet", GroupName = "Green North Treks", PaymentType = "Cash or CliQ" },
+                new HikeListing { Title = "Dana Canyon Descent", Organizer = "Jordan Trail Co.", WhatsApp = "+962791000003", Region = "Dana", Difficulty = "Hard", Status = AppConstants.HikeStatus.Published, DateLabel = "Aug 2", TimeLabel = "6:00 AM", SpotsLeft = 5, Price = 60, DurationHours = 8, DistanceKm = 14, Description = "Full-day descent through Dana's dramatic canyon system reaching Wadi Araba. Licensed guides, small groups, safety briefing included.", MeetingPoint = "Dana Village guesthouse", RequiredGear = "Trekking poles, 3L water, snacks", IncludedItems = "Certified guide, safety gear", ExcludedItems = "Transport, meals", GroupName = "Jordan Trail Co.", PaymentType = "Bank transfer" });
         }
 
         if (!await db.OrganizerProfiles.AnyAsync())
@@ -51,8 +51,8 @@ public static class DatabaseSeeder
                 new Destination { Name = "Ajloun", Slug = "ajloun", CoverImageUrl = "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80", IsActive = true },
                 new Destination { Name = "Dana", Slug = "dana", CoverImageUrl = "https://images.unsplash.com/photo-1522163182402-834f871fd851?auto=format&fit=crop&w=900&q=80", IsActive = true },
                 new Destination { Name = "Dead Sea", Slug = "dead-sea", CoverImageUrl = "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80", IsActive = true },
-                new Destination { Name = "Wadi Mujib", Slug = "wadi-mujib", IsActive = true },
-                new Destination { Name = "Salt", Slug = "salt", IsActive = true });
+                new Destination { Name = "Wadi Mujib", Slug = "wadi-mujib", CoverImageUrl = "https://images.unsplash.com/photo-1504151932400-72d4384f04b3?auto=format&fit=crop&w=900&q=80", IsActive = true },
+                new Destination { Name = "Salt", Slug = "salt", CoverImageUrl = "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=900&q=80", IsActive = true });
         }
 
         if (!await db.ReviewFlags.AnyAsync())
