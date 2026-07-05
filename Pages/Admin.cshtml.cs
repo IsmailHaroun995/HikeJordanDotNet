@@ -17,6 +17,7 @@ public class AdminModel(HikeJordanDbContext db, ILogger<AdminModel> logger, IPas
     public IReadOnlyList<AppUser> ActiveOrganizers { get; private set; } = [];
     public IReadOnlyList<TripReview> PendingReviews { get; private set; } = [];
     public IReadOnlyList<Destination> Destinations { get; private set; } = [];
+    public IReadOnlyList<Partner> Partners { get; private set; } = [];
 
     public async Task OnGetAsync()
     {
@@ -53,6 +54,10 @@ public class AdminModel(HikeJordanDbContext db, ILogger<AdminModel> logger, IPas
 
         Destinations = await db.Destinations
             .OrderBy(d => d.Name)
+            .ToListAsync();
+
+        Partners = await db.Partners
+            .OrderBy(p => p.Name)
             .ToListAsync();
     }
 
@@ -226,6 +231,44 @@ public class AdminModel(HikeJordanDbContext db, ILogger<AdminModel> logger, IPas
             await db.SaveChangesAsync();
         }
 
+        return RedirectToPage();
+    }
+
+    public async Task<IActionResult> OnPostAddPartnerAsync(string name, string? imageUrl, string? instagramPage)
+    {
+        if (!string.IsNullOrWhiteSpace(name))
+        {
+            db.Partners.Add(new Partner
+            {
+                Name = name.Trim(),
+                ImageUrl = string.IsNullOrWhiteSpace(imageUrl) ? null : imageUrl.Trim(),
+                InstagramPage = string.IsNullOrWhiteSpace(instagramPage) ? null : instagramPage.Trim().TrimStart('@'),
+                IsActive = true
+            });
+            await db.SaveChangesAsync();
+        }
+        return RedirectToPage();
+    }
+
+    public async Task<IActionResult> OnPostTogglePartnerAsync(int id)
+    {
+        var partner = await db.Partners.FindAsync(id);
+        if (partner is not null)
+        {
+            partner.IsActive = !partner.IsActive;
+            await db.SaveChangesAsync();
+        }
+        return RedirectToPage();
+    }
+
+    public async Task<IActionResult> OnPostDeletePartnerAsync(int id)
+    {
+        var partner = await db.Partners.FindAsync(id);
+        if (partner is not null)
+        {
+            db.Partners.Remove(partner);
+            await db.SaveChangesAsync();
+        }
         return RedirectToPage();
     }
 

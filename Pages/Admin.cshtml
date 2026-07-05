@@ -55,6 +55,7 @@
                 <a href="#trip-reviews">Trip reviews</a>
                 <a href="#review-flags">Review flags</a>
                 <a href="#destinations">Destinations</a>
+                <a href="#partners">Partners</a>
                 <a href="#analytics">Analytics</a>
                 <a href="#settings">Marketplace settings</a>
             </aside>
@@ -74,9 +75,15 @@
                         {
                             <article class="request-card" data-admin-item="organizer">
                                 <div class="request-card-header">
-                                    <div>
-                                        <strong>@request.Name</strong>
-                                        <span>@request.Email · @request.WhatsApp</span>
+                                    <div class="request-card-identity">
+                                        <div class="request-avatar" aria-hidden="true">@(request.Name.Length > 0 ? request.Name[0].ToString().ToUpper() : "?")</div>
+                                        <div>
+                                            <strong>@request.Name</strong>
+                                            <div class="request-contact">
+                                                <span class="contact-chip">✉ @request.Email</span>
+                                                <span class="contact-chip">📱 @request.WhatsApp</span>
+                                            </div>
+                                        </div>
                                     </div>
                                     <span class="status-badge status-submitted" data-status>@request.Status</span>
                                 </div>
@@ -132,13 +139,26 @@
                                     <th>Level</th>
                                     <th>Date</th>
                                     <th>Status</th>
+                                    <th>Lifecycle</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var hike in Model.SubmittedHikes)
                                 {
-                                    <tr data-admin-item="hike">
+                                    var lifecycle = IndexModel.TripLifecycle(hike);
+                                    var isCompleted = lifecycle == "Completed";
+                                    var lifecycleClass = lifecycle == "Completed" ? "lifecycle-completed"
+                                                       : lifecycle == "In Progress" ? "lifecycle-in-progress"
+                                                       : "lifecycle-upcoming";
+                                    var statusClass = hike.Status switch {
+                                        "Approved"  => "status-approved",
+                                        "Published" => "status-published",
+                                        "Rejected"  => "status-rejected",
+                                        "Hidden"    => "status-hidden",
+                                        _           => "status-submitted"
+                                    };
+                                    <tr data-admin-item="hike" class="@(isCompleted ? "row-completed" : "")">
                                         <td>
                                             <strong>@hike.Title</strong>
                                             <span>@hike.Note</span>
@@ -147,18 +167,26 @@
                                         <td>@hike.Region</td>
                                         <td>@hike.Difficulty</td>
                                         <td>@hike.DateLabel</td>
-                                        <td><span class="status-badge status-submitted" data-status>@hike.Status</span></td>
+                                        <td><span class="status-badge @statusClass" data-status>@hike.Status</span></td>
+                                        <td><span class="lifecycle-badge @lifecycleClass">@lifecycle</span></td>
                                         <td>
                                             <div class="table-actions">
-                                                <form method="post" asp-page-handler="UpdateHike" asp-route-id="@hike.Id" asp-route-status="Approved">
-                                                    <button type="submit" data-action="approve-hike">Approve</button>
-                                                </form>
-                                                <form method="post" asp-page-handler="UpdateHike" asp-route-id="@hike.Id" asp-route-status="Hidden">
-                                                    <button type="submit" data-action="hide-hike">Hide</button>
-                                                </form>
-                                                <form method="post" asp-page-handler="UpdateHike" asp-route-id="@hike.Id" asp-route-status="Rejected">
-                                                    <button type="submit" data-action="reject-hike">Reject</button>
-                                                </form>
+                                                @if (isCompleted)
+                                                {
+                                                    <span class="completed-note">Trip ended</span>
+                                                }
+                                                else
+                                                {
+                                                    <form method="post" asp-page-handler="UpdateHike" asp-route-id="@hike.Id" asp-route-status="Approved">
+                                                        <button type="submit" data-action="approve-hike">Approve</button>
+                                                    </form>
+                                                    <form method="post" asp-page-handler="UpdateHike" asp-route-id="@hike.Id" asp-route-status="Hidden">
+                                                        <button type="submit" data-action="hide-hike">Hide</button>
+                                                    </form>
+                                                    <form method="post" asp-page-handler="UpdateHike" asp-route-id="@hike.Id" asp-route-status="Rejected">
+                                                        <button type="submit" data-action="reject-hike">Reject</button>
+                                                    </form>
+                                                }
                                             </div>
                                         </td>
                                     </tr>
@@ -180,8 +208,9 @@
                         <table class="admin-table">
                             <thead>
                                 <tr>
-                                    <th>Name</th>
+                                    <th>Organizer</th>
                                     <th>Email</th>
+                                    <th>Role</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -190,8 +219,14 @@
                                 @foreach (var organizer in Model.ActiveOrganizers)
                                 {
                                     <tr>
-                                        <td><strong>@organizer.Name</strong></td>
-                                        <td>@organizer.Email</td>
+                                        <td>
+                                            <div class="table-identity">
+                                                <div class="table-avatar" aria-hidden="true">@(organizer.Name.Length > 0 ? organizer.Name[0].ToString().ToUpper() : "?")</div>
+                                                <strong>@organizer.Name</strong>
+                                            </div>
+                                        </td>
+                                        <td><span class="table-email">@organizer.Email</span></td>
+                                        <td><span class="role-chip">@organizer.Role</span></td>
                                         <td>
                                             <span class="status-badge @(organizer.ApprovalStatus == "Disabled" ? "status-rejected" : "status-approved")" data-status>
                                                 @organizer.ApprovalStatus
@@ -362,6 +397,71 @@
                     </div>
                 </section>
 
+                <section id="partners" class="admin-panel">
+                    <div class="panel-heading">
+                        <div>
+                            <span class="eyebrow">Marketplace configuration</span>
+                            <h2>Partners</h2>
+                            <p>Partners appear in the homepage partners section. Add a logo/image URL and an Instagram account to link to.</p>
+                        </div>
+                    </div>
+
+                    <form method="post" asp-page-handler="AddPartner" class="destination-add-form">
+                        <div class="partner-add-fields">
+                            <div>
+                                <label for="partnerName">Partner name</label>
+                                <input id="partnerName" name="name" class="form-control" placeholder="e.g. Wadi Rum Stars Camp" required maxlength="140" />
+                            </div>
+                            <div>
+                                <label for="partnerImage">Logo / image URL <small>(optional)</small></label>
+                                <input id="partnerImage" name="imageUrl" class="form-control" placeholder="https://..." maxlength="400" />
+                            </div>
+                            <div>
+                                <label for="partnerInsta">Instagram account <small>(optional, without @@)</small></label>
+                                <input id="partnerInsta" name="instagramPage" class="form-control" placeholder="wadirumstars" maxlength="120" />
+                            </div>
+                        </div>
+                        <button type="submit" class="btn primary-action">Add partner</button>
+                    </form>
+
+                    <div class="destination-manage-grid">
+                        @if (!Model.Partners.Any())
+                        {
+                            <p class="muted-note">No partners yet. Add the first one above.</p>
+                        }
+                        @foreach (var partner in Model.Partners)
+                        {
+                            <article class="destination-manage-card">
+                                @if (!string.IsNullOrEmpty(partner.ImageUrl))
+                                {
+                                    <div class="dest-thumb" style="background-image:url('@partner.ImageUrl'); background-size:contain; background-color:#f8f8f6;"></div>
+                                }
+                                <div class="dest-info">
+                                    <div>
+                                        <strong>@partner.Name</strong>
+                                        @if (!string.IsNullOrEmpty(partner.InstagramPage))
+                                        {
+                                            <small style="display:block; color:var(--muted);">@("@" + partner.InstagramPage)</small>
+                                        }
+                                    </div>
+                                    <span class="status-badge @(partner.IsActive ? "status-approved" : "status-rejected")">
+                                        @(partner.IsActive ? "Active" : "Hidden")
+                                    </span>
+                                </div>
+                                <div class="table-actions">
+                                    <form method="post" asp-page-handler="TogglePartner" asp-route-id="@partner.Id">
+                                        <button type="submit">@(partner.IsActive ? "Hide" : "Show")</button>
+                                    </form>
+                                    <form method="post" asp-page-handler="DeletePartner" asp-route-id="@partner.Id"
+                                          onsubmit="return confirm('Delete @partner.Name? This cannot be undone.')">
+                                        <button type="submit" data-action="reject-hike">Delete</button>
+                                    </form>
+                                </div>
+                            </article>
+                        }
+                    </div>
+                </section>
+
                 <section id="analytics" class="admin-panel">
                     <div class="panel-heading">
                         <div>
@@ -382,13 +482,147 @@
                         <div>
                             <span class="eyebrow">Configuration</span>
                             <h2>Marketplace settings</h2>
+                            <p>These controls govern how the platform behaves for organizers and visitors.</p>
                         </div>
                     </div>
-                    <div class="settings-grid">
-                        <label><input type="checkbox" checked /> Require admin approval before publishing</label>
-                        <label><input type="checkbox" checked /> Require WhatsApp number on every hike</label>
-                        <label><input type="checkbox" checked /> Allow verified reviews only after attendance proof</label>
-                        <label><input type="checkbox" /> Enable paid featured placements</label>
+
+                    <div class="settings-sections">
+
+                        <div class="settings-group">
+                            <h3 class="settings-group-title">Marketplace operations</h3>
+                            <div class="settings-toggle-list">
+                                <label class="settings-toggle-row">
+                                    <div class="toggle-info">
+                                        <strong>Site is live</strong>
+                                        <span>Uncheck to put the site into maintenance mode — visitors see a holding page.</span>
+                                    </div>
+                                    <input type="checkbox" class="settings-toggle" checked />
+                                </label>
+                                <label class="settings-toggle-row">
+                                    <div class="toggle-info">
+                                        <strong>Accept new organizer signups</strong>
+                                        <span>Disable to stop new organizers from submitting the signup form.</span>
+                                    </div>
+                                    <input type="checkbox" class="settings-toggle" checked />
+                                </label>
+                                <label class="settings-toggle-row">
+                                    <div class="toggle-info">
+                                        <strong>Allow trip submissions</strong>
+                                        <span>Disable to freeze all new hike submissions from approved organizers.</span>
+                                    </div>
+                                    <input type="checkbox" class="settings-toggle" checked />
+                                </label>
+                                <label class="settings-toggle-row">
+                                    <div class="toggle-info">
+                                        <strong>Trip reviews enabled</strong>
+                                        <span>Disable to hide the review form and all joiner reviews site-wide.</span>
+                                    </div>
+                                    <input type="checkbox" class="settings-toggle" checked />
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="settings-group">
+                            <h3 class="settings-group-title">Trip requirements</h3>
+                            <div class="settings-toggle-list">
+                                <label class="settings-toggle-row">
+                                    <div class="toggle-info">
+                                        <strong>Require admin approval before publishing</strong>
+                                        <span>Submitted hikes must be approved here before they go live.</span>
+                                    </div>
+                                    <input type="checkbox" class="settings-toggle" checked />
+                                </label>
+                                <label class="settings-toggle-row">
+                                    <div class="toggle-info">
+                                        <strong>WhatsApp number required on every hike</strong>
+                                        <span>Organizers cannot submit a trip without a valid WhatsApp contact.</span>
+                                    </div>
+                                    <input type="checkbox" class="settings-toggle" checked />
+                                </label>
+                                <label class="settings-toggle-row">
+                                    <div class="toggle-info">
+                                        <strong>Verified reviews only</strong>
+                                        <span>Only reviews from verified joiners count toward the public rating.</span>
+                                    </div>
+                                    <input type="checkbox" class="settings-toggle" checked />
+                                </label>
+                                <label class="settings-toggle-row">
+                                    <div class="toggle-info">
+                                        <strong>Enable paid featured placements</strong>
+                                        <span>Allow organizers to pay for highlighted placement on the homepage.</span>
+                                    </div>
+                                    <input type="checkbox" class="settings-toggle" />
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="settings-group">
+                            <h3 class="settings-group-title">Limits</h3>
+                            <div class="settings-field-list">
+                                <div class="settings-field-row">
+                                    <label for="settingMaxSpots">
+                                        <strong>Default max spots per trip</strong>
+                                        <span>Organizers can override this per trip, but this is the starting value.</span>
+                                    </label>
+                                    <input id="settingMaxSpots" type="number" class="settings-input" value="20" min="1" max="500" />
+                                </div>
+                                <div class="settings-field-row">
+                                    <label for="settingMaxTrips">
+                                        <strong>Max active trips per organizer</strong>
+                                        <span>Prevents one organizer from flooding the marketplace.</span>
+                                    </label>
+                                    <input id="settingMaxTrips" type="number" class="settings-input" value="10" min="1" max="100" />
+                                </div>
+                                <div class="settings-field-row">
+                                    <label for="settingMinRating">
+                                        <strong>Minimum stars to display review</strong>
+                                        <span>Reviews below this rating are held for admin review before publishing.</span>
+                                    </label>
+                                    <input id="settingMinRating" type="number" class="settings-input" value="1" min="1" max="5" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-group">
+                            <h3 class="settings-group-title">Communication</h3>
+                            <div class="settings-field-list">
+                                <div class="settings-field-row">
+                                    <label for="settingAdminEmail">
+                                        <strong>Admin notification email</strong>
+                                        <span>Where organizer signups, new hikes, and flag alerts are sent.</span>
+                                    </label>
+                                    <input id="settingAdminEmail" type="email" class="settings-input" placeholder="admin@hikejordan.com" />
+                                </div>
+                                <div class="settings-field-row">
+                                    <label for="settingSupportWa">
+                                        <strong>Support WhatsApp number</strong>
+                                        <span>Shown to visitors who need help. Include country code, e.g. +962791234567.</span>
+                                    </label>
+                                    <input id="settingSupportWa" type="tel" class="settings-input" placeholder="+962791234567" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-group">
+                            <h3 class="settings-group-title">Announcement banner</h3>
+                            <div class="settings-field-list">
+                                <div class="settings-field-row settings-field-row--wide">
+                                    <label for="settingBanner">
+                                        <strong>Banner message</strong>
+                                        <span>Displayed at the top of every page when the banner is enabled.</span>
+                                    </label>
+                                    <input id="settingBanner" type="text" class="settings-input" placeholder="e.g. New hike season starts July 1 — check out the latest trips!" maxlength="200" />
+                                </div>
+                                <label class="settings-toggle-row">
+                                    <div class="toggle-info">
+                                        <strong>Show announcement banner</strong>
+                                        <span>Enable to display the message above on all pages.</span>
+                                    </div>
+                                    <input type="checkbox" class="settings-toggle" />
+                                </label>
+                            </div>
+                        </div>
+
                     </div>
                 </section>
             </div>

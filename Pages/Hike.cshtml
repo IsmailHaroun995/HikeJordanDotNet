@@ -1,0 +1,156 @@
+@page "{id:int}"
+@model HikeModel
+@{
+    var lifecycle = IndexModel.TripLifecycle(Model.Hike);
+    var lifecycleSlug = IndexModel.LifecycleSlug(lifecycle);
+}
+
+<script type="application/ld+json">
+{
+  "@@context": "https://schema.org",
+  "@@type": "Event",
+  "name": "@Model.Hike.Title",
+  "description": "@(Model.Hike.Description?.Replace("\"", "\\\"") ?? "")",
+  "location": {
+    "@@type": "Place",
+    "name": "@Model.Hike.Region, Jordan"
+  },
+  "organizer": {
+    "@@type": "Organization",
+    "name": "@Model.Hike.Organizer"
+  },
+  "offers": {
+    "@@type": "Offer",
+    "price": "@Model.Hike.Price",
+    "priceCurrency": "JOD",
+    "availability": "https://schema.org/InStock"
+  },
+  "image": "@Model.CoverImage"
+}
+</script>
+
+<section class="hike-detail-hero" style="--image:url('@Model.CoverImage')">
+    <div class="container-fluid page-shell">
+        <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+            <a href="/">Home</a>
+            <span>›</span>
+            <a href="/hikes/@IndexModel.RegionSlug(Model.Hike.Region)">@Model.Hike.Region</a>
+            <span>›</span>
+            <span>@Model.Hike.Title</span>
+        </nav>
+        <div class="hike-detail-header">
+            <div class="card-img-badges">
+                <span class="diff-badge diff-@IndexModel.DifficultySlug(Model.Hike.Difficulty)">@Model.Hike.Difficulty</span>
+                <span class="price-badge">@(Model.Hike.Price == 0 ? "Free" : $"JD {Model.Hike.Price:0}")</span>
+            </div>
+            <span class="lifecycle-badge lifecycle-@lifecycleSlug">@lifecycle</span>
+            <h1>@Model.Hike.Title</h1>
+            <p class="hike-detail-organizer">by @Model.Hike.Organizer@(string.IsNullOrEmpty(Model.Hike.GroupName) ? "" : $" · {Model.Hike.GroupName}")</p>
+        </div>
+    </div>
+</section>
+
+<div class="container-fluid page-shell hike-detail-body">
+    <div class="hike-detail-main">
+
+        @if (!string.IsNullOrWhiteSpace(Model.Hike.Description))
+        {
+            <section class="hike-detail-section">
+                <h2>About this trip</h2>
+                <p>@Model.Hike.Description</p>
+            </section>
+        }
+
+        <section class="hike-detail-section">
+            <h2>Trip details</h2>
+            <dl class="quick-facts quick-facts--lg">
+                <div><dt>Region</dt><dd>@Model.Hike.Region</dd></div>
+                <div><dt>Date</dt><dd>@Model.Hike.DateLabel@(string.IsNullOrEmpty(Model.Hike.TimeLabel) ? "" : $" · {Model.Hike.TimeLabel}")</dd></div>
+                <div><dt>Duration</dt><dd>@(Model.Hike.DurationHours.HasValue ? $"{Model.Hike.DurationHours}h" : "—")@(Model.Hike.DistanceKm.HasValue ? $" · {Model.Hike.DistanceKm}km" : "")</dd></div>
+                <div><dt>Difficulty</dt><dd>@Model.Hike.Difficulty</dd></div>
+                <div><dt>Spots left</dt><dd class="@(Model.Hike.SpotsLeft <= 3 ? "spots-critical" : Model.Hike.SpotsLeft <= 6 ? "spots-low" : "spots-ok")">@Model.Hike.SpotsLeft</dd></div>
+                <div><dt>Price</dt><dd>@(Model.Hike.Price == 0 ? "Free" : $"JD {Model.Hike.Price:0}")</dd></div>
+                @if (!string.IsNullOrEmpty(Model.Hike.PaymentType))
+                {
+                    <div><dt>Payment</dt><dd>@Model.Hike.PaymentType</dd></div>
+                }
+                @if (!string.IsNullOrEmpty(Model.Hike.MeetingPoint))
+                {
+                    <div><dt>Meeting point</dt><dd>@Model.Hike.MeetingPoint</dd></div>
+                }
+            </dl>
+        </section>
+
+        @if (!string.IsNullOrWhiteSpace(Model.Hike.RequiredGear) || !string.IsNullOrWhiteSpace(Model.Hike.IncludedItems) || !string.IsNullOrWhiteSpace(Model.Hike.ExcludedItems))
+        {
+            <section class="hike-detail-section">
+                <h2>What to know</h2>
+                @if (!string.IsNullOrWhiteSpace(Model.Hike.RequiredGear))
+                {
+                    <div class="what-to-know-block">
+                        <strong>Required gear</strong>
+                        <p>@Model.Hike.RequiredGear</p>
+                    </div>
+                }
+                @if (!string.IsNullOrWhiteSpace(Model.Hike.IncludedItems))
+                {
+                    <div class="what-to-know-block">
+                        <strong>Included</strong>
+                        <p>@Model.Hike.IncludedItems</p>
+                    </div>
+                }
+                @if (!string.IsNullOrWhiteSpace(Model.Hike.ExcludedItems))
+                {
+                    <div class="what-to-know-block">
+                        <strong>Not included</strong>
+                        <p>@Model.Hike.ExcludedItems</p>
+                    </div>
+                }
+            </section>
+        }
+
+        @if (Model.Reviews.Count > 0)
+        {
+            <section class="hike-detail-section">
+                <h2>Reviews (@Model.Reviews.Count)</h2>
+                <div class="reviews-list">
+                    @foreach (var review in Model.Reviews)
+                    {
+                        <div class="trip-review-item">
+                            <div class="review-stars">@HikeModel.StarRating(review.Rating)</div>
+                            <p class="review-text">@review.ReviewText</p>
+                            <span class="review-author">— @review.ReviewerName</span>
+                        </div>
+                    }
+                </div>
+            </section>
+        }
+
+    </div>
+
+    <aside class="hike-detail-sidebar">
+        <div class="booking-card">
+            <strong>Book this trip</strong>
+            <p>Message the organizer directly on WhatsApp to reserve your spot.</p>
+            @if (lifecycle != "Completed")
+            {
+                <a class="btn whatsapp-button" href="@Model.WhatsAppUrl" target="_blank" rel="noopener noreferrer">
+                    Book on WhatsApp
+                </a>
+            }
+            @if (lifecycle != "Upcoming")
+            {
+                <a class="btn review-button" asp-page="/Review" asp-route-id="@Model.Hike.Id">Rate this trip</a>
+            }
+            <p class="booking-note">Hike Jordan does not process payments. All bookings are handled directly with the organizer.</p>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.Hike.InstagramPage))
+        {
+            <div class="organizer-instagram">
+                <strong>Organizer Instagram</strong>
+                <a href="https://instagram.com/@Model.Hike.InstagramPage.TrimStart('@')" target="_blank" rel="noopener noreferrer">@Model.Hike.InstagramPage</a>
+            </div>
+        }
+    </aside>
+</div>
