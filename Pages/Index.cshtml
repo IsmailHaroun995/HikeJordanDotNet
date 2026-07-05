@@ -191,28 +191,6 @@
     </div>
 </section>
 
-<section id="organizers" class="section-block">
-    <div class="container-fluid page-shell">
-        <div class="section-heading">
-            <span class="eyebrow">Trust marketplace</span>
-            <h2>Top organizers</h2>
-        </div>
-        <div class="organizer-grid">
-            @if (Model.TopOrganizers.Count == 0)
-            {
-                <p class="muted-note">No verified organizers yet. Check back soon.</p>
-            }
-            @foreach (var org in Model.TopOrganizers)
-            {
-                <article class="organizer-card">
-                    <strong>@org.Name</strong>
-                    <span>@org.Rating rating · @org.PastTrips · @org.Status</span>
-                    <p>@org.Note</p>
-                </article>
-            }
-        </div>
-    </div>
-</section>
 
 
 @if (Model.Partners.Count > 0)
@@ -230,38 +208,28 @@
                         ? null
                         : $"https://instagram.com/{partner.InstagramPage}";
                     <article class="partner-card">
+                        <div class="partner-card-img">
+                            @if (!string.IsNullOrEmpty(partner.ImageUrl))
+                            {
+                                <img src="@partner.ImageUrl" alt="@partner.Name logo" loading="lazy" />
+                            }
+                            else
+                            {
+                                <span class="partner-name-fallback">@partner.Name</span>
+                            }
+                        </div>
+                        <div class="partner-card-info">
+                            <p class="partner-label">@partner.Name</p>
+                            @if (!string.IsNullOrEmpty(partner.InstagramPage))
+                            {
+                                <a class="partner-insta-link" href="@partnerHref" target="_blank" rel="noopener noreferrer">
+                                    @("@" + partner.InstagramPage)
+                                </a>
+                            }
+                        </div>
                         @if (partnerHref is not null)
                         {
-                            <a href="@partnerHref" target="_blank" rel="noopener noreferrer" class="partner-card-inner" title="@partner.Name on Instagram">
-                                @if (!string.IsNullOrEmpty(partner.ImageUrl))
-                                {
-                                    <img src="@partner.ImageUrl" alt="@partner.Name logo" loading="lazy" />
-                                }
-                                else
-                                {
-                                    <span class="partner-name-fallback">@partner.Name</span>
-                                }
-                            </a>
-                        }
-                        else
-                        {
-                            <div class="partner-card-inner">
-                                @if (!string.IsNullOrEmpty(partner.ImageUrl))
-                                {
-                                    <img src="@partner.ImageUrl" alt="@partner.Name logo" loading="lazy" />
-                                }
-                                else
-                                {
-                                    <span class="partner-name-fallback">@partner.Name</span>
-                                }
-                            </div>
-                        }
-                        <p class="partner-label">@partner.Name</p>
-                        @if (!string.IsNullOrEmpty(partner.InstagramPage))
-                        {
-                            <a class="partner-insta-link" href="@partnerHref" target="_blank" rel="noopener noreferrer">
-                                @("@" + partner.InstagramPage)
-                            </a>
+                            <a class="partner-card-overlay" href="@partnerHref" target="_blank" rel="noopener noreferrer" aria-label="@partner.Name on Instagram"></a>
                         }
                     </article>
                 }
