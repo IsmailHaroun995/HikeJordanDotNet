@@ -16,13 +16,13 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div>
                 <label asp-for="Input.Email"></label>
-                <input asp-for="Input.Email" class="form-control" placeholder="admin@hikejordan.test" />
+                <input asp-for="Input.Email" class="form-control" />
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
             <div>
                 <label asp-for="Input.Password"></label>
                 <div class="password-wrap">
-                    <input asp-for="Input.Password" class="form-control" placeholder="admin123" autocomplete="current-password" />
+                    <input asp-for="Input.Password" class="form-control" autocomplete="current-password" />
                     <button type="button" class="password-toggle" aria-label="Show password">Show</button>
                 </div>
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
