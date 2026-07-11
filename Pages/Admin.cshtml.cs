@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace HikeJordanDotNet.Pages;
 
 [Authorize(Roles = AppConstants.Roles.Admin)]
-public class AdminModel(HikeJordanDbContext db, ILogger<AdminModel> logger, IPasswordService passwords, IEmailService email) : PageModel
+public class AdminModel(HikeJordanDbContext db, ILogger<AdminModel> logger, IPasswordService passwords, IEmailService email, IWebHostEnvironment env) : PageModel
 {
     public IReadOnlyList<OrganizerRequest> OrganizerRequests { get; private set; } = [];
     public IReadOnlyList<HikeListing> SubmittedHikes { get; private set; } = [];
@@ -234,14 +234,29 @@ public class AdminModel(HikeJordanDbContext db, ILogger<AdminModel> logger, IPas
         return RedirectToPage();
     }
 
-    public async Task<IActionResult> OnPostAddPartnerAsync(string name, string? imageUrl, string? instagramPage)
+    public async Task<IActionResult> OnPostAddPartnerAsync(string name, IFormFile? imageFile, string? instagramPage)
     {
         if (!string.IsNullOrWhiteSpace(name))
         {
+            string? imageUrl = null;
+            if (imageFile is { Length: > 0 })
+            {
+                var ext = Path.GetExtension(imageFile.FileName).ToLowerInvariant();
+                if (ext is ".jpg" or ".jpeg" or ".png" or ".webp" or ".gif" or ".svg")
+                {
+                    var dir = Path.Combine(env.WebRootPath, "uploads", "partners");
+                    Directory.CreateDirectory(dir);
+                    var fileName = $"{Guid.NewGuid()}{ext}";
+                    using var stream = System.IO.File.Create(Path.Combine(dir, fileName));
+                    await imageFile.CopyToAsync(stream);
+                    imageUrl = $"/uploads/partners/{fileName}";
+                }
+            }
+
             db.Partners.Add(new Partner
             {
                 Name = name.Trim(),
-                ImageUrl = string.IsNullOrWhiteSpace(imageUrl) ? null : imageUrl.Trim(),
+                ImageUrl = imageUrl,
                 InstagramPage = string.IsNullOrWhiteSpace(instagramPage) ? null : instagramPage.Trim().TrimStart('@'),
                 IsActive = true
             });

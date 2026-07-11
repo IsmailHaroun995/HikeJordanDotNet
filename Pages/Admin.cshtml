@@ -406,15 +406,15 @@
                         </div>
                     </div>
 
-                    <form method="post" asp-page-handler="AddPartner" class="destination-add-form">
+                    <form method="post" asp-page-handler="AddPartner" class="destination-add-form" enctype="multipart/form-data">
                         <div class="partner-add-fields">
                             <div>
                                 <label for="partnerName">Partner name</label>
                                 <input id="partnerName" name="name" class="form-control" placeholder="e.g. Wadi Rum Stars Camp" required maxlength="140" />
                             </div>
                             <div>
-                                <label for="partnerImage">Logo / image URL <small>(optional)</small></label>
-                                <input id="partnerImage" name="imageUrl" class="form-control" placeholder="https://..." maxlength="400" />
+                                <label for="partnerImage">Logo / image <small>(upload from machine)</small></label>
+                                <input id="partnerImage" name="imageFile" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/svg+xml" class="form-control" />
                             </div>
                             <div>
                                 <label for="partnerInsta">Instagram account <small>(optional, without @@)</small></label>
