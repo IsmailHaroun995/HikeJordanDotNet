@@ -1,89 +1,57 @@
 using HikeJordanDotNet.Data;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace HikeJordanDotNet.Pages;
 
-public class IndexModel(HikeJordanDbContext db, IWhatsAppService whatsApp) : PageModel
+public class IndexModel(HikeJordanDbContext db) : CommunityPageModel(db)
 {
-    public IReadOnlyList<HikeListing> PublicHikes { get; private set; } = [];
-    public IReadOnlyList<OrganizerProfile> TopOrganizers { get; private set; } = [];
-    public IReadOnlyDictionary<int, IReadOnlyList<TripReview>> ApprovedReviews { get; private set; }
-        = new Dictionary<int, IReadOnlyList<TripReview>>();
-    public int VerifiedOrganizersCount { get; private set; }
-    public IReadOnlyList<Destination> Destinations { get; private set; } = [];
-    public IReadOnlyList<Partner> Partners { get; private set; } = [];
+    public IReadOnlyList<Post> Posts { get; private set; } = [];
+    public HashSet<int> LikedPostIds { get; private set; } = [];
+    public IReadOnlyList<AppUser> SuggestedUsers { get; private set; } = [];
+    public string Tab { get; private set; } = "latest";
+    public int PostCount { get; private set; }
+    public int MemberCount { get; private set; }
 
-    public async Task OnGetAsync()
+    public async Task OnGetAsync(string? tab = null)
     {
-        PublicHikes = await db.HikeListings
-            .Where(hike => hike.Status == AppConstants.HikeStatus.Approved
-                        || hike.Status == AppConstants.HikeStatus.Published)
-            .OrderBy(hike => hike.DateLabel)
+        Tab = tab == "following" && CurrentUserId is not null ? "following" : "latest";
+
+        var query = Db.Posts
+            .Where(p => !p.IsHidden)
+            .Include(p => p.Author)
+            .AsQueryable();
+
+        if (Tab == "following" && CurrentUserId is int uid)
+        {
+            var followingIds = await Db.Follows
+                .Where(f => f.FollowerId == uid)
+                .Select(f => f.FollowingId)
+                .ToListAsync();
+            query = query.Where(p => followingIds.Contains(p.AuthorId));
+        }
+
+        Posts = await query
+            .OrderByDescending(p => p.CreatedAtUtc)
+            .Take(50)
             .ToListAsync();
 
-        var hikeIds = PublicHikes.Select(h => h.Id).ToList();
-        var reviews = await db.TripReviews
-            .Where(r => hikeIds.Contains(r.HikeListingId) && r.Status == "Approved")
-            .OrderByDescending(r => r.CreatedAtUtc)
-            .ToListAsync();
+        if (CurrentUserId is int currentUid)
+        {
+            LikedPostIds = await SocialOps.LikedPostIdsAsync(Db, currentUid, Posts.Select(p => p.Id));
 
-        ApprovedReviews = reviews
-            .GroupBy(r => r.HikeListingId)
-            .ToDictionary(g => g.Key, g => (IReadOnlyList<TripReview>)g.ToList());
+            var followingIds = await Db.Follows
+                .Where(f => f.FollowerId == currentUid)
+                .Select(f => f.FollowingId)
+                .ToListAsync();
 
-        TopOrganizers = await db.OrganizerProfiles
-            .Where(org => org.Status == AppConstants.AccountStatus.Verified
-                       && org.PastTrips != ""
-                       && !org.PastTrips.StartsWith("0"))
-            .OrderByDescending(org => org.Rating)
-            .Take(3)
-            .ToListAsync();
+            SuggestedUsers = await Db.Users
+                .Where(u => u.Id != currentUid && !followingIds.Contains(u.Id))
+                .OrderByDescending(u => u.Posts.Count)
+                .Take(4)
+                .ToListAsync();
+        }
 
-        VerifiedOrganizersCount = await db.OrganizerProfiles
-            .CountAsync(org => org.Status == AppConstants.AccountStatus.Verified);
-
-        Destinations = await db.Destinations
-            .Where(d => d.IsActive)
-            .OrderBy(d => d.Name)
-            .ToListAsync();
-
-        Partners = await db.Partners
-            .Where(p => p.IsActive)
-            .OrderBy(p => p.Name)
-            .ToListAsync();
+        PostCount = await Db.Posts.CountAsync(p => !p.IsHidden);
+        MemberCount = await Db.Users.CountAsync();
     }
-
-    public string WhatsAppBookingUrl(string whatsAppNumber, string hikeTitle) =>
-        whatsApp.BookingUrl(whatsAppNumber, hikeTitle);
-
-    public static string TripLifecycle(HikeListing hike)
-    {
-        if (hike.TripDate is null) return "Upcoming";
-        var now = DateTime.Now;
-        var end = hike.TripDate.Value.AddHours(hike.DurationHours ?? 6);
-        if (hike.TripDate.Value > now) return "Upcoming";
-        if (now <= end) return "In Progress";
-        return "Completed";
-    }
-
-    public static string LifecycleSlug(string lifecycle) =>
-        lifecycle.ToLowerInvariant().Replace(" ", "-");
-
-    public static string RegionSlug(string region) =>
-        region.ToLowerInvariant().Replace(" ", "-");
-
-    public static string DifficultySlug(string difficulty) =>
-        difficulty.ToLowerInvariant();
-
-    public static string ImageForRegion(string region) => region switch
-    {
-        "Wadi Rum"   => "https://images.unsplash.com/photo-1548786811-dd6e453ccca7?auto=format&fit=crop&w=900&q=80",
-        "Ajloun"     => "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80",
-        "Dana"       => "https://images.unsplash.com/photo-1522163182402-834f871fd851?auto=format&fit=crop&w=900&q=80",
-        "Dead Sea"   => "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80",
-        "Wadi Mujib" => "https://images.unsplash.com/photo-1504151932400-72d4384f04b3?auto=format&fit=crop&w=900&q=80",
-        "Salt"       => "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=900&q=80",
-        _            => "https://images.unsplash.com/photo-1548786811-dd6e453ccca7?auto=format&fit=crop&w=900&q=80"
-    };
 }

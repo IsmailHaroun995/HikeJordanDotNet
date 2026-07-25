@@ -1,0 +1,75 @@
+@model Post
+@{
+    var liked = (ViewData["LikedPostIds"] as HashSet<int>)?.Contains(Model.Id) ?? false;
+    var isAuth = User.Identity?.IsAuthenticated == true;
+    var returnUrl = Context.Request.Path + Context.Request.QueryString;
+    var author = Model.Author;
+}
+
+<article class="post-card">
+    <header class="post-head">
+        <a class="post-avatar" href="/u/@author?.Username" aria-label="@author?.Name">
+            @if (!string.IsNullOrEmpty(author?.AvatarUrl))
+            {
+                <img src="@author.AvatarUrl" alt="@author.Name" loading="lazy" />
+            }
+            else
+            {
+                <span class="avatar-fallback">@Community.Initials(author?.Name ?? "?")</span>
+            }
+        </a>
+        <div class="post-head-meta">
+            <a class="post-author" href="/u/@author?.Username">@author?.Name</a>
+            <span class="post-sub">
+                <a href="/u/@author?.Username">@@@author?.Username</a>
+                <span class="dot">·</span>
+                <span title="@Model.CreatedAtUtc.ToString("f")">@Community.TimeAgo(Model.CreatedAtUtc)</span>
+            </span>
+        </div>
+        @if (!string.IsNullOrEmpty(Model.Region))
+        {
+            <a class="post-region-chip" href="/explore?region=@Uri.EscapeDataString(Model.Region)">@Model.Region</a>
+        }
+    </header>
+
+    <a class="post-body-link" href="/post/@Model.Id">
+        <p class="post-body">@Model.Body</p>
+    </a>
+
+    @if (!string.IsNullOrEmpty(Model.LocationName))
+    {
+        <div class="post-location">📍 @Model.LocationName</div>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+    {
+        <a href="/post/@Model.Id" class="post-image-wrap">
+            <img src="@Model.ImageUrl" alt="Photo from @Model.Region" loading="lazy" />
+        </a>
+    }
+
+    <footer class="post-actions">
+        @if (isAuth)
+        {
+            <form method="post" asp-page-handler="Like" class="inline-form">
+                <input type="hidden" name="postId" value="@Model.Id" />
+                <input type="hidden" name="returnUrl" value="@returnUrl" />
+                <button type="submit" class="post-action @(liked ? "liked" : "")" aria-pressed="@liked.ToString().ToLower()">
+                    <span class="action-icon">@(liked ? "♥" : "♡")</span>
+                    <span>@Model.LikeCount</span>
+                </button>
+            </form>
+        }
+        else
+        {
+            <a class="post-action" href="/Login">
+                <span class="action-icon">♡</span>
+                <span>@Model.LikeCount</span>
+            </a>
+        }
+        <a class="post-action" href="/post/@Model.Id">
+            <span class="action-icon">💬</span>
+            <span>@Model.CommentCount</span>
+        </a>
+    </footer>
+</article>

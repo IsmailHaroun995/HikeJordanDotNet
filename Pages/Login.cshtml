@@ -4,34 +4,43 @@
     ViewData["Title"] = "Sign in";
 }
 
-<section class="auth-page">
-    <div class="container-fluid page-shell auth-grid">
-        <div class="auth-copy">
-            <span class="eyebrow">Secure access</span>
-            <h1>Sign in to manage Hike Jordan.</h1>
-            <p>Admins review supply and trust signals. Approved organizers can add hikes after their profile is verified.</p>
-        </div>
+<div class="auth-page page-shell">
+    <div class="auth-card">
+        <h1>Welcome back</h1>
+        <p class="auth-sub">Sign in to your HikeJordan account.</p>
 
-        <form method="post" class="auth-card">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div>
-                <label asp-for="Input.Email"></label>
-                <input asp-for="Input.Email" class="form-control" />
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
+        @if (Model.NeedsVerification)
+        {
+            <div class="form-error">
+                Please verify your email before signing in.
+                <form method="post" asp-page="/RegisterConfirmation" asp-page-handler="Resend" style="margin-top:8px">
+                    <input type="hidden" name="email" value="@Model.UnverifiedEmail" />
+                    <button type="submit" class="btn-mini">Resend verification email</button>
+                </form>
             </div>
-            <div>
-                <label asp-for="Input.Password"></label>
+        }
+
+        <form method="post" class="stack-form">
+            <div asp-validation-summary="ModelOnly" class="form-error"></div>
+            <div class="field">
+                <label asp-for="Input.Email">Email</label>
+                <input asp-for="Input.Email" class="form-control" />
+                <span asp-validation-for="Input.Email" class="field-error"></span>
+            </div>
+            <div class="field">
+                <label asp-for="Input.Password">Password</label>
                 <div class="password-wrap">
                     <input asp-for="Input.Password" class="form-control" autocomplete="current-password" />
                     <button type="button" class="password-toggle" aria-label="Show password">Show</button>
                 </div>
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
+                <span asp-validation-for="Input.Password" class="field-error"></span>
             </div>
-            <button class="btn primary-action" type="submit">Sign in</button>
-            <a asp-page="/OrganizerSignup">Organizer sign up</a>
+            <button class="btn primary-action full-width" type="submit">Sign in</button>
         </form>
+
+        <p class="auth-switch">New here? <a href="/Register">Create an account</a></p>
     </div>
-</section>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

@@ -1,0 +1,89 @@
+@page "/u/{username}"
+@model ProfileModel
+@{
+    var u = Model.Profile;
+    ViewData["Title"] = u.Name;
+    ViewData["Description"] = string.IsNullOrEmpty(u.Bio) ? $"{u.Name} on HikeJordan." : u.Bio;
+    ViewData["LikedPostIds"] = Model.LikedPostIds;
+    var isAuth = User.Identity?.IsAuthenticated == true;
+    var cover = string.IsNullOrEmpty(u.CoverUrl) ? Community.RegionImage("") : u.CoverUrl;
+    var returnUrl = $"/u/{u.Username}";
+}
+
+<div class="profile-cover" style="background-image:url('@cover')"></div>
+
+<div class="profile-header page-shell">
+    <div class="profile-avatar-lg">
+        @if (!string.IsNullOrEmpty(u.AvatarUrl))
+        {
+            <img src="@u.AvatarUrl" alt="@u.Name" />
+        }
+        else
+        {
+            <span class="avatar-fallback">@Community.Initials(u.Name)</span>
+        }
+    </div>
+
+    <div class="profile-actions">
+        @if (Model.IsSelf)
+        {
+            <a class="btn secondary-action" href="/settings">Edit profile</a>
+        }
+        else if (isAuth)
+        {
+            <form method="post" asp-page-handler="Follow" class="inline-form">
+                <input type="hidden" name="targetId" value="@u.Id" />
+                <input type="hidden" name="returnUrl" value="@returnUrl" />
+                <button type="submit" class="btn @(Model.IsFollowing ? "secondary-action" : "primary-action")">
+                    @(Model.IsFollowing ? "Following" : "Follow")
+                </button>
+            </form>
+        }
+        else
+        {
+            <a class="btn primary-action" href="/Login">Follow</a>
+        }
+    </div>
+
+    <div class="profile-identity">
+        <h1>@u.Name @if (u.Role == AppConstants.Roles.Admin) { <span class="badge-admin">Admin</span> }</h1>
+        <span class="profile-username">@@@u.Username</span>
+    </div>
+
+    @if (!string.IsNullOrEmpty(u.Bio))
+    {
+        <p class="profile-bio">@u.Bio</p>
+    }
+
+    <div class="profile-meta">
+        @if (!string.IsNullOrEmpty(u.Location))
+        {
+            <span>📍 @u.Location</span>
+        }
+        <span>🗓 Joined @u.CreatedAtUtc.ToString("MMM yyyy")</span>
+    </div>
+
+    <div class="profile-stats">
+        <span><strong>@Model.Posts.Count</strong> Posts</span>
+        <span><strong>@Model.FollowerCount</strong> Followers</span>
+        <span><strong>@Model.FollowingCount</strong> Following</span>
+    </div>
+</div>
+
+<div class="profile-feed page-shell">
+    <main class="feed-main">
+        @if (Model.Posts.Count == 0)
+        {
+            <div class="empty-state"><p>@(Model.IsSelf ? "You haven't" : u.Name + " hasn't") posted anything yet.</p></div>
+        }
+        else
+        {
+            <div class="post-feed">
+                @foreach (var post in Model.Posts)
+                {
+                    <partial name="_PostCard" model="post" />
+                }
+            </div>
+        }
+    </main>
+</div>

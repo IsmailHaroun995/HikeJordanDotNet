@@ -12,56 +12,120 @@ public static class DatabaseSeeder
 
         await db.Database.MigrateAsync();
 
-        if (!await db.Users.AnyAsync())
+        if (await db.Users.AnyAsync())
         {
-            db.Users.AddRange(
-                new AppUser { Name = "Admin", Email = "admin@hikejordan.test", Password = passwords.Hash("admin123"), Role = AppConstants.Roles.Admin, ApprovalStatus = AppConstants.AccountStatus.Approved },
-                new AppUser { Name = "Desert Paths", Email = "organizer@hikejordan.test", Password = passwords.Hash("organizer123"), Role = AppConstants.Roles.Organizer, ApprovalStatus = AppConstants.AccountStatus.Approved },
-                new AppUser { Name = "Pending Organizer", Email = "pending@hikejordan.test", Password = passwords.Hash("pending123"), Role = AppConstants.Roles.Organizer, ApprovalStatus = AppConstants.AccountStatus.Pending });
+            return;
         }
 
-        if (!await db.OrganizerRequests.AnyAsync())
+        var admin = new AppUser
         {
-            db.OrganizerRequests.AddRange(
-                new OrganizerRequest { Name = "Wadi Nomads", Email = "owner@wadinomads.test", WhatsApp = "+962791112200", Regions = "Wadi Rum, Dead Sea", Experience = "6 years guiding desert and valley hikes. First-aid certified guides.", Status = AppConstants.AccountStatus.Submitted },
-                new OrganizerRequest { Name = "Amman Weekend Treks", Email = "hello@ammanweekend.test", WhatsApp = "+962785550190", Regions = "Ajloun, Salt", Experience = "Small-group beginner hikes with transport from Amman.", Status = AppConstants.AccountStatus.Submitted },
-                new OrganizerRequest { Name = "Dana Wild Routes", Email = "ops@danawild.test", WhatsApp = "+962772408821", Regions = "Dana, Wadi Mujib", Experience = "Advanced canyon routes. License and insurance pending review.", Status = "Needs docs" });
-        }
+            Name = "HikeJordan",
+            Username = "hikejordan",
+            Email = "admin@hikejordan.test",
+            Password = passwords.Hash("admin123"),
+            Role = AppConstants.Roles.Admin,
+            ApprovalStatus = AppConstants.AccountStatus.Approved,
+            EmailConfirmed = true,
+            Bio = "The community for Jordan's outdoor explorers.",
+            Location = "Amman, Jordan",
+            AvatarUrl = "https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=200&q=80"
+        };
 
-        if (!await db.HikeListings.AnyAsync())
+        var lina = new AppUser
         {
-            db.HikeListings.AddRange(
-                new HikeListing { Title = "Wadi Rum Sunset Ridge", Organizer = "Desert Paths", WhatsApp = "+962791000001", Region = "Wadi Rum", Difficulty = "Moderate", Status = AppConstants.HikeStatus.Published, DateLabel = "Jul 19", TimeLabel = "2:30 PM", SpotsLeft = 7, Price = 35, DurationHours = 4, DistanceKm = 8, Description = "Hike to the famous Sunset Ridge overlooking Wadi Rum. Bedouin tea and golden-hour views included. Jeep transfer from camp.", MeetingPoint = "Wadi Rum Village Gate", RequiredGear = "Sun hat, 2L water, closed shoes", IncludedItems = "Guide, Bedouin tea", GroupName = "Desert Paths Hikes", PaymentType = "Cash on day" },
-                new HikeListing { Title = "Ajloun Forest Morning Loop", Organizer = "Green North", WhatsApp = "+962791000002", Region = "Ajloun", Difficulty = "Easy", Status = AppConstants.HikeStatus.Published, DateLabel = "Jul 26", TimeLabel = "7:00 AM", SpotsLeft = 14, Price = 20, DurationHours = 3, DistanceKm = 5, Description = "A gentle morning loop through Ajloun's oak and pine forests. Perfect for families and beginners. Finishes at the castle viewpoint.", MeetingPoint = "Ajloun Castle parking", RequiredGear = "Comfortable shoes, water", IncludedItems = "Guide, nature booklet", GroupName = "Green North Treks", PaymentType = "Cash or CliQ" },
-                new HikeListing { Title = "Dana Canyon Descent", Organizer = "Jordan Trail Co.", WhatsApp = "+962791000003", Region = "Dana", Difficulty = "Hard", Status = AppConstants.HikeStatus.Published, DateLabel = "Aug 2", TimeLabel = "6:00 AM", SpotsLeft = 5, Price = 60, DurationHours = 8, DistanceKm = 14, Description = "Full-day descent through Dana's dramatic canyon system reaching Wadi Araba. Licensed guides, small groups, safety briefing included.", MeetingPoint = "Dana Village guesthouse", RequiredGear = "Trekking poles, 3L water, snacks", IncludedItems = "Certified guide, safety gear", ExcludedItems = "Transport, meals", GroupName = "Jordan Trail Co.", PaymentType = "Bank transfer" });
-        }
+            Name = "Lina Haddad",
+            Username = "lina",
+            Email = "lina@hikejordan.test",
+            Password = passwords.Hash("member123"),
+            Role = AppConstants.Roles.Member,
+            ApprovalStatus = AppConstants.AccountStatus.Approved,
+            EmailConfirmed = true,
+            Bio = "Weekend hiker. Chasing sunrises across the Jordan Trail.",
+            Location = "Amman",
+            AvatarUrl = "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80"
+        };
 
-        if (!await db.OrganizerProfiles.AnyAsync())
+        var omar = new AppUser
         {
-            db.OrganizerProfiles.AddRange(
-                new OrganizerProfile { Name = "Desert Paths", Status = AppConstants.AccountStatus.Verified, Rating = "4.8", PastTrips = "97 trips", Note = "Local guide documents uploaded" },
-                new OrganizerProfile { Name = "Green North", Status = AppConstants.AccountStatus.Pending, Rating = "4.7", PastTrips = "84 trips", Note = "Waiting for license photo" },
-                new OrganizerProfile { Name = "Jordan Trail Co.", Status = AppConstants.AccountStatus.Verified, Rating = "4.9", PastTrips = "126 trips", Note = "Insurance proof current" });
-        }
+            Name = "Omar Nasser",
+            Username = "omar",
+            Email = "omar@hikejordan.test",
+            Password = passwords.Hash("member123"),
+            Role = AppConstants.Roles.Member,
+            ApprovalStatus = AppConstants.AccountStatus.Approved,
+            EmailConfirmed = true,
+            Bio = "Canyon guide in Wadi Mujib. Water, rock, repeat.",
+            Location = "Madaba",
+            AvatarUrl = "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80"
+        };
 
-        if (!await db.Destinations.AnyAsync())
-        {
-            db.Destinations.AddRange(
-                new Destination { Name = "Wadi Rum", Slug = "wadi-rum", CoverImageUrl = "https://images.unsplash.com/photo-1548786811-dd6e453ccca7?auto=format&fit=crop&w=900&q=80", IsActive = true },
-                new Destination { Name = "Ajloun", Slug = "ajloun", CoverImageUrl = "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80", IsActive = true },
-                new Destination { Name = "Dana", Slug = "dana", CoverImageUrl = "https://images.unsplash.com/photo-1522163182402-834f871fd851?auto=format&fit=crop&w=900&q=80", IsActive = true },
-                new Destination { Name = "Dead Sea", Slug = "dead-sea", CoverImageUrl = "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80", IsActive = true },
-                new Destination { Name = "Wadi Mujib", Slug = "wadi-mujib", CoverImageUrl = "https://images.unsplash.com/photo-1504151932400-72d4384f04b3?auto=format&fit=crop&w=900&q=80", IsActive = true },
-                new Destination { Name = "Salt", Slug = "salt", CoverImageUrl = "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=900&q=80", IsActive = true });
-        }
+        db.Users.AddRange(admin, lina, omar);
+        await db.SaveChangesAsync();
 
-        if (!await db.ReviewFlags.AnyAsync())
+        var posts = new[]
         {
-            db.ReviewFlags.AddRange(
-                new ReviewFlag { Title = "Possible duplicate review", Detail = "Same text appeared on two Dana trips", Priority = "Medium" },
-                new ReviewFlag { Title = "Organizer response dispute", Detail = "Visitor says WhatsApp reply took 3 days", Priority = "Low" },
-                new ReviewFlag { Title = "Unverified attendance", Detail = "Reviewer did not provide trip proof", Priority = "High" });
-        }
+            new Post
+            {
+                AuthorId = lina.Id,
+                Region = "Wadi Rum",
+                LocationName = "Sunset Ridge",
+                Body = "Camped in Wadi Rum last night and hiked up to Sunset Ridge for golden hour. The silence out here is unreal — no signal, no noise, just red sand and sky. Bring 3L of water, it's dry.",
+                ImageUrl = "https://images.unsplash.com/photo-1548786811-dd6e453ccca7?auto=format&fit=crop&w=1200&q=80",
+                CreatedAtUtc = DateTime.UtcNow.AddHours(-3)
+            },
+            new Post
+            {
+                AuthorId = omar.Id,
+                Region = "Wadi Mujib",
+                LocationName = "Siq Trail",
+                Body = "Ran the Mujib Siq Trail with a group this morning. Water level is perfect right now — waist-deep in places. Wear shoes with grip, the rocks are slick. Closed season starts soon so go while you can!",
+                ImageUrl = "https://images.unsplash.com/photo-1504151932400-72d4384f04b3?auto=format&fit=crop&w=1200&q=80",
+                CreatedAtUtc = DateTime.UtcNow.AddHours(-8)
+            },
+            new Post
+            {
+                AuthorId = lina.Id,
+                Region = "Ajloun",
+                LocationName = "Forest Reserve",
+                Body = "Easy morning loop through Ajloun's oak forest. Great for beginners and families — shaded most of the way and the castle viewpoint at the end is worth it.",
+                ImageUrl = "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
+                CreatedAtUtc = DateTime.UtcNow.AddDays(-1)
+            },
+            new Post
+            {
+                AuthorId = omar.Id,
+                Region = "Dana",
+                LocationName = "Dana to Feynan",
+                Body = "Two days descending from Dana village down to Feynan. From cool highlands to desert heat in one trail. One of the best routes in the country. Hire a local guide for the lower section.",
+                ImageUrl = "https://images.unsplash.com/photo-1522163182402-834f871fd851?auto=format&fit=crop&w=1200&q=80",
+                CreatedAtUtc = DateTime.UtcNow.AddDays(-2)
+            }
+        };
+
+        db.Posts.AddRange(posts);
+        await db.SaveChangesAsync();
+
+        db.Follows.AddRange(
+            new Follow { FollowerId = lina.Id, FollowingId = omar.Id },
+            new Follow { FollowerId = omar.Id, FollowingId = lina.Id },
+            new Follow { FollowerId = admin.Id, FollowingId = lina.Id },
+            new Follow { FollowerId = admin.Id, FollowingId = omar.Id });
+
+        db.Comments.Add(new Comment
+        {
+            PostId = posts[0].Id,
+            AuthorId = omar.Id,
+            Body = "Sunset Ridge never disappoints. Did you catch the sunrise too?"
+        });
+
+        db.PostLikes.AddRange(
+            new PostLike { PostId = posts[0].Id, UserId = omar.Id },
+            new PostLike { PostId = posts[0].Id, UserId = admin.Id },
+            new PostLike { PostId = posts[1].Id, UserId = lina.Id });
+
+        posts[0].LikeCount = 2;
+        posts[0].CommentCount = 1;
+        posts[1].LikeCount = 1;
 
         await db.SaveChangesAsync();
     }

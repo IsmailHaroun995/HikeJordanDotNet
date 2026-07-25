@@ -38,7 +38,6 @@ public static class ServiceExtensions
         services.AddRazorPages();
         services.AddHealthChecks();
         services.AddScoped<IPasswordService, PasswordService>();
-        services.AddScoped<IWhatsAppService, WhatsAppService>();
         services.Configure<EmailOptions>(configuration.GetSection("Email"));
         services.AddScoped<IEmailService, EmailService>();
 

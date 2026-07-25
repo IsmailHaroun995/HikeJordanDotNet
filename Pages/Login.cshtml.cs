@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
+using HikeJordanDotNet.Core;
 using HikeJordanDotNet.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -15,6 +16,9 @@ public class LoginModel(HikeJordanDbContext db, ILogger<LoginModel> logger, IPas
     public LoginInput Input { get; set; } = new();
 
     public string? ReturnUrl { get; set; }
+
+    public bool NeedsVerification { get; private set; }
+    public string? UnverifiedEmail { get; private set; }
 
     public void OnGet(string? returnUrl = null)
     {
@@ -48,27 +52,26 @@ public class LoginModel(HikeJordanDbContext db, ILogger<LoginModel> logger, IPas
             return Page();
         }
 
+        if (!account.EmailConfirmed)
+        {
+            logger.LogInformation("Unverified login attempt for {Email}", account.Email);
+            NeedsVerification = true;
+            UnverifiedEmail = account.Email;
+            return Page();
+        }
+
         logger.LogInformation("User {Email} ({Role}) signed in", account.Email, account.Role);
 
-        var claims = new List<Claim>
-        {
-            new(ClaimTypes.Name, account.Name),
-            new(ClaimTypes.Email, account.Email),
-            new(ClaimTypes.Role, account.Role),
-            new(AppConstants.ApprovalStatusClaim, account.ApprovalStatus)
-        };
-
-        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         await HttpContext.SignInAsync(
             CookieAuthenticationDefaults.AuthenticationScheme,
-            new ClaimsPrincipal(identity));
+            AuthClaims.Build(account));
 
         if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
         {
             return LocalRedirect(returnUrl);
         }
 
-        return account.Role == AppConstants.Roles.Admin ? RedirectToPage("/Admin") : RedirectToPage("/AddHike");
+        return RedirectToPage("/Index");
     }
 
     public async Task<IActionResult> OnPostLogoutAsync()

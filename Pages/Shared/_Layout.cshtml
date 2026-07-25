@@ -58,21 +58,30 @@
                 </button>
                 <div class="navbar-collapse collapse justify-content-end">
                     <ul class="navbar-nav align-items-lg-center gap-lg-3">
-                        <li class="nav-item"><a class="nav-link" href="/#hikes">Trips</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/#destinations">Destinations</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/#organizers">Organizers</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/#trust">Trust</a></li>
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <li class="nav-item"><a class="nav-link" asp-page="/Admin">Admin</a></li>
-                        }
-                        @if (User.IsInRole("Organizer"))
-                        {
-                            <li class="nav-item"><a class="nav-link" asp-page="/OrganizerDashboard">My trips</a></li>
-                            <li class="nav-item"><a class="nav-link nav-pill" asp-page="/AddHike">Add hike</a></li>
-                        }
+                        <li class="nav-item"><a class="nav-link" href="/">Feed</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/explore">Explore</a></li>
                         @if (User.Identity?.IsAuthenticated == true)
                         {
+                            var username = User.FindFirst("username")?.Value;
+                            var avatar = User.FindFirst("avatar")?.Value;
+                            <li class="nav-item"><a class="nav-link nav-pill" href="/compose">+ Post</a></li>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item"><a class="nav-link" asp-page="/Admin">Admin</a></li>
+                            }
+                            <li class="nav-item dropdown nav-profile">
+                                <a class="nav-link nav-avatar" href="/u/@username" aria-label="My profile">
+                                    @if (!string.IsNullOrEmpty(avatar))
+                                    {
+                                        <img src="@avatar" alt="Me" />
+                                    }
+                                    else
+                                    {
+                                        <span class="avatar-fallback">@HikeJordanDotNet.Core.Community.Initials(User.Identity?.Name ?? "?")</span>
+                                    }
+                                </a>
+                            </li>
+                            <li class="nav-item"><a class="nav-link" href="/settings">Settings</a></li>
                             <li class="nav-item">
                                 <form method="post" asp-page="/Login" asp-page-handler="Logout" style="display:inline">
                                     <button type="submit" class="nav-link btn-link-nav">Sign out</button>
@@ -82,9 +91,8 @@
                         else
                         {
                             <li class="nav-item"><a class="nav-link" asp-page="/Login">Sign in</a></li>
-                            <li class="nav-item"><a class="nav-link nav-pill" asp-page="/OrganizerSignup">Add hike</a></li>
+                            <li class="nav-item"><a class="nav-link nav-pill" asp-page="/Register">Join</a></li>
                         }
-                        <li class="nav-item"><button class="language-toggle" type="button" id="languageToggle" aria-label="Switch language">العربية</button></li>
                     </ul>
                 </div>
             </div>
@@ -99,7 +107,7 @@
         <div class="container-fluid page-shell footer-grid">
             <div>
                 <strong>Hike Jordan</strong>
-                <span>Discover trusted organized hikes in under 60 seconds.</span>
+                <span>The community for Jordan's outdoor explorers.</span>
             </div>
             <div class="footer-links">
                 @if (User.IsInRole("Admin"))

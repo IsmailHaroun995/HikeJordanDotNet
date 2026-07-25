@@ -7,4 +7,5 @@ public interface IEmailService
     Task NotifyOrganizerNewTripAsync(string organizerEmail, string organizerName, string tripTitle);
     Task NotifyAdminNewTripAsync(string organizerName, string organizerEmail, string tripTitle);
     Task NotifyOrganizerDocsRequestedAsync(string organizerEmail, string organizerName);
+    Task SendEmailVerificationAsync(string toEmail, string name, string verifyUrl);
 }

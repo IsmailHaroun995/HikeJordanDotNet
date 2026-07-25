@@ -1,0 +1,52 @@
+@page "/compose"
+@model ComposeModel
+@{
+    ViewData["Title"] = "New post";
+}
+
+<div class="form-page page-shell">
+    <div class="form-card">
+        <h1>Share a trip</h1>
+        <p class="form-sub">Post a trip report, a photo, or a tip for the community.</p>
+
+        @if (!string.IsNullOrEmpty(Model.Error))
+        {
+            <div class="form-error">@Model.Error</div>
+        }
+
+        <form method="post" enctype="multipart/form-data" class="stack-form">
+            <div class="field char-count-wrap">
+                <label for="Body">What's the story?</label>
+                <textarea id="Body" name="Body" rows="5" maxlength="2000" class="form-control" placeholder="Describe the trail, conditions, tips…" required>@Model.Body</textarea>
+                <span class="char-count" aria-hidden="true"></span>
+            </div>
+
+            <div class="field-row">
+                <div class="field">
+                    <label for="Region">Region</label>
+                    <select id="Region" name="Region" class="form-select">
+                        <option value="">Select a region</option>
+                        @foreach (var r in Community.Regions)
+                        {
+                            <option value="@r" selected="@(Model.Region == r)">@r</option>
+                        }
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="LocationName">Specific place (optional)</label>
+                    <input id="LocationName" name="LocationName" value="@Model.LocationName" class="form-control" placeholder="e.g. Sunset Ridge" />
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="Image">Photo (optional)</label>
+                <input id="Image" name="Image" type="file" accept="image/*" class="form-control" />
+            </div>
+
+            <div class="form-buttons">
+                <a class="btn secondary-action" href="/">Cancel</a>
+                <button type="submit" class="btn primary-action">Post</button>
+            </div>
+        </form>
+    </div>
+</div>

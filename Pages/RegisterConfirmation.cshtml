@@ -1,0 +1,39 @@
+@page
+@model RegisterConfirmationModel
+@{
+    ViewData["Title"] = "Check your email";
+}
+
+<div class="auth-page page-shell">
+    <div class="auth-card" style="text-align:center">
+        <div class="verify-icon" aria-hidden="true">✉️</div>
+        <h1>Check your email</h1>
+        <p class="auth-sub">
+            We sent a verification link to
+            @if (!string.IsNullOrEmpty(Model.Email))
+            {
+                <strong>@Model.Email</strong>
+            }
+            else
+            {
+                <text>your email address</text>
+            }.
+            Click it to activate your account. The link expires in 24 hours.
+        </p>
+
+        @if (!string.IsNullOrEmpty(Model.Message))
+        {
+            <div class="form-success">@Model.Message</div>
+        }
+
+        <p class="auth-switch" style="margin-top:24px">Didn't get it? Check spam, or</p>
+        <form method="post" asp-page-handler="Resend" class="inline-form">
+            <input type="hidden" name="email" value="@Model.Email" />
+            <button type="submit" class="btn secondary-action full-width">Resend verification email</button>
+        </form>
+
+        <p class="auth-switch" style="margin-top:20px">
+            Already verified? <a href="/Login">Sign in</a>
+        </p>
+    </div>
+</div>

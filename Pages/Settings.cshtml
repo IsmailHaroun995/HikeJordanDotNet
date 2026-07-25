@@ -1,0 +1,68 @@
+@page "/settings"
+@model SettingsModel
+@{
+    ViewData["Title"] = "Edit profile";
+    var a = Model.Account;
+}
+
+<div class="form-page page-shell">
+    <div class="form-card">
+        <h1>Edit profile</h1>
+
+        @if (!string.IsNullOrEmpty(Model.Message))
+        {
+            <div class="form-success">@Model.Message</div>
+        }
+        @if (!string.IsNullOrEmpty(Model.Error))
+        {
+            <div class="form-error">@Model.Error</div>
+        }
+
+        <div class="settings-preview">
+            <div class="settings-avatar">
+                @if (!string.IsNullOrEmpty(a.AvatarUrl))
+                {
+                    <img src="@a.AvatarUrl" alt="@a.Name" />
+                }
+                else
+                {
+                    <span class="avatar-fallback">@Community.Initials(a.Name)</span>
+                }
+            </div>
+            <div>
+                <strong>@a.Name</strong>
+                <span class="settings-username">@@@a.Username</span>
+            </div>
+        </div>
+
+        <form method="post" enctype="multipart/form-data" class="stack-form">
+            <div class="field">
+                <label for="Name">Display name</label>
+                <input id="Name" name="Name" value="@Model.Name" class="form-control" required />
+            </div>
+            <div class="field char-count-wrap">
+                <label for="Bio">Bio</label>
+                <textarea id="Bio" name="Bio" rows="3" maxlength="500" class="form-control" placeholder="Tell the community about yourself…">@Model.Bio</textarea>
+                <span class="char-count" aria-hidden="true"></span>
+            </div>
+            <div class="field">
+                <label for="Location">Location</label>
+                <input id="Location" name="Location" value="@Model.Location" class="form-control" placeholder="e.g. Amman" />
+            </div>
+            <div class="field-row">
+                <div class="field">
+                    <label for="Avatar">Profile photo</label>
+                    <input id="Avatar" name="Avatar" type="file" accept="image/*" class="form-control" />
+                </div>
+                <div class="field">
+                    <label for="Cover">Cover photo</label>
+                    <input id="Cover" name="Cover" type="file" accept="image/*" class="form-control" />
+                </div>
+            </div>
+            <div class="form-buttons">
+                <a class="btn secondary-action" href="/u/@a.Username">View profile</a>
+                <button type="submit" class="btn primary-action">Save changes</button>
+            </div>
+        </form>
+    </div>
+</div>
