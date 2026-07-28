@@ -1,0 +1,69 @@
+@page "/explore"
+@model ExploreModel
+@{
+    ViewData["Title"] = Model.Region is not null ? $"{Model.Region} posts" : "Explore";
+    ViewData["Description"] = "Explore trip reports and photos from across Jordan's outdoors.";
+    ViewData["LikedPostIds"] = Model.LikedPostIds;
+}
+
+<div class="explore-header">
+    <div class="page-shell">
+        <h1>@T("Explore")</h1>
+        <form class="explore-search" method="get" action="/explore">
+            <input type="search" name="q" value="@Model.Query" placeholder="@T("Search posts, places, people…")" class="form-control" />
+            <button type="submit" class="btn primary-action">@T("Search")</button>
+        </form>
+        <div class="region-chips explore-chips">
+            <a class="region-chip @(Model.Region is null ? "active" : "")" href="/explore">@T("All")</a>
+            @foreach (var r in Community.Regions)
+            {
+                <a class="region-chip @(Model.Region == r ? "active" : "")" href="/explore?region=@Uri.EscapeDataString(r)">@Community.RegionEmoji(r) @T(r)</a>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="explore-layout page-shell">
+    <main class="feed-main">
+        @if (!string.IsNullOrWhiteSpace(Model.Query) && Model.People.Count > 0)
+        {
+            <div class="side-card">
+                <h3 class="side-title">@T("People")</h3>
+                <ul class="suggest-list">
+                    @foreach (var u in Model.People)
+                    {
+                        <li class="suggest-row">
+                            <a class="suggest-user" href="/u/@u.Username">
+                                <span class="suggest-avatar">
+                                    @if (!string.IsNullOrEmpty(u.AvatarUrl))
+                                    {
+                                        <img src="@u.AvatarUrl" alt="@u.Name" />
+                                    }
+                                    else
+                                    {
+                                        <span class="avatar-fallback">@Community.Initials(u.Name)</span>
+                                    }
+                                </span>
+                                <span class="suggest-meta"><strong>@u.Name</strong><span>@@@u.Username</span></span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+
+        @if (Model.Posts.Count == 0)
+        {
+            <div class="empty-state"><p>@T("No posts found.")</p></div>
+        }
+        else
+        {
+            <div class="post-feed">
+                @foreach (var post in Model.Posts)
+                {
+                    <partial name="_PostCard" model="post" />
+                }
+            </div>
+        }
+    </main>
+</div>

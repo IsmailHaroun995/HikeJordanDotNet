@@ -1,0 +1,78 @@
+@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Join";
+}
+
+<div class="auth-page page-shell">
+    <div class="auth-card">
+        <h1>@T("Join HikeJordan")</h1>
+        <p class="auth-sub">@T("Create a profile to post trips, follow hikers, and save places.")</p>
+
+        <form method="post" class="stack-form">
+            <div asp-validation-summary="ModelOnly" class="form-error"></div>
+
+            <div class="field">
+                <label>@T("Account type")</label>
+                <div class="segmented" role="radiogroup">
+                    <label class="seg-option">
+                        <input type="radio" asp-for="Input.AccountType" value="Person" checked />
+                        <span class="seg-body"><strong>👤 @T("Person")</strong><small>@T("A personal account to share your own trips.")</small></span>
+                    </label>
+                    <label class="seg-option">
+                        <input type="radio" asp-for="Input.AccountType" value="Group" />
+                        <span class="seg-body"><strong>👥 @T("Group")</strong><small>@T("A hiking group or company that runs trips.")</small></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="field" id="instagramField" style="display:none">
+                <label asp-for="Input.InstagramPage">@T("Instagram page")</label>
+                <div class="input-prefix">
+                    <span>@@</span>
+                    <input asp-for="Input.InstagramPage" class="form-control" placeholder="wadi.rum.adventures" />
+                </div>
+            </div>
+
+            <div class="field">
+                <label asp-for="Input.Name">@T("Display name")</label>
+                <input asp-for="Input.Name" class="form-control" />
+                <span asp-validation-for="Input.Name" class="field-error"></span>
+            </div>
+            <div class="field">
+                <label asp-for="Input.Username">@T("Username")</label>
+                <input asp-for="Input.Username" class="form-control" />
+                <span asp-validation-for="Input.Username" class="field-error"></span>
+            </div>
+            <div class="field">
+                <label asp-for="Input.Email">@T("Email")</label>
+                <input asp-for="Input.Email" class="form-control" />
+                <span asp-validation-for="Input.Email" class="field-error"></span>
+            </div>
+            <div class="field">
+                <label asp-for="Input.Password">@T("Password")</label>
+                <input asp-for="Input.Password" type="password" class="form-control" />
+                <span asp-validation-for="Input.Password" class="field-error"></span>
+            </div>
+
+            <button type="submit" class="btn primary-action full-width">@T("Create account")</button>
+        </form>
+
+        <p class="auth-switch">@T("Already have an account?") <a href="/Login">@T("Sign in")</a></p>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            var field = document.getElementById('instagramField');
+            var radios = document.querySelectorAll('input[name="Input.AccountType"]');
+            function sync() {
+                var checked = document.querySelector('input[name="Input.AccountType"]:checked');
+                field.style.display = (checked && checked.value === 'Group') ? '' : 'none';
+            }
+            radios.forEach(function (r) { r.addEventListener('change', sync); });
+            sync();
+        })();
+    </script>
+}

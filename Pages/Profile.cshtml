@@ -1,0 +1,171 @@
+@page "/u/{username}"
+@model ProfileModel
+@{
+    var u = Model.Profile;
+    ViewData["Title"] = u.Name;
+    ViewData["Description"] = string.IsNullOrEmpty(u.Bio) ? $"{u.Name} on HikeJordan." : u.Bio;
+    ViewData["LikedPostIds"] = Model.LikedPostIds;
+    var isAuth = User.Identity?.IsAuthenticated == true;
+    var cover = string.IsNullOrEmpty(u.CoverUrl) ? Community.RegionImage("") : u.CoverUrl;
+    var returnUrl = $"/u/{u.Username}";
+}
+
+<div class="profile-cover" style="background-image:url('@cover')"></div>
+
+<div class="profile-header page-shell">
+    <div class="profile-avatar-lg">
+        @if (!string.IsNullOrEmpty(u.AvatarUrl))
+        {
+            <img src="@u.AvatarUrl" alt="@u.Name" />
+        }
+        else
+        {
+            <span class="avatar-fallback">@Community.Initials(u.Name)</span>
+        }
+    </div>
+
+    <div class="profile-actions">
+        @if (Model.IsSelf)
+        {
+            <a class="btn secondary-action" href="/settings">@T("Edit profile")</a>
+        }
+        else if (isAuth)
+        {
+            <form method="post" asp-page-handler="Follow" class="inline-form">
+                <input type="hidden" name="targetId" value="@u.Id" />
+                <input type="hidden" name="returnUrl" value="@returnUrl" />
+                <button type="submit" class="btn @(Model.IsFollowing ? "secondary-action" : "primary-action")">
+                    @(Model.IsFollowing ? T("Following") : T("Follow"))
+                </button>
+            </form>
+        }
+        else
+        {
+            <a class="btn primary-action" href="/Login">@T("Follow")</a>
+        }
+    </div>
+
+    <div class="profile-identity">
+        <h1>
+            @u.Name
+            @if (Model.IsGroup) { <span class="badge-group">👥 @T("Group")</span> }
+            @if (u.Role == AppConstants.Roles.Admin) { <span class="badge-admin">@T("Admin")</span> }
+        </h1>
+        <span class="profile-username">@@@u.Username</span>
+    </div>
+
+    @if (!string.IsNullOrEmpty(u.Bio))
+    {
+        <p class="profile-bio">@u.Bio</p>
+    }
+
+    <div class="profile-meta">
+        @if (!string.IsNullOrEmpty(u.Location))
+        {
+            <span>📍 @u.Location</span>
+        }
+        @if (Model.IsGroup && !string.IsNullOrEmpty(u.InstagramPage))
+        {
+            <a class="profile-insta" href="https://instagram.com/@u.InstagramPage" target="_blank" rel="noopener noreferrer">📷 @@@u.InstagramPage</a>
+        }
+        @if (Model.IsGroup && Model.ReviewCount > 0)
+        {
+            <span class="profile-rating">⭐ @Model.AverageRating <span class="muted-text">(@Model.ReviewCount)</span></span>
+        }
+        <span>🗓 @T("Joined") @u.CreatedAtUtc.ToString("MMM yyyy")</span>
+    </div>
+
+    <div class="profile-stats">
+        <span><strong>@Model.Posts.Count</strong> @T("Posts")</span>
+        <span><strong>@Model.FollowerCount</strong> @T("Followers")</span>
+        <span><strong>@Model.FollowingCount</strong> @T("Following")</span>
+    </div>
+
+    <div class="profile-badges">
+        <h3 class="badges-title">@T("Badges") <span class="badges-count">@Model.Badges.Count</span></h3>
+        @if (Model.Badges.Count == 0)
+        {
+            <p class="badges-empty">@T("No badges yet — post about a place to earn one.")</p>
+        }
+        else
+        {
+            <div class="badge-grid">
+                @foreach (var region in Model.Badges)
+                {
+                    <a class="hike-badge" href="/explore?region=@Uri.EscapeDataString(region)" title="@T("Places visited")">
+                        <span class="hike-badge-icon">@Community.RegionEmoji(region)</span>
+                        <span class="hike-badge-label">@T(region)</span>
+                    </a>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@if (Model.IsGroup)
+{
+    <div class="group-section page-shell">
+        @if (Model.IsSelf && Model.QrDataUri is not null)
+        {
+            <div class="qr-card">
+                <div class="qr-image">
+                    <img src="@Model.QrDataUri" alt="Review QR code" id="reviewQr" />
+                </div>
+                <div class="qr-info">
+                    <h3>@T("Review QR code")</h3>
+                    <p>@T("Share this code with joiners so they can rate your group.")</p>
+                    <div class="qr-actions">
+                        <a class="btn secondary-action" href="@Model.QrDataUri" download="@(u.Username)-review-qr.png">@T("Download QR")</a>
+                        <button type="button" class="btn secondary-action" data-copy="@Model.ReviewUrl">@T("Copy review link")</button>
+                    </div>
+                    <code class="qr-link">@Model.ReviewUrl</code>
+                </div>
+            </div>
+        }
+
+        <div class="reviews-block">
+            <h3 class="reviews-title">@T("Reviews") <span class="badges-count">@Model.ReviewCount</span></h3>
+            @if (Model.ReviewCount == 0)
+            {
+                <p class="badges-empty">@T("No reviews yet.")</p>
+            }
+            else
+            {
+                <ul class="review-list">
+                    @foreach (var r in Model.Reviews)
+                    {
+                        <li class="review-item">
+                            <div class="review-head">
+                                <strong>@r.ReviewerName</strong>
+                                <span class="review-stars" aria-label="@r.Rating">@(new string('★', r.Rating))<span class="star-empty">@(new string('★', 5 - r.Rating))</span></span>
+                                <span class="review-time">@Community.TimeAgo(r.CreatedAtUtc)</span>
+                            </div>
+                            @if (!string.IsNullOrEmpty(r.Comment))
+                            {
+                                <p class="review-comment">@r.Comment</p>
+                            }
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+    </div>
+}
+
+<div class="profile-feed page-shell">
+    <main class="feed-main">
+        @if (Model.Posts.Count == 0)
+        {
+            <div class="empty-state"><p>@(Model.IsSelf ? T("You haven't posted anything yet.") : u.Name + " " + T("hasn't posted anything yet."))</p></div>
+        }
+        else
+        {
+            <div class="post-feed">
+                @foreach (var post in Model.Posts)
+                {
+                    <partial name="_PostCard" model="post" />
+                }
+            </div>
+        }
+    </main>
+</div>

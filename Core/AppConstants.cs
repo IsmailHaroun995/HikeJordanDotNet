@@ -5,8 +5,13 @@ public static class AppConstants
     public static class Roles
     {
         public const string Admin = "Admin";
-        public const string Organizer = "Organizer";
-        public const string Visitor = "Visitor";
+        public const string Member = "Member";
+    }
+
+    public static class AccountType
+    {
+        public const string Person = "Person";
+        public const string Group = "Group";
     }
 
     public static class HikeStatus

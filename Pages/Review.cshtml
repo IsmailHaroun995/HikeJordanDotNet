@@ -1,83 +1,63 @@
-@page "{id:int}"
+@page "/review/{username}"
 @model ReviewModel
 @{
-    ViewData["Title"] = Model.Hike is not null ? $"Review: {Model.Hike.Title}" : "Write a review";
+    var g = Model.Group;
+    ViewData["Title"] = $"{T("Rate this group")} — {g.Name}";
 }
 
-<section class="auth-page">
-    <div class="container-fluid page-shell auth-grid">
-        <div class="auth-copy">
-            <span class="eyebrow">Trip review</span>
-            <h1>Share your experience.</h1>
-            <p>Your honest review helps other travelers choose the right hike and gives organizers valuable feedback. Reviews are moderated before appearing on the site.</p>
-            @if (Model.Hike is not null)
-            {
-                <div class="demo-credentials">
-                    <strong>@Model.Hike.Title</strong>
-                    <span>@Model.Hike.Region · @Model.Hike.Difficulty · @Model.Hike.DateLabel</span>
-                    <span>Organized by @Model.Hike.Organizer</span>
+<div class="auth-page page-shell">
+    <div class="auth-card" style="text-align:center">
+        @if (Model.Submitted)
+        {
+            <div class="verify-icon" aria-hidden="true">🎉</div>
+            <h1>@T("Thanks for your review!")</h1>
+            <p class="auth-sub">@g.Name</p>
+            <a class="btn primary-action full-width" href="/u/@g.Username">@T("View profile")</a>
+        }
+        else
+        {
+            <div class="review-group-head">
+                <div class="review-avatar">
+                    @if (!string.IsNullOrEmpty(g.AvatarUrl))
+                    {
+                        <img src="@g.AvatarUrl" alt="@g.Name" />
+                    }
+                    else
+                    {
+                        <span class="avatar-fallback">@Community.Initials(g.Name)</span>
+                    }
                 </div>
-            }
-        </div>
+                <h1>@T("Rate this group")</h1>
+                <p class="auth-sub">@g.Name</p>
+            </div>
 
-        <div class="auth-card">
-            @if (Model.ReviewsClosed)
-            {
-                <div class="success-panel blocked-panel" role="alert">
-                    <strong>Reviews are closed for this trip.</strong>
-                    <p>The organizer has closed this trip. No new reviews can be submitted.</p>
-                    <a class="btn primary-action" asp-page="/Index">Back to hikes</a>
+            <form method="post" class="stack-form" style="text-align:start">
+                <div asp-validation-summary="ModelOnly" class="form-error"></div>
+
+                <div class="field">
+                    <label>@T("Your rating")</label>
+                    <div class="star-input" role="radiogroup" aria-label="@T("Your rating")">
+                        @for (var i = 5; i >= 1; i--)
+                        {
+                            <input type="radio" name="Rating" value="@i" id="star@i" @(Model.Rating == i ? "checked" : "") />
+                            <label for="star@i" title="@i">★</label>
+                        }
+                    </div>
                 </div>
-            }
-            else if (Model.Submitted)
-            {
-                <div class="success-panel" role="status">
-                    <strong>Review submitted — thank you!</strong>
-                    <p>Your review is pending admin approval and will appear on the trip once approved.</p>
-                    <a class="btn primary-action" asp-page="/Index">Back to hikes</a>
+
+                <div class="field">
+                    <label for="ReviewerName">@T("Your name")</label>
+                    <input id="ReviewerName" name="ReviewerName" value="@Model.ReviewerName" class="form-control" maxlength="80" />
                 </div>
-            }
-            else
-            {
-                <form method="post" class="organizer-form">
-                    <input type="hidden" asp-for="Input.HikeId" />
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                    <div>
-                        <label asp-for="Input.ReviewerName"></label>
-                        <input asp-for="Input.ReviewerName" class="form-control" placeholder="Your name or nickname" autocomplete="name" />
-                        <span asp-validation-for="Input.ReviewerName" class="text-danger"></span>
-                    </div>
+                <div class="field char-count-wrap">
+                    <label for="Comment">@T("Your review")</label>
+                    <textarea id="Comment" name="Comment" rows="4" maxlength="1000" class="form-control" placeholder="@T("Share your experience with this group…")">@Model.Comment</textarea>
+                    <span class="char-count" aria-hidden="true"></span>
+                </div>
 
-                    <div>
-                        <label asp-for="Input.Rating"></label>
-                        <div class="star-picker" role="group" aria-label="Rating">
-                            @for (int i = 1; i <= 5; i++)
-                            {
-                                <label class="star-label">
-                                    <input type="radio" asp-for="Input.Rating" value="@i" class="star-radio" />
-                                    <span class="star-icon">★</span>
-                                    <span class="sr-only">@i star@(i > 1 ? "s" : "")</span>
-                                </label>
-                            }
-                        </div>
-                        <span asp-validation-for="Input.Rating" class="text-danger"></span>
-                    </div>
-
-                    <div>
-                        <label asp-for="Input.ReviewText"></label>
-                        <textarea asp-for="Input.ReviewText" class="form-control" rows="5"
-                            placeholder="How was the route, the organizer, the experience? What would you tell a friend?"></textarea>
-                        <span asp-validation-for="Input.ReviewText" class="text-danger"></span>
-                    </div>
-
-                    <button class="btn primary-action submit-action" type="submit">Submit review</button>
-                </form>
-            }
-        </div>
+                <button type="submit" class="btn primary-action full-width">@T("Submit review")</button>
+            </form>
+        }
     </div>
-</section>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+</div>

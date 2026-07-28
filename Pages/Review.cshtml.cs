@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+using HikeJordanDotNet.Core;
 using HikeJordanDotNet.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -6,72 +6,49 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HikeJordanDotNet.Pages;
 
-public class ReviewModel(HikeJordanDbContext db, ILogger<ReviewModel> logger) : PageModel
+public class ReviewModel(HikeJordanDbContext db) : PageModel
 {
-    [BindProperty]
-    public ReviewInput Input { get; set; } = new();
-
-    public HikeListing? Hike { get; private set; }
+    public AppUser Group { get; private set; } = null!;
     public bool Submitted { get; private set; }
 
-    public bool ReviewsClosed { get; private set; }
+    [BindProperty] public string? ReviewerName { get; set; }
+    [BindProperty] public int Rating { get; set; }
+    [BindProperty] public string? Comment { get; set; }
 
-    public async Task<IActionResult> OnGetAsync(int id)
+    public async Task<IActionResult> OnGetAsync(string username)
     {
-        Hike = await db.HikeListings.FindAsync(id);
-        if (Hike is null) return NotFound();
-        ReviewsClosed = Hike.Status == AppConstants.HikeStatus.Completed;
-        Input.HikeId = id;
+        var group = await FindGroupAsync(username);
+        if (group is null) return NotFound();
+        Group = group;
         return Page();
     }
 
-    public async Task<IActionResult> OnPostAsync()
+    public async Task<IActionResult> OnPostAsync(string username)
     {
-        Hike = await db.HikeListings.FindAsync(Input.HikeId);
-        if (Hike is null) return NotFound();
+        var group = await FindGroupAsync(username);
+        if (group is null) return NotFound();
+        Group = group;
 
-        if (Hike.Status == AppConstants.HikeStatus.Completed)
+        if (Rating is < 1 or > 5)
         {
-            ReviewsClosed = true;
+            ModelState.AddModelError(nameof(Rating), "Please choose a rating from 1 to 5 stars.");
             return Page();
         }
 
-        if (!ModelState.IsValid) return Page();
-
-        db.TripReviews.Add(new TripReview
+        db.GroupReviews.Add(new GroupReview
         {
-            HikeListingId = Input.HikeId,
-            ReviewerName = Input.ReviewerName,
-            Rating = Input.Rating,
-            ReviewText = Input.ReviewText,
-            Status = "Pending"
+            GroupId = group.Id,
+            ReviewerName = string.IsNullOrWhiteSpace(ReviewerName) ? "Anonymous" : ReviewerName.Trim(),
+            Rating = Rating,
+            Comment = Comment?.Trim() ?? string.Empty
         });
-
         await db.SaveChangesAsync();
-        logger.LogInformation("Review submitted for hike {HikeId} by {Reviewer}", Input.HikeId, Input.ReviewerName);
 
         Submitted = true;
         return Page();
     }
 
-    public class ReviewInput
-    {
-        public int HikeId { get; set; }
-
-        [Required]
-        [MaxLength(100)]
-        [Display(Name = "Your name")]
-        public string ReviewerName { get; set; } = string.Empty;
-
-        [Required]
-        [Range(1, 5, ErrorMessage = "Please choose a rating from 1 to 5.")]
-        [Display(Name = "Rating")]
-        public int Rating { get; set; }
-
-        [Required]
-        [MinLength(10, ErrorMessage = "Please write at least 10 characters.")]
-        [MaxLength(600)]
-        [Display(Name = "Your review")]
-        public string ReviewText { get; set; } = string.Empty;
-    }
+    private Task<AppUser?> FindGroupAsync(string username) =>
+        db.Users.FirstOrDefaultAsync(u =>
+            u.Username == username && u.AccountType == AppConstants.AccountType.Group);
 }

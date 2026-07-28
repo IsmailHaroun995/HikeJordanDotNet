@@ -1,274 +1,137 @@
 @page
 @model IndexModel
 @{
-    ViewData["Title"] = "Find trusted hikes across Jordan";
-    ViewData["Description"] = "Find trusted organized hiking trips across Jordan. Compare routes, organizers, dates, prices and reviews — then book directly on WhatsApp. Wadi Rum, Ajloun, Dana, Dead Sea trails.";
+    ViewData["Title"] = "Feed";
+    ViewData["Description"] = "HikeJordan — the community for Jordan's outdoor explorers. Share trips, follow hikers, discover new places.";
+    ViewData["LikedPostIds"] = Model.LikedPostIds;
+    var isAuth = User.Identity?.IsAuthenticated == true;
 }
 
-<section class="hero-section">
-    <div class="hero-media" role="img" aria-label="Wadi Rum desert landscape at sunset"></div>
-    <div class="container-fluid page-shell hero-content">
-        <div class="hero-copy">
-            <span class="eyebrow">Jordan's organized hiking marketplace</span>
-            <h1>Find the right hike in under 60 seconds.</h1>
-            <p>
-                Hike Jordan gathers scattered Instagram, WhatsApp, and Facebook trip posts into one trusted place
-                where travelers can compare routes, organizers, dates, prices, difficulty, and reviews.
-            </p>
-            <div class="hero-actions">
-                <a class="btn primary-action" href="#hikes">Explore hikes</a>
-                <a class="btn secondary-action" asp-page="/AddHike">Add your trip</a>
+<div class="feed-layout page-shell">
+    <main class="feed-main">
+        @if (isAuth)
+        {
+            <div class="feed-tabs">
+                <a class="feed-tab @(Model.Tab == "latest" ? "active" : "")" href="/?tab=latest">@T("Latest")</a>
+                <a class="feed-tab @(Model.Tab == "following" ? "active" : "")" href="/?tab=following">@T("Following")</a>
             </div>
-        </div>
 
-        <form class="search-panel" aria-label="Search upcoming hikes">
-            <div class="filter-explainer">
-                <strong>How filters work</strong>
-                <span id="filterSummary">Showing all public hikes. Change region or difficulty to narrow the cards below.</span>
-            </div>
-            <div>
-                <label for="region">Region</label>
-                <select id="region" class="form-select filter-control" data-filter="region">
-                    <option value="all">Anywhere</option>
-                    @foreach (var dest in Model.Destinations)
+            <a class="compose-prompt" href="/compose">
+                <span class="compose-avatar">
+                    @{ var meAvatar = User.FindFirst("avatar")?.Value; }
+                    @if (!string.IsNullOrEmpty(meAvatar))
                     {
-                        <option value="@dest.Slug">@dest.Name</option>
+                        <img src="@meAvatar" alt="You" />
                     }
-                </select>
-            </div>
-            <div>
-                <label for="difficulty">Difficulty</label>
-                <select id="difficulty" class="form-select filter-control" data-filter="difficulty">
-                    <option value="all">Any level</option>
-                    <option value="easy">Easy</option>
-                    <option value="moderate">Moderate</option>
-                    <option value="hard">Hard</option>
-                </select>
-            </div>
-            <div>
-                <label for="date">When</label>
-                <select id="date" class="form-select">
-                    <option>This weekend</option>
-                    <option>Next 7 days</option>
-                    <option>Next 30 days</option>
-                </select>
-            </div>
-            <button class="btn search-button" type="button" id="resetFilters">Reset filters</button>
-        </form>
-    </div>
-</section>
-
-<section class="value-strip" aria-label="Marketplace value">
-    <div class="container-fluid page-shell value-grid">
-        <div><strong>@Model.PublicHikes.Count</strong><span>Upcoming hikes</span></div>
-        <div><strong>@Model.VerifiedOrganizersCount</strong><span>Verified organizers</span></div>
-        <div><strong>Direct</strong><span>WhatsApp booking — no sign-up needed</span></div>
-    </div>
-</section>
-
-<section id="hikes" class="section-block">
-    <div class="container-fluid page-shell">
-        <div class="section-heading">
-            <span class="eyebrow">Search and discovery</span>
-            <h2>Upcoming and featured hikes</h2>
-            <p>Compare routes, organizers, dates, prices, difficulty, and remaining spots — then book directly on WhatsApp.</p>
-        </div>
-
-        <div class="hike-grid" id="hikeGrid" data-total-hikes="@Model.PublicHikes.Count">
-            @foreach (var hike in Model.PublicHikes)
-            {
-                var lifecycle = IndexModel.TripLifecycle(hike);
-                var lifecycleSlug = IndexModel.LifecycleSlug(lifecycle);
-                var hikeReviews = Model.ApprovedReviews.GetValueOrDefault(hike.Id) ?? [];
-                <article class="hike-card" data-region="@IndexModel.RegionSlug(hike.Region)" data-difficulty="@IndexModel.DifficultySlug(hike.Difficulty)">
-                    <div class="card-img-wrap">
-                        <img src="@(!string.IsNullOrEmpty(hike.ImagePath) ? hike.ImagePath : IndexModel.ImageForRegion(hike.Region))" alt="@hike.Region hiking landscape" loading="lazy" />
-                        <div class="card-img-badges">
-                            <span class="diff-badge diff-@IndexModel.DifficultySlug(hike.Difficulty)">@hike.Difficulty</span>
-                            <span class="price-badge">@(hike.Price == 0 ? "Free" : $"JD {hike.Price:0}")</span>
-                        </div>
-                        <span class="lifecycle-badge lifecycle-@lifecycleSlug">@lifecycle</span>
+                    else
+                    {
+                        <span class="avatar-fallback">@Community.Initials(User.Identity?.Name ?? "?")</span>
+                    }
+                </span>
+                <span class="compose-placeholder">@T("Share a trip or a tip…")</span>
+                <span class="compose-go">@T("Post")</span>
+            </a>
+        }
+        else
+        {
+            <section class="feed-welcome">
+                <div class="feed-welcome-body">
+                    <span class="welcome-eyebrow">@T("Discover Jordan, one trip at a time")</span>
+                    <h1>@T("Jordan's outdoor community")</h1>
+                    <p>@T("Share your trips, follow other hikers, and discover new places through the people who've been there.")</p>
+                    <div class="welcome-actions">
+                        <a class="btn primary-action" href="/Register">@T("Join the community")</a>
+                        <a class="btn secondary-action" href="/explore">@T("Explore posts")</a>
                     </div>
-                    <div class="card-body">
-                        <div class="card-kicker">@hike.Region</div>
-                        <h3><a href="/hike/@hike.Id">@hike.Title</a></h3>
-                        @if (!string.IsNullOrWhiteSpace(hike.Description))
+                    <div class="welcome-regions">
+                        @foreach (var r in Community.Regions.Take(6))
                         {
-                            <p>@hike.Description</p>
+                            <a class="welcome-region-chip" href="/explore?region=@Uri.EscapeDataString(r)">@Community.RegionEmoji(r) @T(r)</a>
                         }
-                        <dl class="quick-facts">
-                            <div><dt>Date</dt><dd>@hike.DateLabel@(string.IsNullOrEmpty(hike.TimeLabel) ? "" : $" · {hike.TimeLabel}")</dd></div>
-                            <div><dt>Duration</dt><dd>@(hike.DurationHours.HasValue ? $"{hike.DurationHours}h" : "—")@(hike.DistanceKm.HasValue ? $" · {hike.DistanceKm}km" : "")</dd></div>
-                            <div><dt>Spots</dt><dd class="@(hike.SpotsLeft <= 3 ? "spots-critical" : hike.SpotsLeft <= 6 ? "spots-low" : "spots-ok")">@hike.SpotsLeft left</dd></div>
-                            <div><dt>Organizer</dt><dd>@hike.Organizer@(string.IsNullOrEmpty(hike.GroupName) ? "" : $" · {hike.GroupName}")</dd></div>
-                            @if (!string.IsNullOrEmpty(hike.PaymentType))
-                            {
-                                <div><dt>Payment</dt><dd>@hike.PaymentType</dd></div>
-                            }
-                            @if (!string.IsNullOrEmpty(hike.InstagramPage))
-                            {
-                                <div><dt>Instagram</dt><dd><a href="https://instagram.com/@hike.InstagramPage.TrimStart('@')" target="_blank" rel="noopener noreferrer">@hike.InstagramPage</a></dd></div>
-                            }
-                        </dl>
-
-                        @if (hikeReviews.Count > 0)
-                        {
-                            <div class="trip-reviews">
-                                @foreach (var review in hikeReviews.Take(2))
-                                {
-                                    <div class="trip-review-item">
-                                        <div class="review-stars">@string.Concat(Enumerable.Repeat("★", review.Rating))@string.Concat(Enumerable.Repeat("☆", 5 - review.Rating))</div>
-                                        <p class="review-text">@review.ReviewText</p>
-                                        <span class="review-author">— @review.ReviewerName</span>
-                                    </div>
-                                }
-                            </div>
-                        }
-
-                        <div class="card-actions">
-                            @if (lifecycle != "Upcoming")
-                            {
-                                <a class="btn review-button" asp-page="/Review" asp-route-id="@hike.Id">Rate this trip</a>
-                            }
-                            @if (lifecycle != "Completed")
-                            {
-                                <a class="btn whatsapp-button" href="@Model.WhatsAppBookingUrl(hike.WhatsApp, hike.Title)" target="_blank" rel="noopener noreferrer">Book on WhatsApp</a>
-                            }
-                        </div>
                     </div>
-                </article>
-            }
-        </div>
-        @if (Model.PublicHikes.Count == 0)
+                </div>
+            </section>
+        }
+
+        @if (Model.Posts.Count == 0)
         {
             <div class="empty-state">
-                <strong>No approved trips yet</strong>
-                <p>Hikes appear here once reviewed and approved by our team. Organizers can submit trips for review.</p>
-                <a class="btn primary-action" asp-page="/OrganizerSignup">List your trip</a>
+                @if (Model.Tab == "following")
+                {
+                    <p>@T("Your following feed is empty.") <a href="/explore">@T("Find people to follow →")</a></p>
+                }
+                else
+                {
+                    <p>@T("No posts yet. Be the first to share something.")</p>
+                }
             </div>
         }
-        <div class="no-results" id="noResults" hidden>
-            No hikes match those filters yet. Try another region or difficulty.
-        </div>
-    </div>
-</section>
+        else
+        {
+            <div class="post-feed">
+                @foreach (var post in Model.Posts)
+                {
+                    <partial name="_PostCard" model="post" />
+                }
+            </div>
+        }
+    </main>
 
-<section id="destinations" class="section-block destination-band">
-    <div class="container-fluid page-shell">
-        <div class="section-heading">
-            <span class="eyebrow">Popular destinations</span>
-            <h2>Browse by destination.</h2>
-            <p>Filter by region to find hikes near Wadi Rum, Ajloun forests, Dana canyons, or Dead Sea trails.</p>
-        </div>
-        <div class="destination-grid">
-            @foreach (var dest in Model.Destinations)
+    <aside class="feed-side">
+        <div class="side-card">
+            <div class="side-stat-row">
+                <div class="side-stat"><strong>@Model.PostCount</strong><span>@T("Posts")</span></div>
+                <div class="side-stat"><strong>@Model.MemberCount</strong><span>@T("Members")</span></div>
+            </div>
+            @if (!isAuth)
             {
-                var coverUrl = !string.IsNullOrEmpty(dest.CoverImageUrl)
-                    ? dest.CoverImageUrl
-                    : IndexModel.ImageForRegion(dest.Name);
-                <a class="destination-card" href="/hikes/@dest.Slug" style="--image:url('@coverUrl')">
-                    <span>@dest.Name</span>
-                </a>
+                <a class="btn primary-action side-join" href="/Register">@T("Create your profile")</a>
             }
         </div>
-    </div>
-</section>
 
-<section id="categories" class="section-block">
-    <div class="container-fluid page-shell">
-        <div class="section-heading">
-            <span class="eyebrow">Categories</span>
-            <h2>What kind of trip are you looking for?</h2>
-        </div>
-        <div class="category-grid">
-            <button class="category-chip" type="button" data-category="beginner">Beginner friendly</button>
-            <button class="category-chip" type="button" data-category="family">Family hikes</button>
-            <button class="category-chip" type="button" data-category="sunset">Sunset trips</button>
-            <button class="category-chip" type="button" data-category="advanced">Advanced routes</button>
-            <button class="category-chip" type="button" data-category="women">Women-only groups</button>
-            <button class="category-chip" type="button" data-category="camping">Overnight camping</button>
-        </div>
-    </div>
-</section>
-
-
-
-@if (Model.Partners.Count > 0)
-{
-    <section id="partners" class="section-block partners-band">
-        <div class="container-fluid page-shell">
-            <div class="section-heading">
-                <span class="eyebrow">Our partners</span>
-                <h2>Trusted by the hiking community.</h2>
+        @if (isAuth && Model.SuggestedUsers.Count > 0)
+        {
+            <div class="side-card">
+                <h3 class="side-title">@T("Who to follow")</h3>
+                <ul class="suggest-list">
+                    @foreach (var u in Model.SuggestedUsers)
+                    {
+                        <li class="suggest-row">
+                            <a class="suggest-user" href="/u/@u.Username">
+                                <span class="suggest-avatar">
+                                    @if (!string.IsNullOrEmpty(u.AvatarUrl))
+                                    {
+                                        <img src="@u.AvatarUrl" alt="@u.Name" />
+                                    }
+                                    else
+                                    {
+                                        <span class="avatar-fallback">@Community.Initials(u.Name)</span>
+                                    }
+                                </span>
+                                <span class="suggest-meta">
+                                    <strong>@u.Name</strong>
+                                    <span>@@@u.Username</span>
+                                </span>
+                            </a>
+                            <form method="post" asp-page-handler="Follow" class="inline-form">
+                                <input type="hidden" name="targetId" value="@u.Id" />
+                                <input type="hidden" name="returnUrl" value="/?tab=@Model.Tab" />
+                                <button type="submit" class="btn-follow-sm">@T("Follow")</button>
+                            </form>
+                        </li>
+                    }
+                </ul>
             </div>
-            <div class="partners-grid">
-                @foreach (var partner in Model.Partners)
+        }
+
+        <div class="side-card">
+            <h3 class="side-title">@T("Explore by region")</h3>
+            <div class="region-chips">
+                @foreach (var r in Community.Regions.Take(8))
                 {
-                    var partnerHref = string.IsNullOrEmpty(partner.InstagramPage)
-                        ? null
-                        : $"https://instagram.com/{partner.InstagramPage}";
-                    <article class="partner-card">
-                        <div class="partner-card-img">
-                            @if (!string.IsNullOrEmpty(partner.ImageUrl))
-                            {
-                                <img src="@partner.ImageUrl" alt="@partner.Name logo" loading="lazy" />
-                            }
-                            else
-                            {
-                                <span class="partner-name-fallback">@partner.Name</span>
-                            }
-                        </div>
-                        <div class="partner-card-info">
-                            <p class="partner-label">@partner.Name</p>
-                            @if (!string.IsNullOrEmpty(partner.InstagramPage))
-                            {
-                                <a class="partner-insta-link" href="@partnerHref" target="_blank" rel="noopener noreferrer">
-                                    @("@" + partner.InstagramPage)
-                                </a>
-                            }
-                        </div>
-                        @if (partnerHref is not null)
-                        {
-                            <a class="partner-card-overlay" href="@partnerHref" target="_blank" rel="noopener noreferrer" aria-label="@partner.Name on Instagram"></a>
-                        }
-                    </article>
+                    <a class="region-chip" href="/explore?region=@Uri.EscapeDataString(r)">@Community.RegionEmoji(r) @T(r)</a>
                 }
             </div>
         </div>
-    </section>
-}
-
-<section id="trust" class="section-block dark-band">
-    <div class="container-fluid page-shell trust-grid">
-        <div>
-            <span class="eyebrow">Why trust us</span>
-            <h2>Every organizer is verified before going live.</h2>
-            <p>We review each organizer's experience, past trips, and safety record before they can publish hikes on Hike Jordan. Verified means we've checked identity, WhatsApp contact, and response history.</p>
-        </div>
-        <div class="trust-card">
-            <strong>What we verify</strong>
-            <ul>
-                <li>Organizer identity and experience level.</li>
-                <li>Safety record and past trip history.</li>
-                <li>WhatsApp contact and response rate.</li>
-                <li>Honest reviews from verified joiners.</li>
-            </ul>
-        </div>
-    </div>
-</section>
-
-
-
-<section id="organizer-cta" class="organizer-cta">
-    <div class="container-fluid page-shell cta-inner">
-        <div>
-            <span class="eyebrow">For organizers</span>
-            <h2>Get approved first, then publish trusted hikes.</h2>
-            <p>Organizers create a profile and wait for admin approval. After verification, they can sign in, add hikes, and receive bookings directly on WhatsApp.</p>
-        </div>
-        <div class="hero-actions">
-            <a class="btn primary-action" asp-page="/OrganizerSignup">Organizer sign up</a>
-            <a class="btn secondary-action" asp-page="/Login">Organizer sign in</a>
-        </div>
-    </div>
-</section>
+    </aside>
+</div>

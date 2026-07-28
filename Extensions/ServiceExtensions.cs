@@ -37,8 +37,31 @@ public static class ServiceExtensions
 
         services.AddRazorPages();
         services.AddHealthChecks();
+
+        // Let the HTML encoder emit non-Latin scripts (Arabic) as raw UTF-8 instead of &#x…; entities.
+        services.Configure<Microsoft.Extensions.WebEncoders.WebEncoderOptions>(options =>
+        {
+            options.TextEncoderSettings =
+                new System.Text.Encodings.Web.TextEncoderSettings(System.Text.Unicode.UnicodeRanges.All);
+        });
+
+        services.Configure<Microsoft.AspNetCore.Builder.RequestLocalizationOptions>(options =>
+        {
+            var supported = new[]
+            {
+                new System.Globalization.CultureInfo("en"),
+                new System.Globalization.CultureInfo("ar")
+            };
+            options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture("en");
+            options.SupportedCultures = supported;
+            options.SupportedUICultures = supported;
+            // Language is chosen only via our cookie toggle (ignore Accept-Language header).
+            options.RequestCultureProviders.Clear();
+            options.RequestCultureProviders.Add(new Microsoft.AspNetCore.Localization.CookieRequestCultureProvider());
+        });
+
         services.AddScoped<IPasswordService, PasswordService>();
-        services.AddScoped<IWhatsAppService, WhatsAppService>();
+        services.Configure<FeatureOptions>(configuration.GetSection("Features"));
         services.Configure<EmailOptions>(configuration.GetSection("Email"));
         services.AddScoped<IEmailService, EmailService>();
 

@@ -1,0 +1,44 @@
+@page "/verify-email"
+@model VerifyEmailModel
+@{
+    ViewData["Title"] = "Verify email";
+}
+
+<div class="auth-page page-shell">
+    <div class="auth-card" style="text-align:center">
+        @switch (Model.Result)
+        {
+            case VerifyEmailModel.Outcome.Success:
+                <div class="verify-icon" aria-hidden="true">✅</div>
+                <h1>Email verified</h1>
+                <p class="auth-sub">You're all set and signed in. Welcome to the community!</p>
+                <a class="btn primary-action full-width" href="/">Go to your feed</a>
+                break;
+
+            case VerifyEmailModel.Outcome.AlreadyVerified:
+                <div class="verify-icon" aria-hidden="true">👍</div>
+                <h1>Already verified</h1>
+                <p class="auth-sub">This email is already confirmed. You can sign in.</p>
+                <a class="btn primary-action full-width" href="/Login">Sign in</a>
+                break;
+
+            case VerifyEmailModel.Outcome.Expired:
+                <div class="verify-icon" aria-hidden="true">⏳</div>
+                <h1>Link expired</h1>
+                <p class="auth-sub">This verification link has expired. Request a fresh one below.</p>
+                <form method="post" asp-page="/RegisterConfirmation" asp-page-handler="Resend" class="inline-form">
+                    <input type="hidden" name="email" value="@Model.ResendEmail" />
+                    <button type="submit" class="btn primary-action full-width">Send a new link</button>
+                </form>
+                break;
+
+            default:
+                <div class="verify-icon" aria-hidden="true">⚠️</div>
+                <h1>Invalid link</h1>
+                <p class="auth-sub">This verification link isn't valid. It may have already been used. Try signing in, or register again.</p>
+                <a class="btn primary-action full-width" href="/Login">Sign in</a>
+                <p class="auth-switch" style="margin-top:16px"><a href="/Register">Create an account</a></p>
+                break;
+        }
+    </div>
+</div>

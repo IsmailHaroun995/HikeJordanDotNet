@@ -94,6 +94,27 @@ public sealed class EmailService(IOptions<EmailOptions> opts, ILogger<EmailServi
             </div>
             """);
 
+    public Task SendEmailVerificationAsync(string toEmail, string name, string verifyUrl) =>
+        SendAsync(toEmail,
+            "Verify your email — Hike Jordan",
+            $"""
+            <div style="font-family:sans-serif;max-width:520px">
+              <h2 style="color:#26483b">Welcome, {name}!</h2>
+              <p>Thanks for joining the <strong>Hike Jordan</strong> community. Please confirm your email
+                 address to activate your account.</p>
+              <p style="margin:24px 0">
+                <a href="{verifyUrl}"
+                   style="background:#26483b;color:#fff;text-decoration:none;padding:12px 24px;border-radius:8px;font-weight:600;display:inline-block">
+                   Verify my email
+                </a>
+              </p>
+              <p style="color:#666;font-size:14px">Or paste this link into your browser:<br>
+                 <a href="{verifyUrl}">{verifyUrl}</a></p>
+              <p style="color:#666;font-size:14px">This link expires in 24 hours. If you didn't create an account, you can ignore this email.</p>
+              <p style="color:#666">— The Hike Jordan team</p>
+            </div>
+            """);
+
     private async Task SendAsync(string to, string subject, string htmlBody)
     {
         if (string.IsNullOrWhiteSpace(_o.SenderEmail) || string.IsNullOrWhiteSpace(_o.Password))
