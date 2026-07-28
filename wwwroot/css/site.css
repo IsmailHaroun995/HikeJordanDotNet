@@ -4325,11 +4325,7 @@ details[open] .trip-reviews-summary::after {
   padding: 44px 36px;
   margin-bottom: 24px;
   overflow: hidden;
-  background:
-    linear-gradient(120deg, rgba(21, 33, 28, 0.92) 0%, rgba(38, 72, 59, 0.72) 100%),
-    url('https://images.unsplash.com/photo-1548786811-dd6e453ccca7?auto=format&fit=crop&w=1200&q=80');
-  background-size: cover;
-  background-position: center;
+  background: linear-gradient(120deg, var(--ink) 0%, var(--cedar) 100%);
 }
 .feed-welcome-body { position: relative; z-index: 1; }
 .welcome-eyebrow {
