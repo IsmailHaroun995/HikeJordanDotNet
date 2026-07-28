@@ -21,6 +21,14 @@ public class AppUser
     [MaxLength(40)]
     public string Role { get; set; } = AppConstants.Roles.Member;
 
+    /// <summary>"Person" or "Group".</summary>
+    [MaxLength(20)]
+    public string AccountType { get; set; } = AppConstants.AccountType.Person;
+
+    /// <summary>Instagram handle (without @) — for group accounts.</summary>
+    [MaxLength(80)]
+    public string? InstagramPage { get; set; }
+
     [MaxLength(40)]
     public string ApprovalStatus { get; set; } = AppConstants.AccountStatus.Approved;
 

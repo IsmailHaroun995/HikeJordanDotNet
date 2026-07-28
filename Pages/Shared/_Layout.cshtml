@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="@Lang" dir="@Dir">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -57,17 +57,23 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse justify-content-end">
+                    @{
+                        var _returnPath = Context.Request.Path + Context.Request.QueryString;
+                        var _langHref = IsArabic
+                            ? $"/set-language/en?redirect={Uri.EscapeDataString(_returnPath)}"
+                            : $"/set-language/ar?redirect={Uri.EscapeDataString(_returnPath)}";
+                    }
                     <ul class="navbar-nav align-items-lg-center gap-lg-3">
-                        <li class="nav-item"><a class="nav-link" href="/">Feed</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/explore">Explore</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/">@T("Feed")</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/explore">@T("Explore")</a></li>
                         @if (User.Identity?.IsAuthenticated == true)
                         {
                             var username = User.FindFirst("username")?.Value;
                             var avatar = User.FindFirst("avatar")?.Value;
-                            <li class="nav-item"><a class="nav-link nav-pill" href="/compose">+ Post</a></li>
+                            <li class="nav-item"><a class="nav-link nav-pill" href="/compose">@T("+ Post")</a></li>
                             @if (User.IsInRole("Admin"))
                             {
-                                <li class="nav-item"><a class="nav-link" asp-page="/Admin">Admin</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-page="/Admin">@T("Admin")</a></li>
                             }
                             <li class="nav-item dropdown nav-profile">
                                 <a class="nav-link nav-avatar" href="/u/@username" aria-label="My profile">
@@ -81,18 +87,19 @@
                                     }
                                 </a>
                             </li>
-                            <li class="nav-item"><a class="nav-link" href="/settings">Settings</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/settings">@T("Settings")</a></li>
                             <li class="nav-item">
                                 <form method="post" asp-page="/Login" asp-page-handler="Logout" style="display:inline">
-                                    <button type="submit" class="nav-link btn-link-nav">Sign out</button>
+                                    <button type="submit" class="nav-link btn-link-nav">@T("Sign out")</button>
                                 </form>
                             </li>
                         }
                         else
                         {
-                            <li class="nav-item"><a class="nav-link" asp-page="/Login">Sign in</a></li>
-                            <li class="nav-item"><a class="nav-link nav-pill" asp-page="/Register">Join</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-page="/Login">@T("Sign in")</a></li>
+                            <li class="nav-item"><a class="nav-link nav-pill" asp-page="/Register">@T("Join")</a></li>
                         }
+                        <li class="nav-item"><a class="language-toggle" href="@_langHref">@(IsArabic ? "English" : "العربية")</a></li>
                     </ul>
                 </div>
             </div>
@@ -107,24 +114,24 @@
         <div class="container-fluid page-shell footer-grid">
             <div>
                 <strong>Hike Jordan</strong>
-                <span>The community for Jordan's outdoor explorers.</span>
+                <span>@T("The community for Jordan's outdoor explorers.")</span>
             </div>
             <div class="footer-links">
                 @if (User.IsInRole("Admin"))
                 {
-                    <a asp-page="/Admin">Admin</a>
+                    <a asp-page="/Admin">@T("Admin")</a>
                 }
                 @if (User.Identity?.IsAuthenticated == true)
                 {
                     <form method="post" asp-page="/Login" asp-page-handler="Logout" style="display:inline">
-                        <button type="submit" class="footer-link-btn">Sign out</button>
+                        <button type="submit" class="footer-link-btn">@T("Sign out")</button>
                     </form>
                 }
                 else
                 {
-                    <a asp-page="/Login">Sign in</a>
+                    <a asp-page="/Login">@T("Sign in")</a>
                 }
-                <a asp-area="" asp-page="/Privacy">Privacy</a>
+                <a asp-area="" asp-page="/Privacy">@T("Privacy")</a>
             </div>
         </div>
     </footer>

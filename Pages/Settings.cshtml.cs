@@ -16,6 +16,7 @@ public class SettingsModel(HikeJordanDbContext db, IWebHostEnvironment env) : Pa
     [BindProperty] public string Name { get; set; } = string.Empty;
     [BindProperty] public string Bio { get; set; } = string.Empty;
     [BindProperty] public string Location { get; set; } = string.Empty;
+    [BindProperty] public string? InstagramPage { get; set; }
     [BindProperty] public IFormFile? Avatar { get; set; }
     [BindProperty] public IFormFile? Cover { get; set; }
 
@@ -31,6 +32,7 @@ public class SettingsModel(HikeJordanDbContext db, IWebHostEnvironment env) : Pa
         Name = user.Name;
         Bio = user.Bio;
         Location = user.Location;
+        InstagramPage = user.InstagramPage;
         return Page();
     }
 
@@ -48,6 +50,12 @@ public class SettingsModel(HikeJordanDbContext db, IWebHostEnvironment env) : Pa
         user.Name = Name.Trim();
         user.Bio = Bio?.Trim() ?? string.Empty;
         user.Location = Location?.Trim() ?? string.Empty;
+
+        if (user.AccountType == AppConstants.AccountType.Group)
+        {
+            var handle = InstagramPage?.Trim().TrimStart('@');
+            user.InstagramPage = string.IsNullOrWhiteSpace(handle) ? null : handle;
+        }
 
         var avatarPath = await SaveImageAsync(Avatar, "avatars");
         if (avatarPath is not null) user.AvatarUrl = avatarPath;

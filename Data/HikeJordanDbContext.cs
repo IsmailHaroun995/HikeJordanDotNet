@@ -9,6 +9,7 @@ public class HikeJordanDbContext(DbContextOptions<HikeJordanDbContext> options) 
     public DbSet<Comment> Comments => Set<Comment>();
     public DbSet<PostLike> PostLikes => Set<PostLike>();
     public DbSet<Follow> Follows => Set<Follow>();
+    public DbSet<GroupReview> GroupReviews => Set<GroupReview>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -64,5 +65,15 @@ public class HikeJordanDbContext(DbContextOptions<HikeJordanDbContext> options) 
 
         modelBuilder.Entity<Follow>()
             .HasIndex(follow => follow.FollowingId);
+
+        // GroupReview → Group (AppUser); cascade so removing a group clears its reviews.
+        modelBuilder.Entity<GroupReview>()
+            .HasOne(review => review.Group)
+            .WithMany()
+            .HasForeignKey(review => review.GroupId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<GroupReview>()
+            .HasIndex(review => new { review.GroupId, review.IsHidden });
     }
 }

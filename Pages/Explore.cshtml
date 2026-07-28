@@ -8,16 +8,16 @@
 
 <div class="explore-header">
     <div class="page-shell">
-        <h1>Explore</h1>
+        <h1>@T("Explore")</h1>
         <form class="explore-search" method="get" action="/explore">
-            <input type="search" name="q" value="@Model.Query" placeholder="Search posts, places, people…" class="form-control" />
-            <button type="submit" class="btn primary-action">Search</button>
+            <input type="search" name="q" value="@Model.Query" placeholder="@T("Search posts, places, people…")" class="form-control" />
+            <button type="submit" class="btn primary-action">@T("Search")</button>
         </form>
         <div class="region-chips explore-chips">
-            <a class="region-chip @(Model.Region is null ? "active" : "")" href="/explore">All</a>
+            <a class="region-chip @(Model.Region is null ? "active" : "")" href="/explore">@T("All")</a>
             @foreach (var r in Community.Regions)
             {
-                <a class="region-chip @(Model.Region == r ? "active" : "")" href="/explore?region=@Uri.EscapeDataString(r)">@r</a>
+                <a class="region-chip @(Model.Region == r ? "active" : "")" href="/explore?region=@Uri.EscapeDataString(r)">@Community.RegionEmoji(r) @T(r)</a>
             }
         </div>
     </div>
@@ -28,7 +28,7 @@
         @if (!string.IsNullOrWhiteSpace(Model.Query) && Model.People.Count > 0)
         {
             <div class="side-card">
-                <h3 class="side-title">People</h3>
+                <h3 class="side-title">@T("People")</h3>
                 <ul class="suggest-list">
                     @foreach (var u in Model.People)
                     {
@@ -54,7 +54,7 @@
 
         @if (Model.Posts.Count == 0)
         {
-            <div class="empty-state"><p>No posts found@(Model.Region is not null ? $" in {Model.Region}" : "").</p></div>
+            <div class="empty-state"><p>@T("No posts found.")</p></div>
         }
         else
         {

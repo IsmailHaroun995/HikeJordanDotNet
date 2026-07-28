@@ -4,6 +4,7 @@ using HikeJordanDotNet.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HikeJordanDotNet.Data.Migrations
 {
     [DbContext(typeof(HikeJordanDbContext))]
-    partial class HikeJordanDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260725180359_AddEmailVerification")]
+    partial class AddEmailVerification
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,11 +32,6 @@ namespace HikeJordanDotNet.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AccountType")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("ApprovalStatus")
                         .IsRequired()
@@ -70,10 +68,6 @@ namespace HikeJordanDotNet.Data.Migrations
                     b.Property<string>("EmailVerificationToken")
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
-
-                    b.Property<string>("InstagramPage")
-                        .HasMaxLength(80)
-                        .HasColumnType("nvarchar(80)");
 
                     b.Property<string>("Location")
                         .IsRequired()
@@ -167,43 +161,6 @@ namespace HikeJordanDotNet.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Follows");
-                });
-
-            modelBuilder.Entity("HikeJordanDotNet.Data.GroupReview", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Comment")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("GroupId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsHidden")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("Rating")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ReviewerName")
-                        .IsRequired()
-                        .HasMaxLength(80)
-                        .HasColumnType("nvarchar(80)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GroupId", "IsHidden");
-
-                    b.ToTable("GroupReviews");
                 });
 
             modelBuilder.Entity("HikeJordanDotNet.Data.Post", b =>
@@ -301,17 +258,6 @@ namespace HikeJordanDotNet.Data.Migrations
                     b.Navigation("Author");
 
                     b.Navigation("Post");
-                });
-
-            modelBuilder.Entity("HikeJordanDotNet.Data.GroupReview", b =>
-                {
-                    b.HasOne("HikeJordanDotNet.Data.AppUser", "Group")
-                        .WithMany()
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Group");
                 });
 
             modelBuilder.Entity("HikeJordanDotNet.Data.Post", b =>

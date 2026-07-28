@@ -10,7 +10,7 @@
 
 <div class="post-detail-layout page-shell">
     <main class="post-detail">
-        <a class="back-link" href="javascript:history.back()">← Back</a>
+        <a class="back-link" href="javascript:history.back()">@T("← Back")</a>
 
         <article class="post-card post-card-detail">
             <header class="post-head">
@@ -60,39 +60,39 @@
                         <input type="hidden" name="returnUrl" value="@returnUrl" />
                         <button type="submit" class="post-action @(Model.Liked ? "liked" : "")">
                             <span class="action-icon">@(Model.Liked ? "♥" : "♡")</span>
-                            <span>@p.LikeCount likes</span>
+                            <span>@p.LikeCount @T("likes")</span>
                         </button>
                     </form>
                 }
                 else
                 {
-                    <a class="post-action" href="/Login"><span class="action-icon">♡</span><span>@p.LikeCount likes</span></a>
+                    <a class="post-action" href="/Login"><span class="action-icon">♡</span><span>@p.LikeCount @T("likes")</span></a>
                 }
-                <span class="post-action static"><span class="action-icon">💬</span><span>@p.CommentCount comments</span></span>
+                <span class="post-action static"><span class="action-icon">💬</span><span>@p.CommentCount @T("comments")</span></span>
             </footer>
         </article>
 
         <section class="comments-section">
-            <h2 class="comments-title">Comments</h2>
+            <h2 class="comments-title">@T("Comments")</h2>
 
             @if (isAuth)
             {
                 <form method="post" asp-page-handler="Comment" asp-route-id="@p.Id" class="comment-form">
                     <div class="char-count-wrap">
-                        <textarea name="body" rows="2" maxlength="1000" placeholder="Add a comment…" class="form-control" required></textarea>
+                        <textarea name="body" rows="2" maxlength="1000" placeholder="@T("Add a comment…")" class="form-control" required></textarea>
                         <span class="char-count" aria-hidden="true"></span>
                     </div>
-                    <button type="submit" class="btn primary-action">Comment</button>
+                    <button type="submit" class="btn primary-action">@T("Comment")</button>
                 </form>
             }
             else
             {
-                <p class="comment-signin"><a href="/Login">Sign in</a> to join the conversation.</p>
+                <p class="comment-signin"><a href="/Login">@T("Sign in")</a> @T("to join the conversation.")</p>
             }
 
             @if (Model.Comments.Count == 0)
             {
-                <p class="empty-state">No comments yet.</p>
+                <p class="empty-state">@T("No comments yet.")</p>
             }
             else
             {

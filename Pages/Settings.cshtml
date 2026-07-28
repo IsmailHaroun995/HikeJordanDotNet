@@ -7,7 +7,7 @@
 
 <div class="form-page page-shell">
     <div class="form-card">
-        <h1>Edit profile</h1>
+        <h1>@T("Edit profile")</h1>
 
         @if (!string.IsNullOrEmpty(Model.Message))
         {
@@ -37,31 +37,41 @@
 
         <form method="post" enctype="multipart/form-data" class="stack-form">
             <div class="field">
-                <label for="Name">Display name</label>
+                <label for="Name">@T("Display name")</label>
                 <input id="Name" name="Name" value="@Model.Name" class="form-control" required />
             </div>
             <div class="field char-count-wrap">
-                <label for="Bio">Bio</label>
-                <textarea id="Bio" name="Bio" rows="3" maxlength="500" class="form-control" placeholder="Tell the community about yourself…">@Model.Bio</textarea>
+                <label for="Bio">@T("Bio")</label>
+                <textarea id="Bio" name="Bio" rows="3" maxlength="500" class="form-control" placeholder="@T("Tell the community about yourself…")">@Model.Bio</textarea>
                 <span class="char-count" aria-hidden="true"></span>
             </div>
             <div class="field">
-                <label for="Location">Location</label>
-                <input id="Location" name="Location" value="@Model.Location" class="form-control" placeholder="e.g. Amman" />
+                <label for="Location">@T("Location")</label>
+                <input id="Location" name="Location" value="@Model.Location" class="form-control" placeholder="@T("e.g. Amman")" />
             </div>
+            @if (a.AccountType == AppConstants.AccountType.Group)
+            {
+                <div class="field">
+                    <label for="InstagramPage">@T("Instagram page")</label>
+                    <div class="input-prefix">
+                        <span>@@</span>
+                        <input id="InstagramPage" name="InstagramPage" value="@Model.InstagramPage" class="form-control" placeholder="wadi.rum.adventures" />
+                    </div>
+                </div>
+            }
             <div class="field-row">
                 <div class="field">
-                    <label for="Avatar">Profile photo</label>
+                    <label for="Avatar">@T("Profile photo")</label>
                     <input id="Avatar" name="Avatar" type="file" accept="image/*" class="form-control" />
                 </div>
                 <div class="field">
-                    <label for="Cover">Cover photo</label>
+                    <label for="Cover">@T("Cover photo")</label>
                     <input id="Cover" name="Cover" type="file" accept="image/*" class="form-control" />
                 </div>
             </div>
             <div class="form-buttons">
-                <a class="btn secondary-action" href="/u/@a.Username">View profile</a>
-                <button type="submit" class="btn primary-action">Save changes</button>
+                <a class="btn secondary-action" href="/u/@a.Username">@T("View profile")</a>
+                <button type="submit" class="btn primary-action">@T("Save changes")</button>
             </div>
         </form>
     </div>

@@ -36,9 +36,26 @@ try
     app.UseHttpsRedirection();
     app.UseSerilogRequestLogging();
     app.UseStaticFiles();
+    app.UseRequestLocalization();
     app.UseRouting();
     app.UseAuthentication();
     app.UseAuthorization();
+
+    // Language toggle: sets the culture cookie, then returns to the current page.
+    app.MapGet("/set-language/{culture}", (string culture, string? redirect, HttpContext ctx) =>
+    {
+        var chosen = culture == "ar" ? "ar" : "en";
+        ctx.Response.Cookies.Append(
+            Microsoft.AspNetCore.Localization.CookieRequestCultureProvider.DefaultCookieName,
+            Microsoft.AspNetCore.Localization.CookieRequestCultureProvider.MakeCookieValue(
+                new Microsoft.AspNetCore.Localization.RequestCulture(chosen)),
+            new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1), IsEssential = true, HttpOnly = false });
+
+        var target = !string.IsNullOrEmpty(redirect) && redirect.StartsWith('/') && !redirect.StartsWith("//")
+            ? redirect
+            : "/";
+        return Results.LocalRedirect(target);
+    });
 
     app.MapRazorPages();
     app.MapHealthChecks("/health");

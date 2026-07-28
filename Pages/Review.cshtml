@@ -1,0 +1,63 @@
+@page "/review/{username}"
+@model ReviewModel
+@{
+    var g = Model.Group;
+    ViewData["Title"] = $"{T("Rate this group")} — {g.Name}";
+}
+
+<div class="auth-page page-shell">
+    <div class="auth-card" style="text-align:center">
+        @if (Model.Submitted)
+        {
+            <div class="verify-icon" aria-hidden="true">🎉</div>
+            <h1>@T("Thanks for your review!")</h1>
+            <p class="auth-sub">@g.Name</p>
+            <a class="btn primary-action full-width" href="/u/@g.Username">@T("View profile")</a>
+        }
+        else
+        {
+            <div class="review-group-head">
+                <div class="review-avatar">
+                    @if (!string.IsNullOrEmpty(g.AvatarUrl))
+                    {
+                        <img src="@g.AvatarUrl" alt="@g.Name" />
+                    }
+                    else
+                    {
+                        <span class="avatar-fallback">@Community.Initials(g.Name)</span>
+                    }
+                </div>
+                <h1>@T("Rate this group")</h1>
+                <p class="auth-sub">@g.Name</p>
+            </div>
+
+            <form method="post" class="stack-form" style="text-align:start">
+                <div asp-validation-summary="ModelOnly" class="form-error"></div>
+
+                <div class="field">
+                    <label>@T("Your rating")</label>
+                    <div class="star-input" role="radiogroup" aria-label="@T("Your rating")">
+                        @for (var i = 5; i >= 1; i--)
+                        {
+                            <input type="radio" name="Rating" value="@i" id="star@i" @(Model.Rating == i ? "checked" : "") />
+                            <label for="star@i" title="@i">★</label>
+                        }
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="ReviewerName">@T("Your name")</label>
+                    <input id="ReviewerName" name="ReviewerName" value="@Model.ReviewerName" class="form-control" maxlength="80" />
+                </div>
+
+                <div class="field char-count-wrap">
+                    <label for="Comment">@T("Your review")</label>
+                    <textarea id="Comment" name="Comment" rows="4" maxlength="1000" class="form-control" placeholder="@T("Share your experience with this group…")">@Model.Comment</textarea>
+                    <span class="char-count" aria-hidden="true"></span>
+                </div>
+
+                <button type="submit" class="btn primary-action full-width">@T("Submit review")</button>
+            </form>
+        }
+    </div>
+</div>

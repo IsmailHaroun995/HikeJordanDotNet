@@ -12,8 +12,8 @@
         @if (isAuth)
         {
             <div class="feed-tabs">
-                <a class="feed-tab @(Model.Tab == "latest" ? "active" : "")" href="/?tab=latest">Latest</a>
-                <a class="feed-tab @(Model.Tab == "following" ? "active" : "")" href="/?tab=following">Following</a>
+                <a class="feed-tab @(Model.Tab == "latest" ? "active" : "")" href="/?tab=latest">@T("Latest")</a>
+                <a class="feed-tab @(Model.Tab == "following" ? "active" : "")" href="/?tab=following">@T("Following")</a>
             </div>
 
             <a class="compose-prompt" href="/compose">
@@ -28,18 +28,27 @@
                         <span class="avatar-fallback">@Community.Initials(User.Identity?.Name ?? "?")</span>
                     }
                 </span>
-                <span class="compose-placeholder">Share a trip or a tip…</span>
-                <span class="compose-go">Post</span>
+                <span class="compose-placeholder">@T("Share a trip or a tip…")</span>
+                <span class="compose-go">@T("Post")</span>
             </a>
         }
         else
         {
             <section class="feed-welcome">
-                <h1>Jordan's outdoor community</h1>
-                <p>Share your trips, follow other hikers, and discover new places through the people who've been there.</p>
-                <div class="welcome-actions">
-                    <a class="btn primary-action" href="/Register">Join the community</a>
-                    <a class="btn secondary-action" href="/explore">Explore posts</a>
+                <div class="feed-welcome-body">
+                    <span class="welcome-eyebrow">@T("Discover Jordan, one trip at a time")</span>
+                    <h1>@T("Jordan's outdoor community")</h1>
+                    <p>@T("Share your trips, follow other hikers, and discover new places through the people who've been there.")</p>
+                    <div class="welcome-actions">
+                        <a class="btn primary-action" href="/Register">@T("Join the community")</a>
+                        <a class="btn secondary-action" href="/explore">@T("Explore posts")</a>
+                    </div>
+                    <div class="welcome-regions">
+                        @foreach (var r in Community.Regions.Take(6))
+                        {
+                            <a class="welcome-region-chip" href="/explore?region=@Uri.EscapeDataString(r)">@Community.RegionEmoji(r) @T(r)</a>
+                        }
+                    </div>
                 </div>
             </section>
         }
@@ -49,11 +58,11 @@
             <div class="empty-state">
                 @if (Model.Tab == "following")
                 {
-                    <p>Your following feed is empty. <a href="/explore">Find people to follow →</a></p>
+                    <p>@T("Your following feed is empty.") <a href="/explore">@T("Find people to follow →")</a></p>
                 }
                 else
                 {
-                    <p>No posts yet. Be the first to share something.</p>
+                    <p>@T("No posts yet. Be the first to share something.")</p>
                 }
             </div>
         }
@@ -71,19 +80,19 @@
     <aside class="feed-side">
         <div class="side-card">
             <div class="side-stat-row">
-                <div class="side-stat"><strong>@Model.PostCount</strong><span>Posts</span></div>
-                <div class="side-stat"><strong>@Model.MemberCount</strong><span>Members</span></div>
+                <div class="side-stat"><strong>@Model.PostCount</strong><span>@T("Posts")</span></div>
+                <div class="side-stat"><strong>@Model.MemberCount</strong><span>@T("Members")</span></div>
             </div>
             @if (!isAuth)
             {
-                <a class="btn primary-action side-join" href="/Register">Create your profile</a>
+                <a class="btn primary-action side-join" href="/Register">@T("Create your profile")</a>
             }
         </div>
 
         @if (isAuth && Model.SuggestedUsers.Count > 0)
         {
             <div class="side-card">
-                <h3 class="side-title">Who to follow</h3>
+                <h3 class="side-title">@T("Who to follow")</h3>
                 <ul class="suggest-list">
                     @foreach (var u in Model.SuggestedUsers)
                     {
@@ -107,7 +116,7 @@
                             <form method="post" asp-page-handler="Follow" class="inline-form">
                                 <input type="hidden" name="targetId" value="@u.Id" />
                                 <input type="hidden" name="returnUrl" value="/?tab=@Model.Tab" />
-                                <button type="submit" class="btn-follow-sm">Follow</button>
+                                <button type="submit" class="btn-follow-sm">@T("Follow")</button>
                             </form>
                         </li>
                     }
@@ -116,11 +125,11 @@
         }
 
         <div class="side-card">
-            <h3 class="side-title">Explore by region</h3>
+            <h3 class="side-title">@T("Explore by region")</h3>
             <div class="region-chips">
                 @foreach (var r in Community.Regions.Take(8))
                 {
-                    <a class="region-chip" href="/explore?region=@Uri.EscapeDataString(r)">@r</a>
+                    <a class="region-chip" href="/explore?region=@Uri.EscapeDataString(r)">@Community.RegionEmoji(r) @T(r)</a>
                 }
             </div>
         </div>

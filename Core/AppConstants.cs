@@ -8,6 +8,12 @@ public static class AppConstants
         public const string Member = "Member";
     }
 
+    public static class AccountType
+    {
+        public const string Person = "Person";
+        public const string Group = "Group";
+    }
+
     public static class HikeStatus
     {
         public const string Draft = "Draft";

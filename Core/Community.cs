@@ -31,6 +31,22 @@ public static class Community
             : (parts[0][..1] + parts[^1][..1]).ToUpperInvariant();
     }
 
+    public static string RegionEmoji(string region) => region switch
+    {
+        "Wadi Rum" => "🏜️",
+        "Petra" => "🏛️",
+        "Dana" => "🏞️",
+        "Ajloun" => "🌲",
+        "Dead Sea" => "🌊",
+        "Wadi Mujib" => "💦",
+        "Aqaba" => "🐠",
+        "Jerash" => "🏺",
+        "Salt" => "🏘️",
+        "Amman" => "🏙️",
+        "Jordan Trail" => "🥾",
+        _ => "📍"
+    };
+
     public static string RegionImage(string region) => region switch
     {
         "Wadi Rum" => "https://images.unsplash.com/photo-1548786811-dd6e453ccca7?auto=format&fit=crop&w=900&q=80",

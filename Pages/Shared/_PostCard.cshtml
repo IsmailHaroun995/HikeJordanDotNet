@@ -28,7 +28,7 @@
         </div>
         @if (!string.IsNullOrEmpty(Model.Region))
         {
-            <a class="post-region-chip" href="/explore?region=@Uri.EscapeDataString(Model.Region)">@Model.Region</a>
+            <a class="post-region-chip" href="/explore?region=@Uri.EscapeDataString(Model.Region)">@Community.RegionEmoji(Model.Region) @T(Model.Region)</a>
         }
     </header>
 

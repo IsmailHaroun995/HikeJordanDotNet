@@ -7,10 +7,15 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace HikeJordanDotNet.Pages;
 
-public class LoginModel(HikeJordanDbContext db, ILogger<LoginModel> logger, IPasswordService passwords) : PageModel
+public class LoginModel(
+    HikeJordanDbContext db,
+    ILogger<LoginModel> logger,
+    IPasswordService passwords,
+    IOptions<FeatureOptions> features) : PageModel
 {
     [BindProperty]
     public LoginInput Input { get; set; } = new();
@@ -52,7 +57,7 @@ public class LoginModel(HikeJordanDbContext db, ILogger<LoginModel> logger, IPas
             return Page();
         }
 
-        if (!account.EmailConfirmed)
+        if (features.Value.RequireEmailVerification && !account.EmailConfirmed)
         {
             logger.LogInformation("Unverified login attempt for {Email}", account.Email);
             NeedsVerification = true;

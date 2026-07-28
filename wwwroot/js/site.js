@@ -1,12 +1,6 @@
 /* HikeJordan community — lightweight progressive enhancement.
-   Everything here is optional; the site is fully functional without JS. */
-
-/* ─── Reset any stale RTL/lang from the previous version of the site ─── */
-try {
-  localStorage.removeItem("hikeJordanLanguage");
-} catch { /* ignore */ }
-document.documentElement.lang = "en";
-document.documentElement.dir = "ltr";
+   Everything here is optional; the site is fully functional without JS.
+   Language & text direction are set server-side (culture cookie), not here. */
 
 /* ─── Show / hide password toggles ──────────────────────────────────── */
 document.querySelectorAll(".password-toggle").forEach((btn) => {
@@ -42,6 +36,18 @@ document.querySelectorAll("textarea[maxlength]").forEach((area) => {
   };
   update();
   area.addEventListener("input", update);
+});
+
+/* ─── Copy-to-clipboard buttons ─────────────────────────────────────── */
+document.querySelectorAll("[data-copy]").forEach((btn) => {
+  btn.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(btn.getAttribute("data-copy") || "");
+      const original = btn.textContent;
+      btn.textContent = "✓ Copied";
+      setTimeout(() => { btn.textContent = original; }, 1800);
+    } catch { /* clipboard unavailable */ }
+  });
 });
 
 /* ─── Highlight the active top-nav link ─────────────────────────────── */
