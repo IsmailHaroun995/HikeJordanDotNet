@@ -4,6 +4,7 @@ using HikeJordanDotNet.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HikeJordanDotNet.Data.Migrations
 {
     [DbContext(typeof(HikeJordanDbContext))]
-    partial class HikeJordanDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260821154841_AddPostStats")]
+    partial class AddPostStats
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -97,10 +100,6 @@ namespace HikeJordanDotNet.Data.Migrations
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasMaxLength(40)
-                        .HasColumnType("nvarchar(40)");
-
-                    b.Property<string>("WhatsApp")
                         .HasMaxLength(40)
                         .HasColumnType("nvarchar(40)");
 
@@ -208,43 +207,6 @@ namespace HikeJordanDotNet.Data.Migrations
                     b.HasIndex("GroupId", "IsHidden");
 
                     b.ToTable("GroupReviews");
-                });
-
-            modelBuilder.Entity("HikeJordanDotNet.Data.Notification", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ActorId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("PostId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RecipientId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ActorId");
-
-                    b.HasIndex("RecipientId", "IsRead");
-
-                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("HikeJordanDotNet.Data.Post", b =>
@@ -363,17 +325,6 @@ namespace HikeJordanDotNet.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Group");
-                });
-
-            modelBuilder.Entity("HikeJordanDotNet.Data.Notification", b =>
-                {
-                    b.HasOne("HikeJordanDotNet.Data.AppUser", "Actor")
-                        .WithMany()
-                        .HasForeignKey("ActorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Actor");
                 });
 
             modelBuilder.Entity("HikeJordanDotNet.Data.Post", b =>

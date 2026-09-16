@@ -21,6 +21,15 @@ public class ComposeModel(HikeJordanDbContext db, IWebHostEnvironment env) : Pag
     [BindProperty]
     public IFormFile? Image { get; set; }
 
+    [BindProperty]
+    public decimal? DistanceKm { get; set; }
+
+    [BindProperty]
+    public int? ElevationGainM { get; set; }
+
+    [BindProperty]
+    public int? DurationMinutes { get; set; }
+
     public string? Error { get; private set; }
 
     public void OnGet() { }
@@ -69,7 +78,10 @@ public class ComposeModel(HikeJordanDbContext db, IWebHostEnvironment env) : Pag
             Body = Body.Trim(),
             Region = Region?.Trim() ?? string.Empty,
             LocationName = LocationName?.Trim() ?? string.Empty,
-            ImageUrl = imageUrl
+            ImageUrl = imageUrl,
+            DistanceKm = DistanceKm is > 0 ? DistanceKm : null,
+            ElevationGainM = ElevationGainM is > 0 ? ElevationGainM : null,
+            DurationMinutes = DurationMinutes is > 0 ? DurationMinutes : null
         };
 
         db.Posts.Add(post);

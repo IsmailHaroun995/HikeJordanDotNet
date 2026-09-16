@@ -41,6 +41,8 @@
         <div class="post-location">📍 @Model.LocationName</div>
     }
 
+    <partial name="_PostStats" model="Model" />
+
     @if (!string.IsNullOrEmpty(Model.ImageUrl))
     {
         <a href="/post/@Model.Id" class="post-image-wrap">
@@ -71,5 +73,8 @@
             <span class="action-icon">💬</span>
             <span>@Model.CommentCount</span>
         </a>
+        <button type="button" class="post-action post-share" data-copy="/post/@Model.Id" title="@T("Copy link")">
+            <span class="action-icon">🔗</span>
+        </button>
     </footer>
 </article>

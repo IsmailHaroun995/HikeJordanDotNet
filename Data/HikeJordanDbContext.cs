@@ -10,6 +10,7 @@ public class HikeJordanDbContext(DbContextOptions<HikeJordanDbContext> options) 
     public DbSet<PostLike> PostLikes => Set<PostLike>();
     public DbSet<Follow> Follows => Set<Follow>();
     public DbSet<GroupReview> GroupReviews => Set<GroupReview>();
+    public DbSet<Notification> Notifications => Set<Notification>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -75,5 +76,16 @@ public class HikeJordanDbContext(DbContextOptions<HikeJordanDbContext> options) 
 
         modelBuilder.Entity<GroupReview>()
             .HasIndex(review => new { review.GroupId, review.IsHidden });
+
+        // Notification → Actor (for avatar/name). Recipient & Post are plain columns
+        // (no FK) to avoid multiple cascade paths, matching Follow/PostLike.
+        modelBuilder.Entity<Notification>()
+            .HasOne(n => n.Actor)
+            .WithMany()
+            .HasForeignKey(n => n.ActorId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Notification>()
+            .HasIndex(n => new { n.RecipientId, n.IsRead });
     }
 }

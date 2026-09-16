@@ -1,0 +1,60 @@
+@page "/notifications"
+@model NotificationsModel
+@{
+    ViewData["Title"] = T("Notifications");
+}
+
+<div class="post-detail-layout page-shell">
+    <main class="post-detail">
+        <h1 class="notif-title">@T("Notifications")</h1>
+
+        @if (Model.Items.Count == 0)
+        {
+            <div class="empty-state"><p>@T("No notifications yet.")</p></div>
+        }
+        else
+        {
+            <ul class="notif-list">
+                @foreach (var n in Model.Items)
+                {
+                    var href = n.Type == AppConstants.NotificationType.Follow
+                        ? $"/u/{n.Actor?.Username}"
+                        : (n.PostId is not null ? $"/post/{n.PostId}" : "#");
+                    var verb = n.Type switch
+                    {
+                        AppConstants.NotificationType.Like => T("liked your post"),
+                        AppConstants.NotificationType.Follow => T("started following you"),
+                        AppConstants.NotificationType.Comment => T("commented on your post"),
+                        _ => ""
+                    };
+                    var icon = n.Type switch
+                    {
+                        AppConstants.NotificationType.Like => "♥",
+                        AppConstants.NotificationType.Follow => "👤",
+                        AppConstants.NotificationType.Comment => "💬",
+                        _ => "🔔"
+                    };
+                    <li class="notif-item @(n.IsRead ? "" : "notif-unread")">
+                        <a class="notif-link" href="@href">
+                            <span class="notif-avatar">
+                                @if (!string.IsNullOrEmpty(n.Actor?.AvatarUrl))
+                                {
+                                    <img src="@n.Actor.AvatarUrl" alt="@n.Actor.Name" />
+                                }
+                                else
+                                {
+                                    <span class="avatar-fallback">@Community.Initials(n.Actor?.Name ?? "?")</span>
+                                }
+                                <span class="notif-badge-icon notif-@n.Type">@icon</span>
+                            </span>
+                            <span class="notif-text">
+                                <span><strong>@n.Actor?.Name</strong> @verb</span>
+                                <span class="notif-time">@Community.TimeAgo(n.CreatedAtUtc)</span>
+                            </span>
+                        </a>
+                    </li>
+                }
+            </ul>
+        }
+    </main>
+</div>

@@ -64,8 +64,8 @@
                             : $"/set-language/ar?redirect={Uri.EscapeDataString(_returnPath)}";
                     }
                     <ul class="navbar-nav align-items-lg-center gap-lg-3">
-                        <li class="nav-item"><a class="nav-link" href="/">@T("Feed")</a></li>
                         <li class="nav-item"><a class="nav-link" href="/explore">@T("Explore")</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/leaderboard">@T("Leaderboard")</a></li>
                         @if (User.Identity?.IsAuthenticated == true)
                         {
                             var username = User.FindFirst("username")?.Value;
@@ -75,6 +75,7 @@
                             {
                                 <li class="nav-item"><a class="nav-link" asp-page="/Admin">@T("Admin")</a></li>
                             }
+                            <li class="nav-item"><partial name="_NotificationBell" /></li>
                             <li class="nav-item dropdown nav-profile">
                                 <a class="nav-link nav-avatar" href="/u/@username" aria-label="My profile">
                                     @if (!string.IsNullOrEmpty(avatar))

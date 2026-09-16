@@ -1,0 +1,56 @@
+@page "/leaderboard"
+@model LeaderboardModel
+@{
+    ViewData["Title"] = T("Leaderboard");
+}
+
+<div class="explore-header">
+    <div class="page-shell">
+        <h1>🏆 @T("Leaderboard")</h1>
+        <p class="lb-sub">@T("Top hikers by distance logged.")</p>
+        <div class="region-chips explore-chips">
+            <a class="region-chip @(Model.Period == "month" ? "active" : "")" href="/leaderboard?period=month">@T("This month")</a>
+            <a class="region-chip @(Model.Period == "all" ? "active" : "")" href="/leaderboard?period=all">@T("All time")</a>
+        </div>
+    </div>
+</div>
+
+<div class="explore-layout page-shell">
+    <main class="feed-main">
+        @if (Model.Rows.Count == 0)
+        {
+            <div class="empty-state"><p>@T("No logged hikes yet. Add distance to your posts to appear here.")</p></div>
+        }
+        else
+        {
+            <ol class="leaderboard">
+                @{ var rank = 0; }
+                @foreach (var row in Model.Rows)
+                {
+                    rank++;
+                    var medal = rank switch { 1 => "🥇", 2 => "🥈", 3 => "🥉", _ => rank.ToString() };
+                    <li class="lb-row @(rank <= 3 ? "lb-top" : "")">
+                        <span class="lb-rank">@medal</span>
+                        <a class="lb-user" href="/u/@row.User.Username">
+                            <span class="lb-avatar">
+                                @if (!string.IsNullOrEmpty(row.User.AvatarUrl))
+                                {
+                                    <img src="@row.User.AvatarUrl" alt="@row.User.Name" />
+                                }
+                                else
+                                {
+                                    <span class="avatar-fallback">@Community.Initials(row.User.Name)</span>
+                                }
+                            </span>
+                            <span class="lb-meta">
+                                <strong>@row.User.Name</strong>
+                                <span>@row.Hikes @T("hikes") · @row.Elevation @T("m")</span>
+                            </span>
+                        </a>
+                        <span class="lb-distance"><strong>@row.Distance.ToString("0.#")</strong> @T("km")</span>
+                    </li>
+                }
+            </ol>
+        }
+    </main>
+</div>

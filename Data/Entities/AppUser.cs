@@ -29,6 +29,10 @@ public class AppUser
     [MaxLength(80)]
     public string? InstagramPage { get; set; }
 
+    /// <summary>WhatsApp number — for group accounts.</summary>
+    [MaxLength(40)]
+    public string? WhatsApp { get; set; }
+
     [MaxLength(40)]
     public string ApprovalStatus { get; set; } = AppConstants.AccountStatus.Approved;
 

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 namespace HikeJordanDotNet.Data;
 
@@ -19,6 +20,14 @@ public class Post
 
     [MaxLength(400)]
     public string? ImageUrl { get; set; }
+
+    // Optional "logged hike" stats (Strava-style activity data)
+    [Precision(6, 2)]
+    public decimal? DistanceKm { get; set; }
+
+    public int? ElevationGainM { get; set; }
+
+    public int? DurationMinutes { get; set; }
 
     public int LikeCount { get; set; }
 

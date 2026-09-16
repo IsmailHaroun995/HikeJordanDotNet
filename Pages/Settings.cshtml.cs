@@ -17,6 +17,7 @@ public class SettingsModel(HikeJordanDbContext db, IWebHostEnvironment env) : Pa
     [BindProperty] public string Bio { get; set; } = string.Empty;
     [BindProperty] public string Location { get; set; } = string.Empty;
     [BindProperty] public string? InstagramPage { get; set; }
+    [BindProperty] public string? WhatsApp { get; set; }
     [BindProperty] public IFormFile? Avatar { get; set; }
     [BindProperty] public IFormFile? Cover { get; set; }
 
@@ -33,6 +34,7 @@ public class SettingsModel(HikeJordanDbContext db, IWebHostEnvironment env) : Pa
         Bio = user.Bio;
         Location = user.Location;
         InstagramPage = user.InstagramPage;
+        WhatsApp = user.WhatsApp;
         return Page();
     }
 
@@ -55,6 +57,7 @@ public class SettingsModel(HikeJordanDbContext db, IWebHostEnvironment env) : Pa
         {
             var handle = InstagramPage?.Trim().TrimStart('@');
             user.InstagramPage = string.IsNullOrWhiteSpace(handle) ? null : handle;
+            user.WhatsApp = string.IsNullOrWhiteSpace(WhatsApp) ? null : WhatsApp.Trim();
         }
 
         var avatarPath = await SaveImageAsync(Avatar, "avatars");

@@ -45,6 +45,8 @@
                 <div class="post-location">📍 @p.LocationName</div>
             }
 
+            <partial name="_PostStats" model="p" />
+
             @if (!string.IsNullOrEmpty(p.ImageUrl))
             {
                 <div class="post-image-wrap post-image-full">
@@ -69,6 +71,9 @@
                     <a class="post-action" href="/Login"><span class="action-icon">♡</span><span>@p.LikeCount @T("likes")</span></a>
                 }
                 <span class="post-action static"><span class="action-icon">💬</span><span>@p.CommentCount @T("comments")</span></span>
+                <button type="button" class="post-action post-share" data-copy="/post/@p.Id" title="@T("Copy link")">
+                    <span class="action-icon">🔗</span><span>@T("Share")</span>
+                </button>
             </footer>
         </article>
 
@@ -122,5 +127,31 @@
                 </ul>
             }
         </section>
+
+        @if (Model.MoreFromRegion.Count > 0)
+        {
+            <section class="more-region">
+                <h2 class="comments-title">@Community.RegionEmoji(p.Region) @T("More from") @T(p.Region)</h2>
+                <div class="more-list">
+                    @foreach (var m in Model.MoreFromRegion)
+                    {
+                        <a class="more-item" href="/post/@m.Id">
+                            @if (!string.IsNullOrEmpty(m.ImageUrl))
+                            {
+                                <span class="more-thumb" style="background-image:url('@m.ImageUrl')"></span>
+                            }
+                            else
+                            {
+                                <span class="more-thumb more-thumb-empty">@Community.RegionEmoji(m.Region)</span>
+                            }
+                            <span class="more-body">
+                                <strong>@m.Author?.Name</strong>
+                                <span>@(m.Body.Length > 70 ? m.Body[..67] + "…" : m.Body)</span>
+                            </span>
+                        </a>
+                    }
+                </div>
+            </section>
+        }
     </main>
 </div>

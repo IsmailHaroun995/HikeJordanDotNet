@@ -17,6 +17,12 @@ public class ProfileModel(HikeJordanDbContext db) : CommunityPageModel(db)
     /// <summary>Region "visited" badges — one per distinct region the member has posted about.</summary>
     public IReadOnlyList<string> Badges { get; private set; } = [];
 
+    // Strava-style aggregate stats
+    public decimal TotalDistanceKm { get; private set; }
+    public int TotalElevationM { get; private set; }
+    public int TotalDurationMinutes { get; private set; }
+    public int KudosReceived { get; private set; }
+
     // Group-account extras
     public bool IsGroup { get; private set; }
     public IReadOnlyList<GroupReview> Reviews { get; private set; } = [];
@@ -44,6 +50,11 @@ public class ProfileModel(HikeJordanDbContext db) : CommunityPageModel(db)
             .Distinct()
             .OrderBy(r => r)
             .ToList();
+
+        TotalDistanceKm = Posts.Sum(p => p.DistanceKm ?? 0);
+        TotalElevationM = Posts.Sum(p => p.ElevationGainM ?? 0);
+        TotalDurationMinutes = Posts.Sum(p => p.DurationMinutes ?? 0);
+        KudosReceived = Posts.Sum(p => p.LikeCount);
 
         FollowerCount = await Db.Follows.CountAsync(f => f.FollowingId == user.Id);
         FollowingCount = await Db.Follows.CountAsync(f => f.FollowerId == user.Id);

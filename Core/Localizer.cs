@@ -129,6 +129,7 @@ public static class Localizer
         ["A personal account to share your own trips."] = "حساب شخصي لمشاركة رحلاتك.",
         ["A hiking group or company that runs trips."] = "مجموعة أو شركة تنظّم رحلات هايكنج.",
         ["Instagram page"] = "صفحة إنستغرام",
+        ["WhatsApp number"] = "رقم واتساب",
         ["Reviews"] = "التقييمات",
         ["No reviews yet."] = "لا توجد تقييمات بعد.",
         ["Rate this group"] = "قيّم هذه المجموعة",
@@ -196,6 +197,64 @@ public static class Localizer
         // ── Main page ─────────────────────────────────────────────────
         ["Popular regions"] = "مناطق شائعة",
         ["Discover Jordan, one trip at a time"] = "اكتشف الأردن، رحلة تلو الأخرى",
+        ["Go to the feed"] = "اذهب إلى المنشورات",
+        ["Share a hike"] = "شارك رحلة",
+        ["Top hikers"] = "أفضل المتنزهين",
+        ["See full leaderboard"] = "عرض كل المتصدرين",
+        ["Ready to share your next hike?"] = "جاهز لمشاركة رحلتك القادمة؟",
+        ["Explore Jordan, together."] = "استكشف الأردن، معًا.",
+        ["How it works"] = "كيف يعمل",
+        ["Share your hikes"] = "شارك رحلاتك",
+        ["Post trip reports, photos, and stats — distance, elevation and time — from every adventure."]
+            = "انشر تقارير الرحلات والصور والإحصائيات — المسافة والارتفاع والوقت — من كل مغامرة.",
+        ["Follow the community"] = "تابِع المجتمع",
+        ["Connect with hikers and groups, and discover new places through the people who've been there."]
+            = "تواصل مع المتنزهين والمجموعات، واكتشف أماكن جديدة من خلال من زاروها.",
+        ["Earn badges & rank up"] = "اجمع الشارات وتصدّر",
+        ["Collect a badge for every place you visit and climb the community distance leaderboard."]
+            = "اجمع شارة لكل مكان تزوره وتسلّق قائمة المتصدرين بالمسافة.",
+        ["Browse all"] = "تصفّح الكل",
+        ["posts"] = "منشور",
+
+        // ── Hike stats & leaderboard ──────────────────────────────────
+        ["Hike stats (optional)"] = "إحصائيات الرحلة (اختياري)",
+        ["km"] = "كم",
+        ["m elev"] = "م ارتفاع",
+        ["min"] = "دقيقة",
+        ["time"] = "الوقت",
+        ["Hikes"] = "رحلات",
+        ["km total"] = "كم إجمالي",
+        ["m climbed"] = "م تسلّق",
+        ["places"] = "أماكن",
+        ["kudos"] = "إعجابات",
+        ["Leaderboard"] = "المتصدرون",
+        ["Top hikers by distance logged."] = "أكثر المتنزهين مسافةً مسجّلة.",
+        ["This month"] = "هذا الشهر",
+        ["All time"] = "كل الأوقات",
+        ["hikes"] = "رحلات",
+        ["m"] = "م",
+        ["No logged hikes yet. Add distance to your posts to appear here."] = "لا توجد رحلات مسجّلة بعد. أضف المسافة إلى منشوراتك لتظهر هنا.",
+
+        // ── Discovery & onboarding ────────────────────────────────────
+        ["Trending regions"] = "المناطق الرائجة",
+        ["See the leaderboard"] = "عرض المتصدرين",
+        ["Get started"] = "لنبدأ",
+        ["done"] = "منجز",
+        ["Dismiss"] = "إخفاء",
+        ["Add a profile photo"] = "أضف صورة شخصية",
+        ["Write a short bio"] = "اكتب نبذة قصيرة",
+        ["Share your first hike"] = "شارك أول رحلة لك",
+        ["Follow 3 hikers"] = "تابِع 3 متنزهين",
+        ["More from"] = "المزيد من",
+        ["Copy link"] = "نسخ الرابط",
+        ["Share"] = "مشاركة",
+
+        // ── Notifications ─────────────────────────────────────────────
+        ["Notifications"] = "الإشعارات",
+        ["No notifications yet."] = "لا توجد إشعارات بعد.",
+        ["liked your post"] = "أعجب بمنشورك",
+        ["started following you"] = "بدأ بمتابعتك",
+        ["commented on your post"] = "علّق على منشورك",
 
         // ── Shared ────────────────────────────────────────────────────
         ["Back to feed"] = "العودة إلى الرئيسية",

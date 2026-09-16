@@ -31,6 +31,20 @@ public static class Community
             : (parts[0][..1] + parts[^1][..1]).ToUpperInvariant();
     }
 
+    public static string WhatsAppUrl(string number)
+    {
+        var digits = new string(number.Where(char.IsDigit).ToArray());
+        return $"https://wa.me/{digits}";
+    }
+
+    public static string FormatDuration(int minutes)
+    {
+        if (minutes < 60) return $"{minutes}m";
+        var h = minutes / 60;
+        var m = minutes % 60;
+        return m == 0 ? $"{h}h" : $"{h}h {m}m";
+    }
+
     public static string RegionEmoji(string region) => region switch
     {
         "Wadi Rum" => "🏜️",

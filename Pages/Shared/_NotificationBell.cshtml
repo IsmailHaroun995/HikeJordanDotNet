@@ -1,0 +1,17 @@
+@using System.Security.Claims
+@using Microsoft.EntityFrameworkCore
+@inject HikeJordanDotNet.Data.HikeJordanDbContext Db
+@{
+    var unread = 0;
+    if (int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var _uid))
+    {
+        unread = await Db.Notifications.CountAsync(n => n.RecipientId == _uid && !n.IsRead);
+    }
+}
+<a class="nav-link nav-bell" href="/notifications" aria-label="@T("Notifications")" title="@T("Notifications")">
+    <span class="nav-bell-icon">🔔</span>
+    @if (unread > 0)
+    {
+        <span class="nav-bell-badge">@(unread > 9 ? "9+" : unread.ToString())</span>
+    }
+</a>
