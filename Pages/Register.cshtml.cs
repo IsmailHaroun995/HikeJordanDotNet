@@ -63,6 +63,7 @@ public class RegisterModel(
             ApprovalStatus = AppConstants.AccountStatus.Approved,
             AccountType = isGroup ? AppConstants.AccountType.Group : AppConstants.AccountType.Person,
             InstagramPage = isGroup ? NormalizeInstagram(Input.InstagramPage) : null,
+            WhatsApp = isGroup && !string.IsNullOrWhiteSpace(Input.WhatsApp) ? Input.WhatsApp.Trim() : null,
             EmailConfirmed = !requireVerification
         };
 
@@ -103,6 +104,9 @@ public class RegisterModel(
 
         [MaxLength(80)]
         public string? InstagramPage { get; set; }
+
+        [MaxLength(40)]
+        public string? WhatsApp { get; set; }
 
         [Required]
         [MaxLength(120)]

@@ -1,57 +1,46 @@
 using HikeJordanDotNet.Data;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace HikeJordanDotNet.Pages;
 
-public class IndexModel(HikeJordanDbContext db) : CommunityPageModel(db)
+public class IndexModel(HikeJordanDbContext db) : PageModel
 {
-    public IReadOnlyList<Post> Posts { get; private set; } = [];
-    public HashSet<int> LikedPostIds { get; private set; } = [];
-    public IReadOnlyList<AppUser> SuggestedUsers { get; private set; } = [];
-    public string Tab { get; private set; } = "latest";
+    public record Hiker(AppUser User, decimal Distance);
+    public record RegionCount(string Region, int Count);
+
     public int PostCount { get; private set; }
     public int MemberCount { get; private set; }
+    public int PlacesCount { get; private set; }
+    public IReadOnlyList<RegionCount> PopularRegions { get; private set; } = [];
+    public IReadOnlyList<Hiker> TopHikers { get; private set; } = [];
 
-    public async Task OnGetAsync(string? tab = null)
+    public async Task OnGetAsync()
     {
-        Tab = tab == "following" && CurrentUserId is not null ? "following" : "latest";
+        PostCount = await db.Posts.CountAsync(p => !p.IsHidden);
+        MemberCount = await db.Users.CountAsync();
 
-        var query = Db.Posts
-            .Where(p => !p.IsHidden)
-            .Include(p => p.Author)
-            .AsQueryable();
-
-        if (Tab == "following" && CurrentUserId is int uid)
-        {
-            var followingIds = await Db.Follows
-                .Where(f => f.FollowerId == uid)
-                .Select(f => f.FollowingId)
-                .ToListAsync();
-            query = query.Where(p => followingIds.Contains(p.AuthorId));
-        }
-
-        Posts = await query
-            .OrderByDescending(p => p.CreatedAtUtc)
-            .Take(50)
+        var regions = await db.Posts
+            .Where(p => !p.IsHidden && p.Region != "")
+            .GroupBy(p => p.Region)
+            .Select(g => new { Region = g.Key, Count = g.Count() })
+            .OrderByDescending(x => x.Count)
+            .Take(8)
             .ToListAsync();
+        PopularRegions = regions.Select(r => new RegionCount(r.Region, r.Count)).ToList();
+        PlacesCount = await db.Posts.Where(p => !p.IsHidden && p.Region != "").Select(p => p.Region).Distinct().CountAsync();
 
-        if (CurrentUserId is int currentUid)
-        {
-            LikedPostIds = await SocialOps.LikedPostIdsAsync(Db, currentUid, Posts.Select(p => p.Id));
-
-            var followingIds = await Db.Follows
-                .Where(f => f.FollowerId == currentUid)
-                .Select(f => f.FollowingId)
-                .ToListAsync();
-
-            SuggestedUsers = await Db.Users
-                .Where(u => u.Id != currentUid && !followingIds.Contains(u.Id))
-                .OrderByDescending(u => u.Posts.Count)
-                .Take(4)
-                .ToListAsync();
-        }
-
-        PostCount = await Db.Posts.CountAsync(p => !p.IsHidden);
-        MemberCount = await Db.Users.CountAsync();
+        var top = await db.Posts
+            .Where(p => !p.IsHidden && p.DistanceKm != null)
+            .GroupBy(p => p.AuthorId)
+            .Select(g => new { AuthorId = g.Key, Distance = g.Sum(p => p.DistanceKm ?? 0) })
+            .OrderByDescending(x => x.Distance)
+            .Take(3)
+            .ToListAsync();
+        var ids = top.Select(t => t.AuthorId).ToList();
+        var users = await db.Users.Where(u => ids.Contains(u.Id)).ToDictionaryAsync(u => u.Id);
+        TopHikers = top.Where(t => users.ContainsKey(t.AuthorId))
+            .Select(t => new Hiker(users[t.AuthorId], t.Distance))
+            .ToList();
     }
 }

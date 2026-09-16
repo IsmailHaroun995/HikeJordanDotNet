@@ -1,0 +1,18 @@
+@model Post
+@if (Model.DistanceKm is not null || Model.ElevationGainM is not null || Model.DurationMinutes is not null)
+{
+    <div class="post-stats">
+        @if (Model.DistanceKm is not null)
+        {
+            <div class="post-stat"><span class="ps-value">@Model.DistanceKm.Value.ToString("0.#")</span><span class="ps-label">@T("km")</span></div>
+        }
+        @if (Model.ElevationGainM is not null)
+        {
+            <div class="post-stat"><span class="ps-value">@Model.ElevationGainM</span><span class="ps-label">@T("m elev")</span></div>
+        }
+        @if (Model.DurationMinutes is not null)
+        {
+            <div class="post-stat"><span class="ps-value">@Community.FormatDuration(Model.DurationMinutes.Value)</span><span class="ps-label">@T("time")</span></div>
+        }
+    </div>
+}

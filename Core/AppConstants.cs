@@ -14,6 +14,13 @@ public static class AppConstants
         public const string Group = "Group";
     }
 
+    public static class NotificationType
+    {
+        public const string Like = "like";
+        public const string Follow = "follow";
+        public const string Comment = "comment";
+    }
+
     public static class HikeStatus
     {
         public const string Draft = "Draft";

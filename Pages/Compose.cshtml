@@ -39,6 +39,24 @@
             </div>
 
             <div class="field">
+                <label>@T("Hike stats (optional)")</label>
+                <div class="stat-inputs">
+                    <div class="stat-input">
+                        <input name="DistanceKm" type="number" step="0.1" min="0" value="@Model.DistanceKm" class="form-control" placeholder="0" />
+                        <span>@T("km")</span>
+                    </div>
+                    <div class="stat-input">
+                        <input name="ElevationGainM" type="number" step="1" min="0" value="@Model.ElevationGainM" class="form-control" placeholder="0" />
+                        <span>@T("m elev")</span>
+                    </div>
+                    <div class="stat-input">
+                        <input name="DurationMinutes" type="number" step="1" min="0" value="@Model.DurationMinutes" class="form-control" placeholder="0" />
+                        <span>@T("min")</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
                 <label for="Image">@T("Photo (optional)")</label>
                 <input id="Image" name="Image" type="file" accept="image/*" class="form-control" />
             </div>

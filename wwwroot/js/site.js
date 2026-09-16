@@ -41,11 +41,13 @@ document.querySelectorAll("textarea[maxlength]").forEach((area) => {
 /* ─── Copy-to-clipboard buttons ─────────────────────────────────────── */
 document.querySelectorAll("[data-copy]").forEach((btn) => {
   btn.addEventListener("click", async () => {
+    let value = btn.getAttribute("data-copy") || "";
+    if (value.startsWith("/")) value = window.location.origin + value;
     try {
-      await navigator.clipboard.writeText(btn.getAttribute("data-copy") || "");
-      const original = btn.textContent;
-      btn.textContent = "✓ Copied";
-      setTimeout(() => { btn.textContent = original; }, 1800);
+      await navigator.clipboard.writeText(value);
+      const original = btn.innerHTML;
+      btn.innerHTML = "<span class='action-icon'>✓</span>";
+      setTimeout(() => { btn.innerHTML = original; }, 1600);
     } catch { /* clipboard unavailable */ }
   });
 });

@@ -26,11 +26,17 @@
                 </div>
             </div>
 
-            <div class="field" id="instagramField" style="display:none">
-                <label asp-for="Input.InstagramPage">@T("Instagram page")</label>
-                <div class="input-prefix">
-                    <span>@@</span>
-                    <input asp-for="Input.InstagramPage" class="form-control" placeholder="wadi.rum.adventures" />
+            <div id="groupFields" style="display:none">
+                <div class="field">
+                    <label asp-for="Input.InstagramPage">@T("Instagram page")</label>
+                    <div class="input-prefix">
+                        <span>@@</span>
+                        <input asp-for="Input.InstagramPage" class="form-control" placeholder="wadi.rum.adventures" />
+                    </div>
+                </div>
+                <div class="field">
+                    <label asp-for="Input.WhatsApp">@T("WhatsApp number")</label>
+                    <input asp-for="Input.WhatsApp" class="form-control" placeholder="+962 7X XXX XXXX" />
                 </div>
             </div>
 
@@ -65,7 +71,7 @@
 @section Scripts {
     <script>
         (function () {
-            var field = document.getElementById('instagramField');
+            var field = document.getElementById('groupFields');
             var radios = document.querySelectorAll('input[name="Input.AccountType"]');
             function sync() {
                 var checked = document.querySelector('input[name="Input.AccountType"]:checked');

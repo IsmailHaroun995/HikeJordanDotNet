@@ -68,6 +68,10 @@
         {
             <a class="profile-insta" href="https://instagram.com/@u.InstagramPage" target="_blank" rel="noopener noreferrer">📷 @@@u.InstagramPage</a>
         }
+        @if (Model.IsGroup && !string.IsNullOrEmpty(u.WhatsApp))
+        {
+            <a class="profile-whatsapp" href="@Community.WhatsAppUrl(u.WhatsApp)" target="_blank" rel="noopener noreferrer">💬 @u.WhatsApp</a>
+        }
         @if (Model.IsGroup && Model.ReviewCount > 0)
         {
             <span class="profile-rating">⭐ @Model.AverageRating <span class="muted-text">(@Model.ReviewCount)</span></span>
@@ -79,6 +83,25 @@
         <span><strong>@Model.Posts.Count</strong> @T("Posts")</span>
         <span><strong>@Model.FollowerCount</strong> @T("Followers")</span>
         <span><strong>@Model.FollowingCount</strong> @T("Following")</span>
+    </div>
+
+    <div class="stats-dashboard">
+        <div class="stat-tile">
+            <span class="stat-tile-value">@Model.Posts.Count</span>
+            <span class="stat-tile-label">@T("Hikes")</span>
+        </div>
+        <div class="stat-tile">
+            <span class="stat-tile-value">@Model.TotalDistanceKm.ToString("0.#")</span>
+            <span class="stat-tile-label">@T("km total")</span>
+        </div>
+        <div class="stat-tile">
+            <span class="stat-tile-value">@Model.TotalElevationM</span>
+            <span class="stat-tile-label">@T("m climbed")</span>
+        </div>
+        <div class="stat-tile">
+            <span class="stat-tile-value">@Model.KudosReceived</span>
+            <span class="stat-tile-label">@T("kudos")</span>
+        </div>
     </div>
 
     <div class="profile-badges">

@@ -76,7 +76,8 @@ public class LoginModel(
             return LocalRedirect(returnUrl);
         }
 
-        return RedirectToPage("/Index");
+        // Land the user on their own profile page after signing in.
+        return Redirect($"/u/{account.Username}");
     }
 
     public async Task<IActionResult> OnPostLogoutAsync()
